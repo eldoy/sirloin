@@ -52,7 +52,7 @@ app.any('/both', async (req, res) => {
   }
 })
 ```
-Websockets are using through *actions*, the URL is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping* the *pong* will automatically close dead connections for you.
+Websockets are using through *actions*, the URL is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead connections.
 ```javascript
 // Websocket actions work like remote function calls
 app.action('hello', async (socket, req) => {
