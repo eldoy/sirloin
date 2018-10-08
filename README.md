@@ -62,7 +62,7 @@ app.action('hello', async (socket, req) => {
 
 // Example socket client setup with wsrecon
 const Socket = require('wsrecon')
-const socket = new Socket('ws://example.com)
+const socket = new Socket('ws://example.com')
 
 // Normal socket send, matches the 'hello' action above
 socket.send({ action: 'hello' })
