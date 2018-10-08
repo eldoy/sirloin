@@ -1,5 +1,5 @@
 {
-  "name": "webserver",
+  "name": "flipflow",
   "version": "0.0.1",
   "description": "Node web server",
   "main": "index.js",
