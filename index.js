@@ -67,9 +67,11 @@ class Webserver {
   }
 
   send (res, data) {
-    const str = JSON.stringify(data)
-    res.setHeader('Content-Length', Buffer.byteLength(str))
-    res.end(str)
+    if (typeof data === 'object') {
+      data = JSON.stringify(data)
+    }
+    res.setHeader('Content-Length', Buffer.byteLength(data))
+    res.end(data)
   }
 
   async processRoute (req, res) {

@@ -26,5 +26,4 @@ app.any('*', async (req, res) => {
   if (route) {
     return await eval(route)(req, res)
   }
-  return null
 })
