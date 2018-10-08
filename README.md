@@ -10,7 +10,7 @@ This extremely easy to use web server includes:
 * Full async / await support
 * Cors enabled by default
 
-Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using web sockets, the [wsrecon](https://github.com/fugroup/wsrecon) library is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
+Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon](https://github.com/fugroup/wsrecon) library is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
 
 ### INSTALL
 ```npm i flipflow``` or ```yarn add flipflow```
@@ -52,7 +52,7 @@ app.any('/both', async (req, res) => {
   }
 })
 ```
-Websockets are using through *actions*, the URL is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action.
+Websockets are using through *actions*, the URL is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping* the *pong* will automatically close dead connections for you.
 ```javascript
 // Websocket actions work like remote function calls
 app.action('hello', async (socket, req) => {
@@ -80,7 +80,9 @@ app.action('*', async (socket, req) => { // On the server
   return { hello: 'object' }       // Will also send what you return
 })
 ```
-Static files will be served from the 'dist' directory by default. Routes have presedence over static files. If the file path ends with just a '/', then the server will serve the 'index.html' file if it exists. Mime types are automatically added to each file to make the browser behave correctly.
+Static files will be served from the 'dist' directory by default. Routes have presedence over static files. If the file path ends with just a '/', then the server will serve the 'index.html' file if it exists.
+
+Mime types are automatically added to each file to make the browser behave correctly.
 
 See the [server.js](https://github.com/fugroup/flipflow/blob/master/server.js) file for more examples.
 
