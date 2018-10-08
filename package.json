@@ -1,0 +1,22 @@
+{
+  "name": "webserver",
+  "version": "0.0.1",
+  "description": "Node web server",
+  "main": "index.js",
+  "author": "fugroup <vidar@fugroup.net>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "jest --watch"
+  },
+  "devDependencies": {
+    "axios": "^0.18.0",
+    "jest": "^23.6.0",
+    "request": "^2.88.0"
+  },
+  "dependencies": {
+    "bparse": "^0.0.2",
+    "mime-types": "^2.1.20"
+  }
+}
