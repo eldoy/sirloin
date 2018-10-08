@@ -18,6 +18,14 @@ app.post('/upload', async (req, res) => {
   return { name: file.name }
 })
 
+app.action('*', async (socket, req) => {
+  return { hello: 'world' }
+})
+
+app.action('hello', async (socket, req) => {
+  return { hello: 'hi' }
+})
+
 app.any('*', async (req, res) => {
   const routes = {
     'POST:/custom': 'async (req, res) => { return { hello: "custom" } }'

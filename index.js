@@ -1,16 +1,23 @@
+const uuid = require('uuid/v4')
 const mime = require('mime-types')
 const fs = require('fs')
-const http = require('http')
 const url = require('url')
+const Http = require('http')
 const bodyparser = require('bparse')
+const WebSocket = require('ws')
+const Socket = require('./lib/socket')
 
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+const PING_TIMEOUT = 30000
+const DEFAULT_PORT = 3000
+const STATIC_DIR = 'dist'
 
 class Webserver {
   constructor (options = {}) {
     this.setOptions(options)
     this.initRoutes()
-    this.http = http.createServer(async (req, res) => {
+
+    const server = Http.createServer(async (req, res) => {
       this.setResponseHeaders(res)
       this.setRequestProperties(req)
       this.printRequest(req)
@@ -19,14 +26,50 @@ class Webserver {
         || this.notFound(req, res)
       this.send(res, data)
     }).listen(options.port)
+
+    this.actions = {}
+    const websocket = new WebSocket.Server({ server })
+    websocket.on('connection', async (connection, req) => {
+      this.setRequestProperties(req)
+      connection.isAlive = true
+      connection.id = uuid()
+
+      connection.on('pong', () => {
+        connection.isAlive = true
+      })
+
+      connection.on('close', () => {
+        connection.isAlive = false
+      })
+
+      connection.on('message', async (message) => {
+        const socket = new Socket(message, connection)
+        const action = this.actions[socket.action]
+        if (action) {
+          const data = await action(socket, req)
+          if (data) {
+            socket.send(data)
+          }
+        }
+      })
+    })
+    this.interval = setInterval(() => {
+      websocket.clients.forEach((connection) => {
+        if (connection.isAlive === false) {
+          return ws.terminate()
+        }
+        connection.isAlive = false
+        connection.ping('', false, true)
+      })
+    }, PING_TIMEOUT)
   }
 
   setOptions (options) {
     if (!options.port) {
-      options.port = 3000
+      options.port = DEFAULT_PORT
     }
     if (options.static !== false) {
-      options.static = 'dist'
+      options.static = STATIC_DIR
     }
     this.options = options
   }
@@ -64,6 +107,10 @@ class Webserver {
     for (const m of METHODS) {
       this[m.toLowerCase()](path, fn)
     }
+  }
+
+  action (name, fn) {
+    this.actions[name] = fn
   }
 
   send (res, data) {

@@ -13,10 +13,13 @@
   "devDependencies": {
     "axios": "^0.18.0",
     "jest": "^23.6.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "wsrecon": "^0.2.0"
   },
   "dependencies": {
     "bparse": "^0.0.2",
-    "mime-types": "^2.1.20"
+    "mime-types": "^2.1.20",
+    "uuid": "^3.3.2",
+    "ws": "^6.1.0"
   }
 }
