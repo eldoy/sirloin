@@ -2,7 +2,10 @@ const Webserver = require('./index.js')
 
 const app = new Webserver({
   port: 3000,
-  static: 'dist' // Static assets folder
+  static: 'dist', // Static assets folder
+  connect: async (connection, req) => {
+    connection.mutate = 'mutate'
+  }
 })
 
 app.get('/world', async (req, res) => {
@@ -24,6 +27,10 @@ app.action('*', async (socket, req) => {
 
 app.action('hello', async (socket, req) => {
   return { hello: 'hi' }
+})
+
+app.action('mutate', async (socket, req) => {
+  return { hello: socket.connection.mutate }
 })
 
 app.any('*', async (req, res) => {

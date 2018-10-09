@@ -47,4 +47,9 @@ describe('Websocket', () => {
       done()
     }, 50)
   })
+
+  it('should allow mutation of connection object', async () => {
+    const data = await socket.fetch({ action: 'mutate' })
+    expect(data.hello).toEqual('mutate')
+  })
 })

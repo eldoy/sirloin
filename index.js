@@ -34,6 +34,10 @@ class Webserver {
       connection.isAlive = true
       connection.id = uuid()
 
+      if (options.connect) {
+        await options.connect(connection, req)
+      }
+
       connection.on('pong', () => {
         connection.isAlive = true
       })

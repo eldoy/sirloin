@@ -22,8 +22,14 @@ const Webserver = require('flipflow')
 
 // Default options shown
 const app = new Webserver({
+  // Web server port
   port: 3000,
-  static: 'dist' // set to false to not serve static
+  // Static assets root directory
+  // set to false to not serve static
+  static: 'dist',
+  // Callback for websocket connect event
+  // Can be used for adding data to the websocket connection
+  connect: async (connection, req) => {}
 })
 
 // Get request, whatever you return will be the response
