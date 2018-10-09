@@ -17,7 +17,7 @@ class Webserver {
     this.setOptions(options)
     this.initRoutes()
 
-    const server = Http.createServer(async (req, res) => {
+    this.server = Http.createServer(async (req, res) => {
       this.setResponseHeaders(res)
       this.setRequestProperties(req)
       this.printRequest(req)
@@ -28,8 +28,8 @@ class Webserver {
     }).listen(options.port)
 
     this.actions = {}
-    const websocket = new WebSocket.Server({ server })
-    websocket.on('connection', async (connection, req) => {
+    this.websocket = new WebSocket.Server({ server: this.server })
+    this.websocket.on('connection', async (connection, req) => {
       this.setRequestProperties(req)
       connection.isAlive = true
       connection.id = uuid()
@@ -58,7 +58,7 @@ class Webserver {
       })
     })
     this.interval = setInterval(() => {
-      websocket.clients.forEach((connection) => {
+      this.websocket.clients.forEach((connection) => {
         if (connection.isAlive === false) {
           return ws.terminate()
         }

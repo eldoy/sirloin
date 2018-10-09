@@ -4,3 +4,5 @@ TODO
 * [ ] HTTP caching for static files (last modified, etags)
 * [ ] Lazy load web socket connection, don't load if not in use
 * [ ] Middleware support: app.use((req, res) => {}), load to array and run. Mutates.
+* [ ] Completely wrap ws connection object to avoid having to do JSON.stringify on send
+  - socket.clients should also be wrapped
