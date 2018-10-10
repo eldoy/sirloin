@@ -12,17 +12,17 @@ This extremely easy to use web server includes:
 * Full async / await support
 * Cors enabled by default
 
-Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/fugroup/wsrecon)  is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
+Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/fugroup/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
 
 The websockets are based on the excellent [ws library](https://github.com/websockets/ws), and have very few other dependencies.
 
-Sirloin is up to 30% faster than Express and Hapi, and even faster than Koa.
+Sirloin is up to 30% faster than Express and Hapi, and also faster than Koa.
 
 ### INSTALL
 ```npm i sirloin``` or ```yarn add sirloin```
 
 ### USAGE
-Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server instances.
+Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server Incoming and Outgoing message instances.
 ```javascript
 const Sirloin = require('sirloin')
 
