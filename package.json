@@ -5,6 +5,7 @@
   "main": "index.js",
   "author": "fugroup <vidar@fugroup.net>",
   "license": "MIT",
+  "repository": "https://github.com/fugroup/sirloin",
   "private": false,
   "scripts": {
     "start": "nodemon server.js",
