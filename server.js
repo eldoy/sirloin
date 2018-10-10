@@ -3,8 +3,8 @@ const Webserver = require('./index.js')
 const app = new Webserver({
   port: 3000,
   static: 'dist', // Static assets folder
-  connect: async (connection, req) => {
-    connection.mutate = 'mutate'
+  connect: async (client, req) => {
+    client.mutate = 'mutate'
   }
 })
 
@@ -30,7 +30,13 @@ app.action('hello', async (socket, req) => {
 })
 
 app.action('mutate', async (socket, req) => {
-  return { hello: socket.connection.mutate }
+  return { hello: socket.client.mutate }
+})
+
+app.action('count', async (socket, req) => {
+  const count = app.websocket.websocket.clients.size
+  console.log('hello:', count)
+  return { hello: count }
 })
 
 app.any('*', async (req, res) => {

@@ -13,3 +13,4 @@ TODO
   - message, client, req for actions
   - rename connection to client
   - return ws.terminate() -> connection.terminate()
+* [ ] Support http return string (text/html)

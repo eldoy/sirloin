@@ -52,4 +52,9 @@ describe('Websocket', () => {
     const data = await socket.fetch({ action: 'mutate' })
     expect(data.hello).toEqual('mutate')
   })
+
+  it('should return the number of clients', async () => {
+    const data = await socket.fetch({ action: 'count' })
+    expect(data.hello).toBeGreaterThan(0)
+  })
 })
