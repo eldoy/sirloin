@@ -5,7 +5,7 @@ This extremely easy to use web server includes:
 * JSON HTTP server for your APIs
 * Web socket server based on actions
 * Support for file uploads and post body parsing
-* Fast and minimal, less than 200 lines of code
+* Fast and minimal, just around 200 lines of code
 * Optional static file server
 * Full async / await support
 * Cors enabled by default
