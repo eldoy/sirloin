@@ -57,4 +57,14 @@ describe('Websocket', () => {
     const data = await socket.fetch({ action: 'count' })
     expect(data.hello).toBeGreaterThan(0)
   })
+
+  it('should return the number of sockets', async () => {
+    const data = await socket.fetch({ action: 'sockets' })
+    expect(data.hello).toBeGreaterThan(0)
+  })
+
+  it('should return the message you sent', async () => {
+    const data = await socket.fetch({ action: 'bounce', hello: 1 })
+    expect(data.hello).toEqual(1)
+  })
 })

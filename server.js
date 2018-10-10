@@ -21,24 +21,6 @@ app.post('/upload', async (req, res) => {
   return { name: file.name }
 })
 
-app.action('*', async (socket, req) => {
-  return { hello: 'world' }
-})
-
-app.action('hello', async (socket, req) => {
-  return { hello: 'hi' }
-})
-
-app.action('mutate', async (socket, req) => {
-  return { hello: socket.client.mutate }
-})
-
-app.action('count', async (socket, req) => {
-  const count = app.websocket.websocket.clients.size
-  console.log('hello:', count)
-  return { hello: count }
-})
-
 app.any('*', async (req, res) => {
   const routes = {
     'POST:/custom': 'async (req, res) => { return { hello: "custom" } }'
@@ -47,4 +29,30 @@ app.any('*', async (req, res) => {
   if (route) {
     return await eval(route)(req, res)
   }
+})
+
+app.action('*', async (message, socket, req) => {
+  return { hello: 'world' }
+})
+
+app.action('hello', async (message, socket, req) => {
+  return { hello: 'hi' }
+})
+
+app.action('mutate', async (message, socket, req) => {
+  return { hello: socket.client.mutate }
+})
+
+app.action('count', async (message, socket, req) => {
+  const count = app.websocket.server.clients.size
+  return { hello: count }
+})
+
+app.action('sockets', async (message, socket, req) => {
+  const count = app.websocket.sockets.length
+  return { hello: count }
+})
+
+app.action('bounce', async (message, socket, req) => {
+  return message.data
 })
