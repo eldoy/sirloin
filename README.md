@@ -1,4 +1,4 @@
-![Sirloin logo](https://7ino.s3.amazonaws.com/1539201023781_sirloin-logo%40200x128.png)
+![Sirloin logo](https://s3.amazonaws.com/7ino/1539200413_sirloin-logo200x128.png)
 
 # Sirloin Node.js Web Server
 
