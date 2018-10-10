@@ -1,5 +1,5 @@
-const Http = require('./lib/http/http')
-const Websocket = require('./lib/websocket/websocket')
+const Http = require('./lib/http')
+const Websocket = require('./lib/websocket')
 
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 const DEFAULT_PORT = 3000

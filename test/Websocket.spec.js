@@ -53,13 +53,13 @@ describe('Websocket', () => {
     expect(data.hello).toEqual('mutate')
   })
 
-  it('should return the number of clients', async () => {
+  it('should return the number of clients (set)', async () => {
     const data = await socket.fetch({ action: 'count' })
     expect(data.hello).toBeGreaterThan(0)
   })
 
-  it('should return the number of sockets', async () => {
-    const data = await socket.fetch({ action: 'sockets' })
+  it('should return the number of clients (array)', async () => {
+    const data = await socket.fetch({ action: 'clients' })
     expect(data.hello).toBeGreaterThan(0)
   })
 

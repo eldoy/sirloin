@@ -36,28 +36,28 @@ app.any('*', async (req, res) => {
   }
 })
 
-app.action('*', async (message, socket, req) => {
+app.action('*', async (data, client, req) => {
   return { hello: 'world' }
 })
 
-app.action('hello', async (message, socket, req) => {
+app.action('hello', async (data, client, req) => {
   return { hello: 'hi' }
 })
 
-app.action('mutate', async (message, socket, req) => {
-  return { hello: socket.client.mutate }
+app.action('mutate', async (data, client, req) => {
+  return { hello: client.mutate }
 })
 
-app.action('count', async (message, socket, req) => {
+app.action('count', async (data, client, req) => {
   const count = app.websocket.server.clients.size
   return { hello: count }
 })
 
-app.action('sockets', async (message, socket, req) => {
-  const count = app.websocket.sockets.length
+app.action('clients', async (data, client, req) => {
+  const count = app.websocket.clients.length
   return { hello: count }
 })
 
-app.action('bounce', async (message, socket, req) => {
-  return message.data
+app.action('bounce', async (data, client, req) => {
+  return data
 })

@@ -1,11 +1,14 @@
 {
   "name": "sirloin",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Node web server for HTTP, web sockets and static files",
   "main": "index.js",
   "author": "fugroup <vidar@fugroup.net>",
   "license": "MIT",
-  "repository": "https://github.com/fugroup/sirloin",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/fugroup/sirloin.git"
+  },
   "private": false,
   "scripts": {
     "start": "nodemon server.js",
