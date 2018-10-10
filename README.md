@@ -18,10 +18,10 @@ Zero configuration required, create an HTTP API endpoint with only 3 lines of co
 ### USAGE
 Supported request methods are GET, POST, PUT, DELETE and PATCH.
 ```javascript
-const Webserver = require('flipflow')
+const FlipFlow = require('flipflow')
 
 // Default options shown
-const app = new Webserver({
+const app = new FlipFlow({
   // Web server port
   port: 3000,
   // Static assets root directory
@@ -61,7 +61,16 @@ app.any('/both', async (req, res) => {
 Websockets are using through *actions*, the URL is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead connections.
 ```javascript
 // Websocket actions work like remote function calls
-app.action('hello', async (socket, req) => {
+app.action('hello', async (message, socket, req) => {
+  message.data     // Contains whatever you sent from the browser minus the action
+  message.action   // The name of the action, here 'hello'
+  message.id       // Internal id used for promises in the browser
+
+  socket.send({})  // Use this function to send messages back to the browser
+  socket.client    // The raw websocket client
+  socket.id        // The id of the raw websocket client
+  socket.message   // The message object above
+
   // Return a javascript object to send to the client
   return { hello: 'world' }
 })
@@ -78,16 +87,29 @@ const data = await socket.fetch({ action: 'hello' })
 console.log(data) // { hello: 'world' }
 
 // Define a '*' action to not use actions
-socket.send({ name: 'Brage' }) // In the browser
-
-app.action('*', async (socket, req) => { // On the server
-  socket.message                   // { name: 'Brage' }
-  socket.connection                // The raw socket connection
-  socket.connection.id             // The socket connection id
-  socket.send({ hello: 'socket' }) // Explicit send
-  return { hello: 'object' }       // Will also send what you return
+app.action('*', async (message, socket, req) => {
+  return { hello: 'custom' }       // Will send what you return
 })
 ```
+The app object contains functions and properties that are useful as well:
+```javascript
+app.http                      // The HTTP server reference
+app.http.server               // The Node.js HTTP server instance
+app.websocket                 // The Websocket server reference
+app.websocket.server          // The ws Websocket server instance
+app.websocket.server.clients  // The raw connected clients objects
+app.websocket.sockets         // All the connected sockets as an array
+
+// For each socket in sockets you can send data to the browser
+app.websocket.sockets.forEach((socket) => {
+  socket.send({ hello: 'world' })
+})
+
+// Find the socket with the 'id' in _id and send some data to it
+const socket = app.websocket.sockets.find(s => s.id === _id)
+socket.send({ data: { hello: 'found' } })
+```
+
 Static files will be served from the 'dist' directory by default. Routes have presedence over static files. If the file path ends with just a '/', then the server will serve the 'index.html' file if it exists.
 
 Mime types are automatically added to each file to make the browser behave correctly.
