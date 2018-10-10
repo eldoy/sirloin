@@ -25,7 +25,7 @@ const app = new FlipFlow({
   // Web server port
   port: 3000,
   // Static assets root directory
-  // set to false to not serve static
+  // set to false to not serve static files
   static: 'dist',
   // Callback for websocket connect event
   // Can be used for adding data to the websocket connection
@@ -34,8 +34,15 @@ const app = new FlipFlow({
 
 // Get request, whatever you return will be the response
 app.get('/db', async (req, res) => {
+  req.method       // Request method
+  req.path         // Request path
+  req.pathname     // Request path name
+  req.url          // Request URL
+  req.params       // Post body parameters
+  req.query        // Query parameters
   return { hello: 'world' }
 })
+// See the documentation on Incoming message and uri for more info.
 
 // Post request, uploads must be post requests
 app.post('/upload', async (req, res) => {

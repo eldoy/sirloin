@@ -1,6 +1,6 @@
 {
   "name": "flipflow",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node web server",
   "main": "index.js",
   "author": "fugroup <vidar@fugroup.net>",

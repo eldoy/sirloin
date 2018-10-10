@@ -16,6 +16,11 @@ app.post('/world', async (req, res) => {
   return { hello: 'moon' }
 })
 
+app.post('/query', async (req, res) => {
+  console.log(req.query)
+  return { hello: req.query.hello }
+})
+
 app.post('/upload', async (req, res) => {
   const file = req.files[0]
   return { name: file.name }

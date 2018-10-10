@@ -1,7 +1,7 @@
 const axios = require('axios')
 const base = 'http://localhost:3000'
 
-describe('Webserver', () => {
+describe('Http', () => {
   it('should return get json', async () => {
     let result = await axios.get(base + '/world')
     expect(result.status).toEqual(200)
@@ -45,5 +45,15 @@ describe('Webserver', () => {
       expect(err.response.status).toEqual(404)
       expect(err.response.data).toEqual({})
     }
+  })
+
+  it('should support normal query parameters', async () => {
+    const result = await axios.post(base + '/query?hello=1')
+    expect(result.data.hello).toEqual('1')
+  })
+
+  it('should support encoded query parameters', async () => {
+    const result = await axios.post(base + '/query?hello=hello%20world')
+    expect(result.data.hello).toEqual('hello world')
   })
 })
