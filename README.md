@@ -16,7 +16,7 @@ Zero configuration required, create an HTTP API endpoint with only 3 lines of co
 ```npm i flipflow``` or ```yarn add flipflow```
 
 ### USAGE
-Supported request methods are GET, POST, PUT, DELETE and PATCH.
+Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server instances.
 ```javascript
 const FlipFlow = require('flipflow')
 
@@ -97,7 +97,7 @@ app.http                      // The HTTP server reference
 app.http.server               // The Node.js HTTP server instance
 app.websocket                 // The Websocket server reference
 app.websocket.server          // The ws Websocket server instance
-app.websocket.server.clients  // The raw connected clients objects
+app.websocket.server.clients  // The raw connected clients as a Set
 app.websocket.sockets         // All the connected sockets as an array
 
 // For each socket in sockets you can send data to the browser
