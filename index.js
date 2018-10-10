@@ -5,7 +5,7 @@ const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 const DEFAULT_PORT = 3000
 const STATIC_DIR = 'dist'
 
-class FlipFlow {
+class Sirloin {
   constructor (options = {}) {
     this.setOptions(options)
     this.http = new Http(this)
@@ -43,4 +43,4 @@ class FlipFlow {
   }
 }
 
-module.exports = FlipFlow
+module.exports = Sirloin

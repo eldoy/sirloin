@@ -1,4 +1,4 @@
-# FlipFlow Node.js Web Server
+# Sirloin Node.js Web Server
 
 This extremely easy to use web server includes:
 
@@ -13,15 +13,15 @@ This extremely easy to use web server includes:
 Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon](https://github.com/fugroup/wsrecon) library is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
 
 ### INSTALL
-```npm i flipflow``` or ```yarn add flipflow```
+```npm i sirloin``` or ```yarn add sirloin```
 
 ### USAGE
 Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server instances.
 ```javascript
-const FlipFlow = require('flipflow')
+const Sirloin = require('sirloin')
 
 // Default options shown
-const app = new FlipFlow({
+const app = new Sirloin({
   // Web server port
   port: 3000,
   // Static assets root directory
@@ -121,7 +121,7 @@ Static files will be served from the 'dist' directory by default. Routes have pr
 
 Mime types are automatically added to each file to make the browser behave correctly.
 
-See the [server.js](https://github.com/fugroup/flipflow/blob/master/server.js) file for more examples.
+See the [server.js](https://github.com/fugroup/sirloin/blob/master/server.js) file for more examples.
 
 ### LICENSE
 
