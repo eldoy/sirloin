@@ -12,9 +12,9 @@ This extremely easy to use web server includes:
 * Full async / await support
 * Cors enabled by default
 
-Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon](https://github.com/fugroup/wsrecon) library is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
+Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/fugroup/wsrecon)  is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
 
-The websockets are based on the excellent [ws lib](https://github.com/websockets/ws), and have very few other dependencies.
+The websockets are based on the excellent [ws library](https://github.com/websockets/ws), and have very few other dependencies.
 
 Sirloin is up to 30% faster than Express and Hapi, and even faster than Koa.
 
