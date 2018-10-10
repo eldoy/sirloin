@@ -1,3 +1,5 @@
+![Sirloin logo](https://7ino.s3.amazonaws.com/1539201023781_sirloin-logo%40200x128.png)
+
 # Sirloin Node.js Web Server
 
 This extremely easy to use web server includes:
