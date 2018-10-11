@@ -23,6 +23,8 @@ Sirloin is up to 30% faster than Express and Hapi, and also faster than Koa.
 
 ### HTTP SERVER
 Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server Incoming and Outgoing message instances.
+
+The router is just based on string matching to make it really fast.
 ```javascript
 const Sirloin = require('sirloin')
 
