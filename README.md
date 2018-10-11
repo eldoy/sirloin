@@ -26,7 +26,7 @@ Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and
 ```javascript
 const Sirloin = require('sirloin')
 
-// Default options shown
+// Default config shown
 const app = new Sirloin({
   // Web server port
   port: 3000,

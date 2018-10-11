@@ -6,21 +6,21 @@ const DEFAULT_PORT = 3000
 const STATIC_DIR = 'dist'
 
 class Sirloin {
-  constructor (options = {}) {
-    this.setOptions(options)
+  constructor (config = {}) {
+    this.configure(config)
     this.http = new Http(this)
     this.initRoutes()
     this.websocket = new Websocket(this)
   }
 
-  setOptions (options) {
-    if (!options.port) {
-      options.port = DEFAULT_PORT
+  configure (config) {
+    if (!config.port) {
+      config.port = DEFAULT_PORT
     }
-    if (options.static !== false) {
-      options.static = STATIC_DIR
+    if (config.static !== false) {
+      config.static = STATIC_DIR
     }
-    this.options = options
+    this.config = config
   }
 
   initRoutes () {
