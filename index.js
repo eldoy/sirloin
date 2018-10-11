@@ -11,7 +11,6 @@ class Sirloin {
     this.configure(config)
     this.http = new Http(this)
     this.initRoutes()
-    this.websocket = new Websocket(this)
   }
 
   configure (config) {
@@ -44,6 +43,9 @@ class Sirloin {
   }
 
   action (name, fn) {
+    if (!this.websocket) {
+      this.websocket = new Websocket(this)
+    }
     this.websocket.actions[name] = fn
   }
 }
