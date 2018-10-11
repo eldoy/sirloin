@@ -32,6 +32,41 @@ describe('Http', () => {
     expect(result.data.hello).toEqual('patched')
   })
 
+  it('should return a string', async () => {
+    let result = await axios.get(base + '/string')
+    expect(result.headers['content-type']).toEqual('text/plain; charset=utf-8')
+    expect(result.status).toEqual(200)
+    expect(result.data).toEqual('string')
+  })
+
+  it('should return a string', async () => {
+    let result = await axios.get(base + '/empty')
+    expect(result.headers['content-type']).toEqual('text/plain; charset=utf-8')
+    expect(result.status).toEqual(200)
+    expect(result.data).toEqual('')
+  })
+
+  it('should return a number', async () => {
+    let result = await axios.get(base + '/number')
+    expect(result.headers['content-type']).toEqual('text/plain; charset=utf-8')
+    expect(result.status).toEqual(200)
+    expect(result.data).toEqual(5)
+  })
+
+  it('should return true', async () => {
+    let result = await axios.get(base + '/true')
+    expect(result.headers['content-type']).toEqual('text/plain; charset=utf-8')
+    expect(result.status).toEqual(200)
+    expect(result.data).toEqual(true)
+  })
+
+  it('should return false', async () => {
+    let result = await axios.get(base + '/false')
+    expect(result.headers['content-type']).toEqual('text/plain; charset=utf-8')
+    expect(result.status).toEqual(200)
+    expect(result.data).toEqual(false)
+  })
+
   it('should not find undefined methods', async () => {
     try {
       result = await axios.put(base + '/')

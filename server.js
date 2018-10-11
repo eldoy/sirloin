@@ -37,6 +37,31 @@ app.post('/upload', async (req, res) => {
   return { name: file.name }
 })
 
+app.get('/string', async (req, res) => {
+  res.setHeader('content-type', 'text/plain; charset=utf-8')
+  return 'string'
+})
+
+app.get('/empty', async (req, res) => {
+  res.setHeader('content-type', 'text/plain; charset=utf-8')
+  return ''
+})
+
+app.get('/number', async (req, res) => {
+  res.setHeader('content-type', 'text/plain; charset=utf-8')
+  return 5
+})
+
+app.get('/true', async (req, res) => {
+  res.setHeader('content-type', 'text/plain; charset=utf-8')
+  return true
+})
+
+app.get('/false', async (req, res) => {
+  res.setHeader('content-type', 'text/plain; charset=utf-8')
+  return false
+})
+
 app.any('*', async (req, res) => {
   const routes = {
     'POST:/custom': 'async (req, res) => { return { hello: "custom" } }'

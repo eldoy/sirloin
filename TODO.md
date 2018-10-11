@@ -4,8 +4,8 @@ TODO
 * [ ] HTTP caching for static files (last modified, etags)
 * [ ] Lazy load web socket connection, don't load if not in use
 * [ ] Middleware support: app.use((req, res) => {}), load to array and run. Mutates.
-* [ ] Make options requests customizable?
+* [-] Make options requests customizable?
 * [x] Test with empty file for files
-* [ ] Test with file extension with multiple dots: hello.tar.gz, jquery.min.js
+* [x] Test with file extension with multiple dots: hello.tar.gz, jquery.min.js
 * [ ] Support for strings instead of JSON
 * [x] Use mime type lookup without using path?
