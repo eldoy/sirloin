@@ -7,6 +7,7 @@ describe('Static', () => {
       url: `${base}/css/app.css`
     },
     (err, res, body) => {
+      expect(res.statusCode).toEqual(200)
       expect(res.headers['content-type']).toEqual('text/css; charset=utf-8')
       expect(typeof body).toEqual('string')
       expect(body).toMatch('body {')
@@ -19,6 +20,7 @@ describe('Static', () => {
       url: `${base}/js/app.js`
     },
     (err, res, body) => {
+      expect(res.statusCode).toEqual(200)
       expect(res.headers['content-type']).toEqual('application/javascript; charset=utf-8')
       expect(typeof body).toEqual('string')
       expect(body).toMatch("console.log('Hello'")
@@ -31,6 +33,7 @@ describe('Static', () => {
       url: `${base}/file.html`
     },
     (err, res, body) => {
+      expect(res.statusCode).toEqual(200)
       expect(res.headers['content-type']).toEqual('text/html; charset=utf-8')
       expect(typeof body).toEqual('string')
       expect(body).toMatch("<h1>File</h1>")
@@ -43,9 +46,23 @@ describe('Static', () => {
       url: `${base}/`
     },
     (err, res, body) => {
+      expect(res.statusCode).toEqual(200)
       expect(res.headers['content-type']).toEqual('text/html; charset=utf-8')
       expect(typeof body).toEqual('string')
       expect(body).toMatch("<h1>Hello</h1>")
+      done()
+    })
+  })
+
+  it('should serve static html empty file', (done) => {
+    request.get({
+      url: `${base}/empty.html`
+    },
+    (err, res, body) => {
+      expect(res.statusCode).toEqual(200)
+      expect(res.headers['content-type']).toEqual('text/html; charset=utf-8')
+      expect(typeof body).toEqual('string')
+      expect(body).toEqual('')
       done()
     })
   })
