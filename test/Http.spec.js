@@ -18,6 +18,13 @@ describe('Http', () => {
     expect(result.data.hello).toEqual('multiple')
   })
 
+  it('should return from middleware', async () => {
+    let result = await axios.get(base + '/middleret')
+    expect(result.status).toEqual(200)
+    expect(result.data.hello).toEqual('middleret')
+  })
+
+
   it('should return get json', async () => {
     let result = await axios.get(base + '/world')
     expect(result.status).toEqual(200)

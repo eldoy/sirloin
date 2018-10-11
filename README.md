@@ -70,18 +70,25 @@ app.any('/both', async (req, res) => {
     return { status: 'OK' }
   }
 })
+```
 
-// Use middleware to run a function before every request
-// They are run in the order that they are added
+### MIDDLEWARE
+Use middleware to run a function before every request. You can return values from middleware as well and the rest of the middleware stack will be skipped.
+```javascript
+// Middleware functions are run in the order that they are added
 app.use(async (req, res) => {
   res.setHeader('Content-Type', 'text/html')
 })
 
+// Return directly from middleware to skip the router
 app.use(async (req, res) => {
-  req.session = await db.session.find({ token })
+   const session = await db.session.find({ token: res.query.token })
+   if (!session) {
+     return { error: 'session not found' }
+   }
 })
-
 ```
+
 ### WEBSOCKETS
 Websockets are using through *actions*, the URL is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead clients.
 
@@ -139,6 +146,7 @@ Static files will be served from the 'dist' directory by default. Routes have pr
 
 Mime types are automatically added to each file to make the browser behave correctly.
 
+### EXAMPLES OF USE
 See the [server.js](https://github.com/fugroup/sirloin/blob/master/server.js) file for more examples.
 
 ### LICENSE

@@ -19,6 +19,11 @@ app.use(async (req, res) => {
     res.setHeader('Content-Language', 'no-NO')
   }
 })
+app.use(async (req, res) => {
+  if (['/middleret'].includes(req.pathname)) {
+    return { hello: 'middleret'}
+  }
+})
 
 app.get('/middleware', async (req, res) => {
   return { hello: 'middleware' }
