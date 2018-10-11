@@ -7,5 +7,5 @@ TODO
 * [ ] Make options requests customizable?
 * [x] Test with empty file for files
 * [ ] Test with file extension with multiple dots: hello.tar.gz, jquery.min.js
-* [ ] No support for strings, only JSON
+* [ ] Support for strings instead of JSON
 * [x] Use mime type lookup without using path?
