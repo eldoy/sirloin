@@ -7,6 +7,7 @@ const STATIC_DIR = 'dist'
 
 class Sirloin {
   constructor (config = {}) {
+    this.middleware = []
     this.configure(config)
     this.http = new Http(this)
     this.initRoutes()
@@ -30,6 +31,10 @@ class Sirloin {
         this.http.routes[m][path] = fn
       }
     }
+  }
+
+  use (fn) {
+    this.middleware.push(fn)
   }
 
   any (path, fn) {

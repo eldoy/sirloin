@@ -70,6 +70,17 @@ app.any('/both', async (req, res) => {
     return { status: 'OK' }
   }
 })
+
+// Use middleware to run a function before every request
+// They are run in the order that they are added
+app.use(async (req, res) => {
+  res.setHeader('Content-Type', 'text/html')
+})
+
+app.use(async (req, res) => {
+  req.session = await db.session.find({ token })
+})
+
 ```
 Websockets are using through *actions*, the URL is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead clients.
 ```javascript

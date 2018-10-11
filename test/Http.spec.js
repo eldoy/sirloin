@@ -2,6 +2,22 @@ const axios = require('axios')
 const base = 'http://localhost:3000'
 
 describe('Http', () => {
+
+  it('should support middleware', async () => {
+    let result = await axios.get(base + '/middleware')
+    expect(result.headers['content-type']).toEqual('text/html')
+    expect(result.status).toEqual(200)
+    expect(result.data.hello).toEqual('middleware')
+  })
+
+  it('should support multiple middleware', async () => {
+    let result = await axios.get(base + '/multiple')
+    expect(result.headers['content-type']).toEqual('text/html')
+    expect(result.headers['content-language']).toEqual('no-NO')
+    expect(result.status).toEqual(200)
+    expect(result.data.hello).toEqual('multiple')
+  })
+
   it('should return get json', async () => {
     let result = await axios.get(base + '/world')
     expect(result.status).toEqual(200)

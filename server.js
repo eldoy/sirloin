@@ -8,6 +8,26 @@ const app = new Webserver({
   }
 })
 
+app.use(async (req, res) => {
+  if (['/middleware', '/multiple'].includes(req.pathname)) {
+    res.setHeader('Content-Type', 'text/html')
+  }
+})
+
+app.use(async (req, res) => {
+  if (['/multiple'].includes(req.pathname)) {
+    res.setHeader('Content-Language', 'no-NO')
+  }
+})
+
+app.get('/middleware', async (req, res) => {
+  return { hello: 'middleware' }
+})
+
+app.get('/multiple', async (req, res) => {
+  return { hello: 'multiple' }
+})
+
 app.get('/world', async (req, res) => {
   return { hello: 'world' }
 })
