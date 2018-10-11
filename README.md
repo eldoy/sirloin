@@ -61,7 +61,7 @@ app.get('*', async (req, res) => {
   if (req.path === '/custom') {
     return { hello: 'custom' }
   }
-  // Return nothing or false to send a 404
+  // Return nothing or undefined to send a 404
 })
 
 // Use 'any' to match all HTTP request methods
@@ -69,6 +69,12 @@ app.any('/both', async (req, res) => {
   if (['POST', 'GET'].includes(req.method)) {
     return { status: 'OK' }
   }
+})
+
+// You can also return HTML, strings, numbers and boolean values
+app.get('/projects', async (req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8')
+  return '<h1>Hello world</h1>'
 })
 ```
 
@@ -92,7 +98,7 @@ app.use(async (req, res) => {
 ### WEBSOCKETS
 Websockets are using through *actions*, the URL is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead clients.
 
-Websockets are lazy loaded and enabled only if you specify an action.
+Websockets are lazy loaded and enabled only if you specify an action. All websocket actions must return Javascript objects (sent as JSON).
 ```javascript
 // Websocket actions work like remote function calls
 app.action('hello', async (data, client, req) => {
