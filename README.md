@@ -21,7 +21,7 @@ Sirloin is up to 30% faster than Express and Hapi, and also faster than Koa.
 ### INSTALL
 ```npm i sirloin``` or ```yarn add sirloin```
 
-### USAGE
+### HTTP SERVER
 Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server Incoming and Outgoing message instances.
 ```javascript
 const Sirloin = require('sirloin')
@@ -82,6 +82,7 @@ app.use(async (req, res) => {
 })
 
 ```
+### WEBSOCKETS
 Websockets are using through *actions*, the URL is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead clients.
 
 Websockets are lazy loaded and enabled only if you specify an action.
@@ -113,6 +114,7 @@ app.action('*', async (data, client, req) => {
   return { hello: 'custom' }       // Will send what you return
 })
 ```
+### API & CONFIGURATION
 The app object contains functions and properties that are useful as well:
 ```javascript
 app.config                    // The active config for the app
@@ -132,7 +134,7 @@ app.websocket.clients.forEach((client) => {
 const client = app.websocket.clients.find(c => c.id === _id)
 client.send({ data: { hello: 'found' } })
 ```
-
+### STATIC FILE SERVER
 Static files will be served from the 'dist' directory by default. Routes have presedence over static files. If the file path ends with just a '/', then the server will serve the 'index.html' file if it exists.
 
 Mime types are automatically added to each file to make the browser behave correctly.
