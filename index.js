@@ -3,7 +3,7 @@ const Websocket = require('./lib/websocket')
 
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 const DEFAULT_PORT = 3000
-const STATIC_DIR = 'dist'
+const FILE_DIR = 'dist'
 
 class Sirloin {
   constructor (config = {}) {
@@ -17,8 +17,8 @@ class Sirloin {
     if (!config.port) {
       config.port = DEFAULT_PORT
     }
-    if (config.static !== false) {
-      config.static = STATIC_DIR
+    if (config.files !== false) {
+      config.files = FILE_DIR
     }
     this.config = config
   }

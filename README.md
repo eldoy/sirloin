@@ -30,9 +30,9 @@ const Sirloin = require('sirloin')
 const app = new Sirloin({
   // Web server port
   port: 3000,
-  // Static assets root directory
-  // set to false to not serve static files
-  static: 'dist',
+  // Static files root directory
+  // Set to false to not serve static files
+  files: 'dist',
   // Callback for websocket connect event
   // Can be used for adding data to the websocket client
   connect: async (client, req) => {}
@@ -143,6 +143,16 @@ client.send({ data: { hello: 'found' } })
 ```
 ### STATIC FILE SERVER
 Static files will be served from the 'dist' directory by default. Routes have presedence over static files. If the file path ends with just a '/', then the server will serve the 'index.html' file if it exists.
+```javascript
+// Set the static file directory via the 'files' option, default is 'dist'
+const app = new Sirloin({ files: 'dist' })
+
+// Change it to the name of the static file directory
+const app = new Sirloin({ files: 'public' })
+
+// Set it to false to disable serving of static files
+const app = new Sirloin({ files: false })
+```
 
 Mime types are automatically added to each file to make the browser behave correctly.
 
