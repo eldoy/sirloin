@@ -14,6 +14,24 @@ describe('Http', () => {
     expect(result.data.hello).toEqual('moon')
   })
 
+  it('should return put json', async () => {
+    let result = await axios.put(base + '/update')
+    expect(result.status).toEqual(200)
+    expect(result.data.hello).toEqual('updated')
+  })
+
+  it('should return delete json', async () => {
+    let result = await axios.delete(base + '/remove')
+    expect(result.status).toEqual(200)
+    expect(result.data.hello).toEqual('removed')
+  })
+
+  it('should return patch json', async () => {
+    let result = await axios.patch(base + '/patch')
+    expect(result.status).toEqual(200)
+    expect(result.data.hello).toEqual('patched')
+  })
+
   it('should not find undefined methods', async () => {
     try {
       result = await axios.put(base + '/')

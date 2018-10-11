@@ -16,8 +16,19 @@ app.post('/world', async (req, res) => {
   return { hello: 'moon' }
 })
 
+app.put('/update', async (req, res) => {
+  return { hello: 'updated' }
+})
+
+app.delete('/remove', async (req, res) => {
+  return { hello: 'removed' }
+})
+
+app.patch('/patch', async (req, res) => {
+  return { hello: 'patched' }
+})
+
 app.post('/query', async (req, res) => {
-  console.log(req.query)
   return { hello: req.query.hello }
 })
 
