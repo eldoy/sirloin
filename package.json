@@ -1,6 +1,6 @@
 {
   "name": "sirloin",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Node web server for HTTP, web sockets and static files",
   "main": "index.js",
   "author": "fugroup <vidar@fugroup.net>",

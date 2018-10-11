@@ -83,6 +83,8 @@ app.use(async (req, res) => {
 
 ```
 Websockets are using through *actions*, the URL is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead clients.
+
+Websockets are lazy loaded and enabled only if you specify an action.
 ```javascript
 // Websocket actions work like remote function calls
 app.action('hello', async (data, client, req) => {
@@ -113,6 +115,7 @@ app.action('*', async (data, client, req) => {
 ```
 The app object contains functions and properties that are useful as well:
 ```javascript
+app.config                    // The active config for the app
 app.http                      // The HTTP server reference
 app.http.server               // The Node.js HTTP server instance
 app.websocket                 // The Websocket server reference
