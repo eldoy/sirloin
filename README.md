@@ -88,7 +88,7 @@ app.use(async (req, res) => {
   res.setHeader('Content-Type', 'text/html')
 })
 
-// Return directly from middleware to skip the router
+// Return directly from middleware to skip further processing
 app.use(async (req, res) => {
    const session = await db.session.find({ token: res.query.token })
    if (!session) {
