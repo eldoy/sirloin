@@ -66,4 +66,30 @@ describe('Static', () => {
       done()
     })
   })
+
+  it('should serve static html tar.gz file', (done) => {
+    request.get({
+      url: `${base}/file.tar.gz`
+    },
+    (err, res, body) => {
+      expect(res.statusCode).toEqual(200)
+      expect(res.headers['content-type']).toEqual('application/gzip')
+      expect(typeof body).toEqual('string')
+      expect(body).not.toEqual('')
+      done()
+    })
+  })
+
+  it('should serve static html jquery.min.js file', (done) => {
+    request.get({
+      url: `${base}/js/jquery.min.js`
+    },
+    (err, res, body) => {
+      expect(res.statusCode).toEqual(200)
+      expect(res.headers['content-type']).toEqual('application/javascript; charset=utf-8')
+      expect(typeof body).toEqual('string')
+      expect(body).toEqual('')
+      done()
+    })
+  })
 })
