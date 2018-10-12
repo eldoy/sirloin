@@ -24,6 +24,12 @@ describe('Http', () => {
     expect(result.data.hello).toEqual('middleret')
   })
 
+  it('should errors in middleware', async () => {
+    let result = await axios.get(base + '/middleerr')
+    expect(result.status).toEqual(200)
+    expect(result.data.error).toEqual('middleerr')
+  })
+
   it('should return get json', async () => {
     let result = await axios.get(base + '/world')
     expect(result.status).toEqual(200)
@@ -137,5 +143,10 @@ describe('Http', () => {
       hello: 'hello world'
     })
     expect(result.data.hello).toEqual('hello world')
+  })
+
+  it('should support error message handling', async () => {
+    const result = await axios.post(base + '/error')
+    expect(result.data.error).toEqual('hello error')
   })
 })

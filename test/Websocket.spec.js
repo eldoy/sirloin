@@ -67,4 +67,9 @@ describe('Websocket', () => {
     const data = await socket.fetch({ action: 'bounce', hello: 1 })
     expect(data.hello).toEqual(1)
   })
+
+  it('should support error messages', async () => {
+    const data = await socket.fetch({ action: 'error' })
+    expect(data.error).toEqual('websocket error')
+  })
 })

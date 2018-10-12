@@ -45,6 +45,27 @@ class Sirloin {
     this.middleware.push(fn)
   }
 
+  async run (type, fn, ...args) {
+    try {
+      return await fn(...args)
+    } catch (err) {
+      const e = type === 'websocket' ? this.fail : this.error
+      if (e) {
+        return await e(err, ...args)
+      } else {
+        throw err
+      }
+    }
+  }
+
+  error (fn) {
+    this.error = fn
+  }
+
+  fail (fn) {
+    this.fail = fn
+  }
+
   any (path, fn) {
     for (const m of METHODS) {
       this[m.toLowerCase()](path, fn)

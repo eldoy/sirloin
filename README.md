@@ -38,7 +38,7 @@ const app = new Sirloin({
   files: 'dist',
   // Callback for websocket connect event
   // Can be used for adding data to the websocket client
-  connect: async (client, req) => {}
+  connect: async (client) => {}
   // Redis pubsub is not enabled by default
   pubsub: undefined
 })
@@ -108,11 +108,12 @@ Websockets are used through *actions*, the URL path is irrelevant. Include *acti
 Websocket connections are lazy loaded and enabled only if you specify an action. All websocket actions must return Javascript objects (sent as JSON).
 ```javascript
 // Websocket actions work like remote function calls
-app.action('hello', async (data, client, req) => {
+app.action('hello', async (data, client) => {
   data             // The data sent from the browser minus action
   client.id        // The id of this websocket client
   client.send()    // Use this function to send messages back to the browser
-  req              // The request object used to connect to the websocket
+  client.req       // The request object used to connect to the websocket
+  client.websocket // The app websocket object
 
   // Return a javascript object to send to the client
   return { hello: 'world' }
@@ -130,7 +131,7 @@ const data = await socket.fetch({ action: 'hello' })
 console.log(data) // { hello: 'world' }
 
 // Define a '*' action to not use actions
-app.action('*', async (data, client, req) => {
+app.action('*', async (data, client) => {
   return { hello: 'custom' }       // Will send what you return
 })
 ```
@@ -159,13 +160,17 @@ Pubsub is disabled by default, remove the config or set to 'false' to send messa
 ### API & CONFIGURATION
 The app object contains functions and properties that are useful as well:
 ```javascript
-app.config                    // The active config for the app
-app.http                      // The HTTP server reference
-app.http.server               // The Node.js HTTP server instance
-app.websocket                 // The Websocket server reference
-app.websocket.server          // The ws Websocket server instance
-app.websocket.server.clients  // The connected clients as a set
-app.websocket.clients         // The connected clients as an array
+app.config                      // The active config for the app
+app.http                        // The HTTP server reference
+app.http.server                 // The Node.js HTTP server instance
+app.websocket                   // The Websocket server reference
+app.websocket.server            // The ws Websocket server instance
+app.websocket.server.clients    // The connected clients as a set
+app.websocket.clients           // The connected clients as an array
+app.websocket.pubsub            // The pubsub object
+app.websocket.pubsub.hub        // The pubsub hub handling subscriptions
+app.websocket.pubsub.connected  // Whether pubsub is connected or not
+app.websocket.pubsub.channel    // The channel to publish messages on
 
 // For each client you can send data to the browser
 app.websocket.clients.forEach((client) => {
@@ -192,6 +197,45 @@ If the given directory doesn't exist static files will be disabled automatically
 
 Mime types are automatically added to each file to make the browser behave correctly.
 
+### ERROR HANDLING
+Errors can be caught with ```try catch``` inside of middleware, routes and actions.
+```javascript
+app.get('/badroute', async (req, res) => {
+  try {
+    const user = await db.user.first()
+  } catch {
+    return { error: 'find user crashed' }
+  }
+})
+```
+You can also collect errors in special routes and actions. The 'err' argument is a normal javascript Error instance.
+```javascript
+// For middleware and http routes use 'error'
+app.error(async (err, req, res) => {
+  return { error: err.message }
+})
+
+// For websocket actions use 'fail'
+app.fail(async (err, req, res) => {
+  return { error: err.message }
+})
+
+// Trigger error from middleware, will go to 'error' if defined
+app.use(async (req, res) => {
+  throw new Error('middleware error!')
+})
+
+// Trigger error from http route, will go to 'error' if defined
+app.post('/db', async (req, res) => {
+  throw new Error('http error!')
+})
+
+// Trigger error from websocket action, will go to 'fail' if defined
+app.action('db', async (req, res) => {
+  throw new Error('websocket error!')
+})
+```
+
 ### EXAMPLES OF USE
 Here's a few examples showing how easy to use Sirloin can be:
 ```javascript
@@ -212,7 +256,7 @@ app.get('/', async (req, res) => {
 
 // JSON Websocket endpoint
 const app = new (require('sirloin'))()
-app.action('hello', async (req, res) => {
+app.action('hello', async (data, client) => {
   return { hello: 'world' }
 })
 ```
