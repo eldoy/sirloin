@@ -3,6 +3,7 @@ const Webserver = require('./index.js')
 const app = new Webserver({
   port: 3000,
   files: 'dist', // Static files folder
+  // pubsub: {},
   connect: async (client, req) => {
     client.mutate = 'mutate'
   }

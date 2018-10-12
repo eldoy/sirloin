@@ -100,9 +100,9 @@ app.use(async (req, res) => {
 ```
 
 ### WEBSOCKETS
-Websockets are using through *actions*, the URL is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead clients.
+Websockets are used through *actions*, the URL path is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead clients.
 
-Websockets are lazy loaded and enabled only if you specify an action. All websocket actions must return Javascript objects (sent as JSON).
+Websocket connections are lazy loaded and enabled only if you specify an action. All websocket actions must return Javascript objects (sent as JSON).
 ```javascript
 // Websocket actions work like remote function calls
 app.action('hello', async (data, client, req) => {
