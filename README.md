@@ -8,6 +8,7 @@ This extremely easy to use web server includes:
 * Web socket server based on actions
 * Support for file uploads and post body parsing
 * Fast and minimal, just around 200 lines of code
+* Redis pubsub support for scaling your websockets
 * Optional static file server
 * Full async / await support
 * Cors enabled by default
@@ -131,6 +132,25 @@ app.action('*', async (data, client, req) => {
   return { hello: 'custom' }       // Will send what you return
 })
 ```
+### REDIS PUBSUB
+If you have more than one app server for your websockets, you need pubsub to reliably send messages back to the browser. With pubsub, the messages go via a Redis server. Sirloin has built in support for pubsub, all you need to do is to [install Redis](https://redis.io) and enable it in your Sirloin config:
+```javascript
+// Default config options shown
+const app = new Sirloin({
+  pubsub: {
+    port: 6379,          // Redis port
+    host: '127.0.0.1',   // Redis host URL
+    family: 4,           // 4 (IPv4) or 6 (IPv6)
+    password: 'auth',    // Redis password
+    db: 0                // Redis database
+  }
+})
+
+// To use the default options, this is all you need
+const app = new Sirloin({ pubsub: {} })
+```
+Pubsub is disabled by default, remove the config or set to 'false' to send messages directly to the socket.
+
 ### API & CONFIGURATION
 The app object contains functions and properties that are useful as well:
 ```javascript
