@@ -235,7 +235,7 @@ app.post('/db', async (req, res) => {
 })
 
 // Trigger error from websocket action, will go to 'fail' if defined
-app.action('db', async (req, res) => {
+app.action('db', async (data, client) => {
   throw new Error('websocket error!')
 })
 ```
