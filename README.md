@@ -4,14 +4,14 @@
 
 This high performance, extremely easy to use web server includes:
 
-* JSON HTTP server for your APIs
-* Web socket server based on actions
+* JSON HTTP server for your APIs and microservices
 * Support for file uploads and post body parsing
 * Fast and minimal, less than 300 lines of code
-* Redis pubsub support for scaling your websockets
+* Integrated websocket server based on actions
+* Redis pubsub for scaling your websockets
 * Optional static file server
+* Cors enabled out of the box
 * Full async / await support
-* Cors enabled by default
 
 Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/fugroup/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
 
