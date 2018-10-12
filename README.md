@@ -188,6 +188,7 @@ const app = new Sirloin({ files: 'public' })
 // Set it to false to disable serving of static files
 const app = new Sirloin({ files: false })
 ```
+If the given directory doesn't exist static files will be disabled automatically.
 
 Mime types are automatically added to each file to make the browser behave correctly.
 
