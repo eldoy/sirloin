@@ -1,5 +1,6 @@
 const Http = require('./lib/http')
 const Websocket = require('./lib/websocket')
+const tools = require('./lib/tools')
 
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 const DEFAULT_PORT = 3000
@@ -18,7 +19,12 @@ class Sirloin {
       config.port = DEFAULT_PORT
     }
     if (config.files !== false) {
-      config.files = FILE_DIR
+      if (typeof config.files === 'undefined') {
+        config.files = FILE_DIR
+      }
+      if (!tools.fileExists(config.files)) {
+        config.files = false
+      }
     }
     if (config.pubsub === true) {
       config.pubsub = {}
