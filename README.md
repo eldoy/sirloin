@@ -220,7 +220,7 @@ app.error(async (err, req, res) => {
 })
 
 // For websocket actions use 'fail'
-app.fail(async (err, req, res) => {
+app.fail(async (err, data, client) => {
   return { error: err.message }
 })
 
