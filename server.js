@@ -53,8 +53,12 @@ app.patch('/patch', async (req, res) => {
   return { hello: 'patched' }
 })
 
-app.post('/query', async (req, res) => {
+app.get('/query', async (req, res) => {
   return { hello: req.query.hello }
+})
+
+app.post('/query', async (req, res) => {
+  return { hello: req.params.hello }
 })
 
 app.post('/upload', async (req, res) => {

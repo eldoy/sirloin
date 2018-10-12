@@ -24,7 +24,6 @@ describe('Http', () => {
     expect(result.data.hello).toEqual('middleret')
   })
 
-
   it('should return get json', async () => {
     let result = await axios.get(base + '/world')
     expect(result.status).toEqual(200)
@@ -124,12 +123,19 @@ describe('Http', () => {
   })
 
   it('should support normal query parameters', async () => {
-    const result = await axios.post(base + '/query?hello=1')
+    const result = await axios.get(base + '/query?hello=1')
     expect(result.data.hello).toEqual('1')
   })
 
   it('should support encoded query parameters', async () => {
-    const result = await axios.post(base + '/query?hello=hello%20world')
+    const result = await axios.get(base + '/query?hello=hello%20world')
+    expect(result.data.hello).toEqual('hello world')
+  })
+
+  it('should support post body params', async () => {
+    const result = await axios.post(base + '/query', {
+      hello: 'hello world'
+    })
     expect(result.data.hello).toEqual('hello world')
   })
 })
