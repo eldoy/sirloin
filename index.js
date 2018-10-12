@@ -41,6 +41,10 @@ class Sirloin {
     }
   }
 
+  log (...args) {
+    tools.log(...args)
+  }
+
   use (fn) {
     this.middleware.push(fn)
   }

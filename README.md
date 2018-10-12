@@ -6,7 +6,7 @@ This high performance, extremely easy to use web server includes:
 
 * HTTP server for your APIs and microservices
 * Support for file uploads and post body parsing
-* Fast and minimal, less than 300 lines of code
+* Fast and minimal, just around 350 lines of code
 * Integrated websocket server based on actions
 * Redis pubsub for scaling your websockets
 * Optional static file server
@@ -197,13 +197,17 @@ If the given directory doesn't exist static files will be disabled automatically
 
 Mime types are automatically added to each file to make the browser behave correctly.
 
+### LOGGING
+Use the ```app.log``` command from within your app instead of ```console.log```. Anything you write to console with ```app.log``` will be silent in production. Set NODE_ENV=production to enter production mode.
+
 ### ERROR HANDLING
 Errors can be caught with ```try catch``` inside of middleware, routes and actions.
 ```javascript
-app.get('/badroute', async (req, res) => {
+app.get('/crash', async (req, res) => {
   try {
     const user = await db.user.first()
-  } catch {
+  } catch (err) {
+    app.log(err.message)
     return { error: 'find user crashed' }
   }
 })
