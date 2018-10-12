@@ -4,7 +4,7 @@
 
 This high performance, extremely easy to use web server includes:
 
-* JSON HTTP server for your APIs and microservices
+* HTTP server for your APIs and microservices
 * Support for file uploads and post body parsing
 * Fast and minimal, less than 300 lines of code
 * Integrated websocket server based on actions
@@ -39,6 +39,8 @@ const app = new Sirloin({
   // Callback for websocket connect event
   // Can be used for adding data to the websocket client
   connect: async (client, req) => {}
+  // Redis pubsub is not enabled by default
+  pubsub: undefined
 })
 
 // Get request, whatever you return will be the response
@@ -150,7 +152,7 @@ const app = new Sirloin({
 
 // To use the default options, this is all you need
 // Make sure Redis is running before starting your application
-const app = new Sirloin({ pubsub: {} })
+const app = new Sirloin({ pubsub: true }) // or pubsub: {}
 ```
 Pubsub is disabled by default, remove the config or set to 'false' to send messages directly to the socket.
 

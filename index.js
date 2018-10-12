@@ -20,6 +20,9 @@ class Sirloin {
     if (config.files !== false) {
       config.files = FILE_DIR
     }
+    if (config.pubsub === true) {
+      config.pubsub = {}
+    }
     this.config = config
   }
 
