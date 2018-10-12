@@ -2,12 +2,12 @@
 
 # Sirloin Node.js Web Server
 
-This extremely easy to use web server includes:
+This high performance, extremely easy to use web server includes:
 
 * JSON HTTP server for your APIs
 * Web socket server based on actions
 * Support for file uploads and post body parsing
-* Fast and minimal, just around 200 lines of code
+* Fast and minimal, less than 300 lines of code
 * Redis pubsub support for scaling your websockets
 * Optional static file server
 * Full async / await support
@@ -17,7 +17,7 @@ Zero configuration required, create an HTTP API endpoint with only 3 lines of co
 
 The websockets are based on the excellent [ws library](https://github.com/websockets/ws), and have very few other dependencies.
 
-Sirloin is up to 30% faster than Express and Hapi, and also faster than Koa.
+*Sirloin is up to 30% faster than Express and Hapi, and also faster than Koa.*
 
 ### INSTALL
 ```npm i sirloin``` or ```yarn add sirloin```
@@ -133,7 +133,9 @@ app.action('*', async (data, client, req) => {
 })
 ```
 ### REDIS PUBSUB
-If you have more than one app server for your websockets, you need pubsub to reliably send messages back to the browser. With pubsub, the messages go via a Redis server. Sirloin has built in support for pubsub, all you need to do is to [install Redis](https://redis.io) and enable it in your Sirloin config:
+If you have more than one app server for your websockets, you need pubsub to reliably send messages back to the browser. With pubsub, the messages go via a [Redis server](https://redis.io), a high performance database server.
+
+Sirloin has built in support for pubsub, all you need to do is to [install Redis](https://redis.io/download) and enable it in your Sirloin config:
 ```javascript
 // Default config options shown
 const app = new Sirloin({
@@ -147,6 +149,7 @@ const app = new Sirloin({
 })
 
 // To use the default options, this is all you need
+// Make sure Redis is running before starting your application
 const app = new Sirloin({ pubsub: {} })
 ```
 Pubsub is disabled by default, remove the config or set to 'false' to send messages directly to the socket.
@@ -177,7 +180,7 @@ Static files will be served from the 'dist' directory by default. Routes have pr
 // Set the static file directory via the 'files' option, default is 'dist'
 const app = new Sirloin({ files: 'dist' })
 
-// Change it to the name of the static file directory
+// Change it to the name of your static files directory
 const app = new Sirloin({ files: 'public' })
 
 // Set it to false to disable serving of static files
@@ -187,6 +190,29 @@ const app = new Sirloin({ files: false })
 Mime types are automatically added to each file to make the browser behave correctly.
 
 ### EXAMPLES OF USE
+Here's a few examples showing how easy to use Sirloin can be:
+```javascript
+// File server running on port 3000 (yeah, only one line of code)
+new (require('sirloin'))()
+
+// JSON API endpoint without routes (middleware only)
+const app = new (require('sirloin'))()
+app.use(async (req, res) => {
+  return { hello: 'world' }
+})
+
+// JSON API endpoint with routes
+const app = new (require('sirloin'))()
+app.get('/', async (req, res) => {
+  return { hello: 'world' }
+})
+
+// JSON Websocket endpoint
+const app = new (require('sirloin'))()
+app.action('hello', async (req, res) => {
+  return { hello: 'world' }
+})
+```
 See the [server.js](https://github.com/fugroup/sirloin/blob/master/server.js) file for more examples.
 
 ### LICENSE
