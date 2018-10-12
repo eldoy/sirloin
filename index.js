@@ -70,7 +70,7 @@ class Sirloin {
     this.fail = fn
   }
 
-  any (path, fn) {
+  all (path, fn) {
     for (const m of METHODS) {
       this[m.toLowerCase()](path, fn)
     }

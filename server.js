@@ -8,6 +8,9 @@ const app = new Webserver({
   }
 })
 
+/*******
+ * MIDDLEWARE
+ */
 app.use(async (req, res) => {
   if (['/middleware', '/multiple'].includes(req.pathname)) {
     res.setHeader('Content-Type', 'text/html')
@@ -32,6 +35,9 @@ app.use(async (req, res) => {
   }
 })
 
+/*******
+* ROUTES
+*/
 app.get('/middleware', async (req, res) => {
   return { hello: 'middleware' }
 })
@@ -106,7 +112,7 @@ app.get('/false', async (req, res) => {
   return false
 })
 
-app.any('*', async (req, res) => {
+app.all('*', async (req, res) => {
   const routes = {
     'POST:/custom': 'async (req, res) => { return { hello: "custom" } }'
   }
@@ -115,6 +121,10 @@ app.any('*', async (req, res) => {
     return await eval(route)(req, res)
   }
 })
+
+/*******
+* ACTIONS
+*/
 
 app.action('*', async (data, client) => {
   return { hello: 'world' }

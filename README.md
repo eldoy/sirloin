@@ -71,8 +71,8 @@ app.get('*', async (req, res) => {
   // Return nothing or undefined to send a 404
 })
 
-// Use 'any' to match all HTTP request methods
-app.any('/both', async (req, res) => {
+// Use 'all' to match all HTTP request methods
+app.all('/all', async (req, res) => {
   if (['POST', 'GET'].includes(req.method)) {
     return { status: 'OK' }
   }
