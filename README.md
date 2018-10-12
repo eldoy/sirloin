@@ -78,6 +78,12 @@ app.all('/all', async (req, res) => {
   }
 })
 
+// Use 'any' to match selected HTTP request methods
+// This matches 'post' and 'get' to the /any route
+app.any('post', 'get', '/any', async (req, res) => {
+  return { status: 'OK' }
+})
+
 // You can also return HTML, strings, numbers and boolean values
 app.get('/projects', async (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8')

@@ -2,8 +2,7 @@
 
 * [ ] Make sirloin binary with pkg and global npm install. Include in brew?
 * [ ] HTTP caching for static files (last modified, etags)
-* [ ] Define methods: every(['post', 'get'], '/postget', async () => {})
-  - Or change any to all and use any for selection?
+* [x] Define methods: any('post', 'get', '/postget', async () => {})
 * [x] Error handling, 500 action? app.error(async (err, req, res) => {})
 * [x] Automatically set files option to false if directory doesn't exist
 * [x] Built in support for redis pub-sub for web sockets

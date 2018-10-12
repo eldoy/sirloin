@@ -122,6 +122,10 @@ app.all('*', async (req, res) => {
   }
 })
 
+app.any('post', 'get', '/any', async (req, res) => {
+  return { hello: 'any' }
+})
+
 /*******
 * ACTIONS
 */

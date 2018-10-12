@@ -113,6 +113,15 @@ describe('Http', () => {
     }
   })
 
+  it('should run any routes', async () => {
+    let result = await axios.post(base + '/any')
+    expect(result.status).toEqual(200)
+    expect(result.data.hello).toEqual('any')
+    result = await axios.get(base + '/any')
+    expect(result.status).toEqual(200)
+    expect(result.data.hello).toEqual('any')
+  })
+
   it('should run matchall and dynamic routes', async () => {
     const result = await axios.post(base + '/custom')
     expect(result.status).toEqual(200)

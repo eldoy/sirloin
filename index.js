@@ -70,8 +70,13 @@ class Sirloin {
     this.fail = fn
   }
 
-  all (path, fn) {
-    for (const m of METHODS) {
+  any (...args) {
+    const [fn, path, ...methods] = args.reverse()
+    this.all(path, fn, methods)
+  }
+
+  all (path, fn, methods = METHODS) {
+    for (const m of methods) {
       this[m.toLowerCase()](path, fn)
     }
   }
