@@ -13,13 +13,13 @@ const app = new Webserver({
  */
 app.use(async (req, res) => {
   if (['/middleware', '/multiple'].includes(req.pathname)) {
-    res.setHeader('content-type', 'text/html')
+    res.setHeader('Content-Type', 'text/html')
   }
 })
 
 app.use(async (req, res) => {
   if (['/multiple'].includes(req.pathname)) {
-    res.setHeader('content-language', 'no-NO')
+    res.setHeader('Content-Language', 'no-NO')
   }
 })
 
@@ -88,27 +88,27 @@ app.post('/upload', async (req, res) => {
 })
 
 app.get('/string', async (req, res) => {
-  res.setHeader('content-type', 'text/plain; charset=utf-8')
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
   return 'string'
 })
 
 app.get('/empty', async (req, res) => {
-  res.setHeader('content-type', 'text/plain; charset=utf-8')
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
   return ''
 })
 
 app.get('/number', async (req, res) => {
-  res.setHeader('content-type', 'text/plain; charset=utf-8')
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
   return 5
 })
 
 app.get('/true', async (req, res) => {
-  res.setHeader('content-type', 'text/plain; charset=utf-8')
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
   return true
 })
 
 app.get('/false', async (req, res) => {
-  res.setHeader('content-type', 'text/plain; charset=utf-8')
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
   return false
 })
 

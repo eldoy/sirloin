@@ -99,7 +99,7 @@ app.any('post', 'get', '/any', async (req, res) => {
 
 // You can also return HTML, strings, numbers and boolean values
 app.get('/projects', async (req, res) => {
-  res.setHeader('content-type', 'text/html; charset=utf-8')
+  res.setHeader('Content-Type', 'text/html; charset=utf-8')
   return '<h1>Hello world</h1>'
 })
 ```
@@ -109,7 +109,7 @@ Use middleware to run a function before every request. You can return values fro
 ```javascript
 // Middleware functions are run in the order that they are added
 app.use(async (req, res) => {
-  res.setHeader('content-type', 'text/html')
+  res.setHeader('Content-Type', 'text/html')
 })
 
 // Return directly from middleware to skip further processing
