@@ -23,7 +23,7 @@ describe('Files', () => {
       expect(res.statusCode).toEqual(200)
       expect(res.headers['content-type']).toEqual('application/javascript; charset=utf-8')
       expect(typeof body).toEqual('string')
-      expect(body).toMatch("console.log('Hello'")
+      expect(body).toMatch("console.log('Hello')")
       done()
     })
   })

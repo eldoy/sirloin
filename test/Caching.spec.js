@@ -16,7 +16,7 @@ describe('Caching', () => {
     })
   })
 
-  it.only('should return last modified headers for files', (done) => {
+  it('should return last modified headers for files', (done) => {
     request.get({
       url: `${base}/css/app.css`,
       headers: {
@@ -25,8 +25,6 @@ describe('Caching', () => {
     },
     (err, res, body) => {
       expect(res.statusCode).toEqual(304)
-      // expect(res.headers['content-type']).toEqual('text/css; charset=utf-8')
-      // expect(res.headers['last-modified']).toBeDefined()
       expect(typeof body).toEqual('string')
       expect(body).toMatch('')
       done()
