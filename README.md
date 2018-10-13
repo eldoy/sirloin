@@ -22,6 +22,20 @@ The websockets are based on the excellent [ws library](https://github.com/websoc
 ### INSTALL
 ```npm i sirloin``` or ```yarn add sirloin```
 
+### SIRLOIN BINARY
+Using the included binary you can start a web server in any directory.
+To install the binary, do ```npm i -g sirloin``` or ```yarn global add sirloin```.
+```
+// Start a web server running on port 3000 from the 'dist' directory
+sirloin
+
+// Start a web server from another directory and port
+sirloin -p 3001 -d public
+
+// Start a web server from the directory you are in
+sirloin -d .
+```
+
 ### HTTP SERVER
 Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server Incoming and Outgoing message instances.
 
@@ -142,7 +156,7 @@ app.action('*', async (data, client) => {
 })
 ```
 ### REDIS PUBSUB
-If you have more than one app server for your websockets, you need pubsub to reliably send messages back to the browser. With pubsub, the messages go via a [Redis server](https://redis.io), a high performance database server.
+If you have more than one app server for your websockets, you need pubsub to reliably send messages back to the browser. With pubsub, the messages go via a [Redis server](https://redis.io), a high performance key-value store.
 
 Sirloin has built in support for pubsub, all you need to do is to [install Redis](https://redis.io/download) and enable it in your Sirloin config:
 ```javascript
@@ -204,7 +218,7 @@ If the given directory doesn't exist static files will be disabled automatically
 Mime types are automatically added to each file to make the browser behave correctly.
 
 ### LOGGING
-Use the ```app.log``` command from within your app instead of ```console.log```. Anything you write to console with ```app.log``` will be silent in production. Set NODE_ENV=production to enter production mode.
+Use the ```app.log``` command from within your app instead of ```console.log```. Anything you write to console with ```app.log``` will be silent in production. Set ```NODE_ENV=production``` on the command line to enter production mode.
 
 ### ERROR HANDLING
 Errors can be caught with ```try catch``` inside of middleware, routes and actions.

@@ -1,8 +1,9 @@
 {
   "name": "sirloin",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Node web server for HTTP, web sockets and static files",
   "main": "index.js",
+  "bin": {"sirloin": "./bin/sirloin.js"},
   "author": "fugroup <vidar@fugroup.net>",
   "license": "MIT",
   "repository": {
