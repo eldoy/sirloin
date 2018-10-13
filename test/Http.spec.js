@@ -2,7 +2,6 @@ const axios = require('axios')
 const base = 'http://localhost:3000'
 
 describe('Http', () => {
-
   it('should support middleware', async () => {
     let result = await axios.get(base + '/middleware')
     expect(result.headers['content-type']).toEqual('text/html')

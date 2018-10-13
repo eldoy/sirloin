@@ -7,7 +7,6 @@ describe('Upload', () => {
     var formData = {
       file: fs.createReadStream('./test/assets/hello.txt')
     }
-
     request.post({
       url: `${base}/upload`,
       headers: {
