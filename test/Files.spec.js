@@ -1,7 +1,7 @@
 const request = require('request')
 const base = 'http://localhost:3000'
 
-describe('Static', () => {
+describe('Files', () => {
   it('should serve static css file', (done) => {
     request.get({
       url: `${base}/css/app.css`

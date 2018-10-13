@@ -7,7 +7,7 @@ beforeEach(() => {
   Http.prototype.routes = {}
 })
 
-describe('Sirloin', () => {
+describe('Config', () => {
   it('should call the constructor', () => {
     const app = new Sirloin()
     expect(Http).toHaveBeenCalledTimes(1)
