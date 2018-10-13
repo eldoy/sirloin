@@ -18,16 +18,15 @@ class Sirloin {
     if (!config.port) {
       config.port = DEFAULT_PORT
     }
-    if (config.files !== false) {
-      if (typeof config.files === 'undefined') {
-        config.files = FILE_DIR
-      }
-      if (!tools.fileExists(config.files)) {
-        config.files = false
-      }
-    }
     if (config.pubsub === true) {
       config.pubsub = {}
+    }
+    switch(typeof config.files) {
+      case 'undefined': config.files = FILE_DIR
+      case 'string':
+      if(!tools.fileExists(config.files)) {
+        config.files = false
+      }
     }
     this.config = config
   }
