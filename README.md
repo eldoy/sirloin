@@ -22,7 +22,6 @@ The websockets are based on the excellent [ws library](https://github.com/websoc
 ### INSTALL
 ```npm i sirloin``` or ```yarn add sirloin```
 
-### SIRLOIN BINARY
 Using the included binary you can start a web server in any directory.
 To install the binary, do ```npm i -g sirloin``` or ```yarn global add sirloin```.
 ```
