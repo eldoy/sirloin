@@ -11,7 +11,6 @@ for (let i = 0; i < args.length; i++) {
     case '-d': options['files'] = args[i + 1]
   }
 }
-console.log('%o', options)
 
 // Start web server
 new (require('../index.js'))(options)

@@ -29,7 +29,7 @@ To install the binary, do ```npm i -g sirloin``` or ```yarn global add sirloin``
 sirloin
 
 // Start a web server from another directory and port
-sirloin -p 3001 -d public
+sirloin -p 3001 -d ~/apps/public
 
 // Start a web server from the directory you are in
 sirloin -d .
