@@ -1,6 +1,6 @@
 {
   "name": "sirloin",
-  "version": "0.6.2",
+  "version": "0.6.1",
   "description": "Node web server for HTTP, web sockets and static files",
   "main": "index.js",
   "bin": {"sirloin": "./bin/sirloin.js"},
@@ -27,5 +27,19 @@
     "mime-types": "^2.1.20",
     "uuid": "^3.3.2",
     "ws": "^6.1.0"
-  }
+  },
+  "keywords": [
+    "webserver",
+    "fast",
+    "minimal",
+    "node",
+    "websocket",
+    "http",
+    "http-server",
+    "file-server",
+    "static",
+    "microservice",
+    "pubsub",
+    "api"
+  ]
 }
