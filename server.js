@@ -13,13 +13,13 @@ const app = new Webserver({
  */
 app.use(async (req, res) => {
   if (['/middleware', '/multiple'].includes(req.pathname)) {
-    res.setHeader('Content-Type', 'text/html')
+    res.setHeader('content-type', 'text/html')
   }
 })
 
 app.use(async (req, res) => {
   if (['/multiple'].includes(req.pathname)) {
-    res.setHeader('Content-Language', 'no-NO')
+    res.setHeader('content-language', 'no-NO')
   }
 })
 

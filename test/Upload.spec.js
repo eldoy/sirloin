@@ -10,7 +10,7 @@ describe('Upload', () => {
     request.post({
       url: `${base}/upload`,
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'content-type': 'multipart/form-data'
       },
       formData: formData
     },
