@@ -92,4 +92,18 @@ describe('Files', () => {
       done()
     })
   })
+
+  it('should support HEAD requests', (done) => {
+    request({
+      method: 'HEAD',
+      url: `${base}/file.html`
+    },
+    (err, res, body) => {
+      expect(res.statusCode).toEqual(200)
+      expect(res.headers['content-type']).toEqual('text/html; charset=utf-8')
+      expect(typeof body).toEqual('string')
+      expect(body).toEqual('')
+      done()
+    })
+  })
 })
