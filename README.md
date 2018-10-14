@@ -33,6 +33,9 @@ sirloin -p 3001 -d ~/apps/public
 
 // Start a web server from the directory you are in
 sirloin -d .
+
+// The -d option can be dropped as a short cut
+sirloin ~/src/web/dist
 ```
 
 ### HTTP SERVER

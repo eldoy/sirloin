@@ -1,6 +1,6 @@
 # TODO
 
-* [ ] Binary single parameter file location (optional -d)
+* [x] Binary single parameter file location (optional -d)
 * [x] Replace app.log / tools.log with rainlog
 * [x] HEAD request support
 * [x] Make sirloin binary
