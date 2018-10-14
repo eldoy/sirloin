@@ -1,9 +1,11 @@
 {
   "name": "sirloin",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "description": "Node web server for HTTP, web sockets and static files",
   "main": "index.js",
-  "bin": {"sirloin": "./bin/sirloin.js"},
+  "bin": {
+    "sirloin": "./bin/sirloin.js"
+  },
   "author": "fugroup <vidar@fugroup.net>",
   "license": "MIT",
   "repository": {
@@ -25,6 +27,7 @@
     "bparse": "^0.0.2",
     "ioredis": "^4.0.2",
     "mime-types": "^2.1.20",
+    "rainlog": "^0.4.0",
     "uuid": "^3.3.2",
     "ws": "^6.1.0"
   },

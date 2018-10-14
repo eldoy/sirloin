@@ -6,6 +6,8 @@ const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 const DEFAULT_PORT = 3000
 const FILE_DIR = 'dist'
 
+
+
 class Sirloin {
   constructor (config = {}) {
     this.middleware = []
@@ -40,8 +42,8 @@ class Sirloin {
     }
   }
 
-  log (...args) {
-    tools.log(...args)
+  get log () {
+    return tools.log
   }
 
   use (fn) {

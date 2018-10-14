@@ -217,7 +217,15 @@ If the given directory doesn't exist static files will be disabled automatically
 Mime types are automatically added to each file to make the browser behave correctly.
 
 ### LOGGING
-Use the ```app.log``` command from within your app instead of ```console.log```. Anything you write to console with ```app.log``` will be silent in production. Set ```NODE_ENV=production``` on the command line to enter production mode.
+Logging is done using the ```app.log``` command. It is an instance of [Rainlog](https://github.com/fugroup/rainlog). You can log to console as well as to file. Rainlog supports multiple loggers, and you can add styles to each logger as well.
+```javascript
+// Log to console with the 'info' logger
+app.log.info('hello')
+
+// Log to console with the 'error' logger
+app.log.info('hello')
+```
+Check out the documentation on [Rainlog](https://github.com/fugroup/rainlog) for more info on how to use it and set it up.
 
 ### ERROR HANDLING
 Errors can be caught with ```try catch``` inside of middleware, routes and actions.

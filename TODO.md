@@ -1,7 +1,7 @@
 # TODO
 
 * [ ] Binary single parameter file location (optional -d)
-* [ ] Replace app.log / tools.log with rainlog
+* [x] Replace app.log / tools.log with rainlog
 * [x] HEAD request support
 * [x] Make sirloin binary
 * [x] HTTP caching for static files (last modified, etags)
