@@ -198,9 +198,10 @@ Sirloin has built in support for pubsub, all you need to do is to [install Redis
 const app = new Sirloin({
   pubsub: {
     port: 6379,          // Redis port
-    host: '127.0.0.1',   // Redis host URL
+    host: 'localhost',   // Redis host URL
+    path: null,          // Socket path
     family: 4,           // 4 (IPv4) or 6 (IPv6)
-    password: 'auth',    // Redis password
+    password: null,      // Redis password
     db: 0,               // Redis database
     channel: 'messages'  // Subscription channel
   }
