@@ -56,10 +56,13 @@ const app = new Sirloin({
 
   // Callback for websocket connect event
   // Can be used for adding data to the websocket client
-  connect: async (client) => {}
+  connect: async (client) => {},
 
   // Redis pubsub is not enabled by default
-  pubsub: undefined
+  pubsub: undefined,
+
+  // Default style for colors and modifiers
+  style: 'green'
 })
 
 // Get request, whatever you return will be the response
@@ -180,7 +183,7 @@ app.action('promise', async (data, client) => {
 app.action('options', async (data, client) => {
   await client.send({ message: 'terminated'}, { compress: true })
 
-  // Terminate the client
+  // Terminate the client when sending is done
   client.terminate()
 
   // ...
