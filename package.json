@@ -1,6 +1,6 @@
 {
   "name": "sirloin",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "Node web server for HTTP, web sockets and static files",
   "main": "index.js",
   "bin": {
@@ -27,7 +27,7 @@
     "bparse": "^0.0.2",
     "ioredis": "^4.0.2",
     "mime-types": "^2.1.20",
-    "rainlog": "^0.4.0",
+    "rainlog": "^0.4.1",
     "uuid": "^3.3.2",
     "ws": "^6.1.0"
   },

@@ -2480,9 +2480,9 @@ qs@~6.5.2:
   version "6.5.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
 
-rainlog@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/rainlog/-/rainlog-0.4.0.tgz#18584ce259691a3c1cd04bd8c1c733d58a3a50fd"
+rainlog@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/rainlog/-/rainlog-0.4.1.tgz#de66553a1a49cb419dacdb8844d3a8bbb0ea0629"
   dependencies:
     chalk "^2.4.1"
 

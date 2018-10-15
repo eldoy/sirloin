@@ -6,11 +6,10 @@ const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 const DEFAULT_PORT = 3000
 const FILE_DIR = 'dist'
 
-
-
 class Sirloin {
   constructor (config = {}) {
     this.middleware = []
+    this.api = {}
     this.configure(config)
     this.http = new Http(this)
     this.initRoutes()
@@ -54,7 +53,7 @@ class Sirloin {
     try {
       return await fn(...args)
     } catch (err) {
-      const e = type === 'websocket' ? this.fail : this.error
+      const e = this.api[type === 'websocket' ? 'fail' : 'error']
       if (e) {
         return await e(err, ...args)
       } else {
@@ -64,11 +63,11 @@ class Sirloin {
   }
 
   error (fn) {
-    this.error = fn
+    this.api.error = fn
   }
 
   fail (fn) {
-    this.fail = fn
+    this.api.fail = fn
   }
 
   any (...args) {
