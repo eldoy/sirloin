@@ -227,6 +227,7 @@ app.websocket.pubsub            // The pubsub object
 app.websocket.pubsub.hub        // The pubsub hub handling subscriptions
 app.websocket.pubsub.connected  // Whether pubsub is connected or not
 app.websocket.pubsub.channel    // The channel to publish messages on
+app.websocket.pubsub.options    // The Redis pubsub options
 
 // For each client you can send data to the browser
 app.websocket.clients.forEach((client) => {
