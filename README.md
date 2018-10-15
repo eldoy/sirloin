@@ -49,12 +49,15 @@ const Sirloin = require('sirloin')
 const app = new Sirloin({
   // Web server port
   port: 3000,
+
   // Static files root directory
   // Set to false to not serve static files
   files: 'dist',
+
   // Callback for websocket connect event
   // Can be used for adding data to the websocket client
   connect: async (client) => {}
+
   // Redis pubsub is not enabled by default
   pubsub: undefined
 })
@@ -246,13 +249,19 @@ If the given directory doesn't exist static files will be disabled automatically
 Mime types are automatically added to each file to make the browser behave correctly.
 
 ### LOGGING
-Logging is done using the ```app.log``` command. It is an instance of [Rainlog](https://github.com/fugroup/rainlog). You can log to console as well as to file. Rainlog supports multiple loggers, and you can add styles to each logger as well.
+Logging is done using the ```app.log``` command. It is an instance of [Rainlog](https://github.com/fugroup/rainlog). You can log to console as well as to file. Rainlog supports multiple loggers, and you can optionally add styles to each logger.
 ```javascript
 // Log to console with the 'info' logger
 app.log.info('hello')
 
-// Log to console with the 'error' logger
-app.log.info('hello')
+// Log to console with the 'err' logger
+app.log.err('hello')
+
+// Set styles for your logger
+// You can combine styles from the 'chalk' library as you please.
+app.log.get.info.set({ style: 'green.bold.underline' })
+
+// Default styles are 'green' for info and 'red' for err.
 ```
 Check out the documentation on [Rainlog](https://github.com/fugroup/rainlog) for more info on how to use it and set it up.
 
