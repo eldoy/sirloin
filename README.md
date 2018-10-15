@@ -156,6 +156,32 @@ console.log(data) // { hello: 'world' }
 app.action('*', async (data, client) => {
   return { hello: 'custom' }       // Will send what you return
 })
+
+// The client send function supports callbacks and promises
+app.action('promise', async (data, client) => {
+  // Unordered, the next line happens immediately
+  client.send({ hello: 'send'})
+
+  // With promise, the next line happens after when this is done
+  await client.send({ hello: 'promise'})
+
+  // With callback, the next line happens immediately
+  await client.send({ hello: 'promise'}, () => {
+    app.log.info('In callback, sent it')
+  })
+
+  // ...
+})
+
+// All of the options in the ws library are supported for send
+app.action('options', async (data, client) => {
+  await client.send({ message: 'terminated'}, { compress: true })
+
+  // Terminate the client
+  client.terminate()
+
+  // ...
+})
 ```
 ### REDIS PUBSUB
 If you have more than one app server for your websockets, you need pubsub to reliably send messages back to the browser. With pubsub, the messages go via a [Redis server](https://redis.io), a high performance key-value store.

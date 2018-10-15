@@ -1,7 +1,7 @@
 const Webserver = require('./index.js')
 
 const app = new Webserver({
-  // pubsub: false,
+  // pubsub: true,
   port: 3000,
   files: 'dist', // Static files folder
   connect: async (client) => {
@@ -168,6 +168,12 @@ app.action('callback', async (data, client) => {
       resolve()
     })
   })
+  return { hello: 'world' }
+})
+
+app.action('promise', async (data, client) => {
+  await client.send({ hello: 'moon' })
+  await client.send({ hello: 'callback' })
   return { hello: 'world' }
 })
 
