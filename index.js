@@ -3,8 +3,8 @@ const Websocket = require('./lib/websocket')
 const tools = require('./lib/tools')
 
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
-const DEFAULT_PORT = 3000
-const FILE_DIR = 'dist'
+const PORT = 3000
+const FILES = 'dist'
 
 class Sirloin {
   constructor (config = {}) {
@@ -17,13 +17,13 @@ class Sirloin {
 
   configure (config) {
     if (!config.port) {
-      config.port = DEFAULT_PORT
+      config.port = PORT
     }
     if (config.pubsub === true) {
       config.pubsub = {}
     }
     switch(typeof config.files) {
-      case 'undefined': config.files = FILE_DIR
+      case 'undefined': config.files = FILES
       case 'string':
       if(!tools.fileExists(config.files)) {
         config.files = false
