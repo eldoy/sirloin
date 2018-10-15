@@ -201,7 +201,8 @@ const app = new Sirloin({
     host: '127.0.0.1',   // Redis host URL
     family: 4,           // 4 (IPv4) or 6 (IPv6)
     password: 'auth',    // Redis password
-    db: 0                // Redis database
+    db: 0,               // Redis database
+    channel: 'messages'  // Subscription channel
   }
 })
 
