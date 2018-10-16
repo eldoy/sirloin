@@ -106,7 +106,7 @@ app.any('post', 'get', '/any', async (req, res) => {
   return { status: 'OK' }
 })
 
-// You can also return HTML, strings, numbers and boolean values
+// You can also return HTML templates, strings, numbers and boolean values
 app.get('/projects', async (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
   return '<h1>Hello world</h1>'
@@ -302,8 +302,8 @@ Errors can be caught with ```try catch``` inside of middleware, routes and actio
 app.get('/crash', async (req, res) => {
   try {
     const user = await db.user.first()
-  } catch (err) {
-    app.log(err.message)
+  } catch (e) {
+    app.log.err(e.message)
     return { error: 'find user crashed' }
   }
 })
