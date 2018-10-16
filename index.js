@@ -3,6 +3,7 @@ const Websocket = require('./lib/websocket')
 const tools = require('./lib/tools')
 
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+const APIS = ['error', 'fail']
 const PORT = 3000
 const FILES = 'dist'
 
@@ -13,6 +14,7 @@ class Sirloin {
     this.configure(config)
     this.http = new Http(this)
     this.initRoutes()
+    this.initApi()
   }
 
   configure (config) {
@@ -41,6 +43,19 @@ class Sirloin {
     }
   }
 
+  initApi () {
+    for (const a of APIS) {
+      this[a] = (fn) => { this.api[a] = fn }
+    }
+  }
+
+  register (name, fn) {
+    if (APIS.includes(name)) {
+      throw new Error('Invalid name for register: %s', name)
+    }
+    this.api[name] = fn
+  }
+
   get log () {
     return tools.log
   }
@@ -60,14 +75,6 @@ class Sirloin {
         throw err
       }
     }
-  }
-
-  error (fn) {
-    this.api.error = fn
-  }
-
-  fail (fn) {
-    this.api.fail = fn
   }
 
   any (...args) {

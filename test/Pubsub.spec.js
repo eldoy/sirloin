@@ -26,7 +26,7 @@ describe('Pubsub', () => {
       expect(messages[1].hello).toEqual('callback')
       expect(messages[2].hello).toEqual('world')
       done()
-    }, 50)
+    }, 40)
   })
 
   it('should work with send promises', (done) => {
@@ -36,6 +36,34 @@ describe('Pubsub', () => {
       expect(messages[1].hello).toEqual('callback')
       expect(messages[2].hello).toEqual('world')
       done()
-    }, 50)
+    }, 40)
+  })
+
+  it('should publish messages to all clients', (done) => {
+    socket.send({ action: 'publish' })
+    setTimeout(() => {
+      expect(messages[0].published).toBe(true)
+      expect(messages[1].hello).toEqual('world')
+      done()
+    }, 40)
+  })
+
+  it('should publish messages to all clients with await', (done) => {
+    socket.send({ action: 'publishawait' })
+    setTimeout(() => {
+      expect(messages[0].hello).toEqual('await')
+      expect(messages[1].published).toBe(true)
+      done()
+    }, 40)
+  })
+
+  it('should publish messages to all clients with callback', (done) => {
+    socket.send({ action: 'publishcallback' })
+    setTimeout(() => {
+      expect(messages[0].published).toBe(true)
+      expect(messages[1].hello).toEqual('publish')
+      expect(messages[2].hello).toEqual('callback')
+      done()
+    }, 40)
   })
 })

@@ -1,7 +1,7 @@
-const Webserver = require('./index.js')
+const Sirloin = require('./index.js')
 
-const app = new Webserver({
-  // pubsub: true,
+const app = new Sirloin({
+  pubsub: true,
   port: 3000,
   files: 'dist', // Static files folder
   connect: async (client) => {
@@ -9,9 +9,12 @@ const app = new Webserver({
   }
 })
 
+app.log.get.info.set({ quiet: true })
+
 /*******
  * MIDDLEWARE
  */
+
 app.use(async (req, res) => {
   if (['/middleware', '/multiple'].includes(req.pathname)) {
     res.setHeader('Content-Type', 'text/html')
@@ -39,6 +42,7 @@ app.use(async (req, res) => {
 /*******
 * ROUTES
 */
+
 app.get('/middleware', async (req, res) => {
   return { hello: 'middleware' }
 })
@@ -177,6 +181,30 @@ app.action('promise', async (data, client) => {
   return { hello: 'world' }
 })
 
+app.register('live', async (data, client) => {
+  app.websocket.clients.forEach((c) => {
+    c.send(data)
+  })
+})
+
+app.action('publish', async (data, client) => {
+  client.publish('live', { hello: 'world' })
+  return { published: true }
+})
+
+app.action('publishawait', async (data, client) => {
+  await client.publish('live', { hello: 'await' })
+  return { published: true }
+})
+
+app.action('publishcallback', async (data, client) => {
+  client.publish('live', { hello: 'publish' }, () => {
+    client.send({ hello: 'callback' })
+  })
+  return { published: true }
+})
+
 app.fail(async (err, data, client) => {
+  app.log.err('%s', err.message)
   return { error: err.message }
 })

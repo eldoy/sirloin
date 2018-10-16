@@ -190,7 +190,7 @@ app.action('options', async (data, client) => {
 })
 ```
 ### REDIS PUBSUB
-If you have more than one app server for your websockets, you need pubsub to reliably send messages back to the browser. With pubsub, the messages go via a [Redis server](https://redis.io), a high performance key-value store.
+If you have more than one app server for your websockets, you need pubsub to reliably publish messages to multiple clients. With pubsub, the messages go via a [Redis server](https://redis.io), a high performance key-value store.
 
 Sirloin has built in support for pubsub, all you need to do is to [install Redis](https://redis.io/download) and enable it in your Sirloin config:
 ```javascript
@@ -210,6 +210,31 @@ const app = new Sirloin({
 // To use the default options, this is all you need
 // Make sure Redis is running before starting your application
 const app = new Sirloin({ pubsub: true }) // or pubsub: {}
+
+// First register a function that is publishable
+app.register('live', async (data, client) => {
+  // Publish data to all clients except publisher (client)
+  app.websocket.clients.forEach((c) => {
+    if (client.id !== c.id) {
+      c.send(data)
+    }
+  })
+})
+
+// Use the 'publish' function to publish messages to multiple clients
+app.action('publish', async (data, client) => {
+  // The name, here 'live', must match the name of a registered function
+  client.publish('live', { hello: 'world' })
+})
+
+// The publish function works with await
+await client.publish('live', { hello: 'world' })
+
+// ... and callbacks
+client.publish('live', { hello: 'world' }, () => {
+  // Publish is done, notify the publisher
+  client.send({ published: true })
+})
 ```
 Pubsub is disabled by default, remove the config or set to 'false' to send messages directly to the socket.
 

@@ -32,7 +32,7 @@ describe('Websocket', () => {
     setTimeout(() => {
       expect(message.hello).toEqual('world')
       done()
-    }, 50)
+    }, 10)
   })
 
   it('should receive a message with action and fetch', async () => {
@@ -45,7 +45,7 @@ describe('Websocket', () => {
     setTimeout(() => {
       expect(message.hello).toEqual('hi')
       done()
-    }, 50)
+    }, 10)
   })
 
   it('should allow mutation of connection object', async () => {
