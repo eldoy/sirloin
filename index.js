@@ -56,7 +56,9 @@ class Sirloin {
     this.api[name] = fn
   }
 
-  // publish (name, data)
+  publish (...args) {
+    return this.websocket.publish(...args)
+  }
 
   get log () {
     return tools.log
