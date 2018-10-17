@@ -204,6 +204,17 @@ app.action('publishcallback', async (data, client) => {
   return { published: true }
 })
 
+app.register('all', async (data, client) => {
+  app.websocket.clients.forEach((c) => {
+    c.send(data)
+  })
+})
+
+app.action('publishall', async (data, client) => {
+  app.publish('all', { hello: 'publish' })
+  return { published: true }
+})
+
 app.fail(async (err, data, client) => {
   app.log.err('%s', err.message)
   return { error: err.message }

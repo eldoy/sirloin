@@ -56,6 +56,8 @@ class Sirloin {
     this.api[name] = fn
   }
 
+  // publish (name, data)
+
   get log () {
     return tools.log
   }

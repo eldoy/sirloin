@@ -66,4 +66,14 @@ describe('Pubsub', () => {
       done()
     }, 40)
   })
+
+  // it.only('should publish messages to all clients without a client', (done) => {
+  //   socket.send({ action: 'publishall' })
+  //   setTimeout(() => {
+  //     expect(messages[0].published).toBe(true)
+  //     expect(messages[1].hello).toEqual('publish')
+  //     expect(messages[2].hello).toEqual('callback')
+  //     done()
+  //   }, 40)
+  // })
 })
