@@ -225,6 +225,9 @@ app.register('live', async (data, client) => {
 app.action('publish', async (data, client) => {
   // The name, here 'live', must match the name of a registered function
   client.publish('live', { hello: 'world' })
+
+  // Send without client (in case you don't have it)
+  app.publish('live', { hello: 'all' })
 })
 
 // The publish function works with await
