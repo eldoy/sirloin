@@ -51,7 +51,7 @@ class Sirloin {
 
   register (name, fn) {
     if (APIS.includes(name)) {
-      throw new Error('Invalid name for register: %s', name)
+      throw new Error(`Invalid name for register: ${name}`)
     }
     this.api[name] = fn
   }
