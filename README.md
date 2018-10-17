@@ -211,8 +211,8 @@ const app = new Sirloin({
 // Make sure Redis is running before starting your application
 const app = new Sirloin({ pubsub: true }) // or pubsub: {}
 
-// First register a function that is publishable
-app.register('live', async (data, client) => {
+// First subscribe to a function that is publishable
+app.subscribe('live', async (data, client) => {
   // Publish data to all clients except publisher (client)
   app.websocket.clients.forEach((c) => {
     if (client.id !== c.id) {
@@ -223,7 +223,7 @@ app.register('live', async (data, client) => {
 
 // Use the 'publish' function to publish messages to multiple clients
 app.action('publish', async (data, client) => {
-  // The name, here 'live', must match the name of a registered function
+  // The name, here 'live', must match the name of a subscribed function
   client.publish('live', { hello: 'world' })
 
   // Send without client (in case you don't have it)

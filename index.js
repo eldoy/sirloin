@@ -49,9 +49,9 @@ class Sirloin {
     }
   }
 
-  register (name, fn) {
+  subscribe (name, fn) {
     if (APIS.includes(name)) {
-      throw new Error(`Invalid name for register: ${name}`)
+      throw new Error(`Invalid name for subscribe: ${name}`)
     }
     this.api[name] = fn
   }
