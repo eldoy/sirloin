@@ -59,10 +59,7 @@ const app = new Sirloin({
   connect: async (client) => {},
 
   // Redis pubsub is not enabled by default
-  pubsub: undefined,
-
-  // Default style for colors and modifiers
-  style: 'green'
+  pubsub: undefined
 })
 
 // Get request, whatever you return will be the response
