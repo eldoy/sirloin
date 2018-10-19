@@ -165,7 +165,7 @@ app.action('promise', async (data, client) => {
   // Unordered, the next line happens immediately
   client.send({ hello: 'send'})
 
-  // With promise, the next line happens after when this is done
+  // With promise, the next line happens after this is done
   await client.send({ hello: 'promise'})
 
   // With callback, the next line happens immediately
@@ -208,7 +208,7 @@ const app = new Sirloin({
 // Make sure Redis is running before starting your application
 const app = new Sirloin({ pubsub: true }) // or pubsub: {}
 
-// First subscribe to a function that is publishable
+// First subscribe to a function
 app.subscribe('live', async (data, client) => {
   // Publish data to all clients except publisher (client)
   app.websocket.clients.forEach((c) => {
@@ -220,10 +220,10 @@ app.subscribe('live', async (data, client) => {
 
 // Use the 'publish' function to publish messages to multiple clients
 app.action('publish', async (data, client) => {
-  // The name, here 'live', must match the name of a subscribed function
+  // This will call the subscribed function named 'live' on every app server
   client.publish('live', { hello: 'world' })
 
-  // Send without client (in case you don't have it)
+  // Publish to all without client, in case you don't have it
   app.publish('live', { hello: 'all' })
 })
 
