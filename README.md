@@ -9,9 +9,11 @@ This high performance, extremely easy to use web server includes:
 * Fast and minimal, just around 350 lines of code
 * Integrated websocket server based on actions
 * Redis pubsub for scaling your websockets
+* Reverse proxy load balancer support
 * Optional static file server
 * Cors enabled out of the box
 * Full async / await support
+* Docker friendly
 
 Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/fugroup/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
 
@@ -335,6 +337,23 @@ app.action('db', async (data, client) => {
   throw new Error('websocket error!')
 })
 ```
+### REVERSE PROXY LOAD BALANCER
+Sirloin has built-in support for reverse proxying so you can use it as a load balancer instead of Nginx, Haproxy or Traefik. You entire application stack can now be pure Javascript.
+```javascript
+// Enable proxy mode
+const app = new Sirloin({ proxy: true })
+
+// Forward all http requests to http://localhost:8080
+app.proxy('*', 'http://localhost:8080')
+app.proxy('http://localhost:8080') // Same as above
+
+// Forward all websocket requests to 'http://localhost:8081'
+app.proxy('ws://localhost:8081')
+
+// Forward all requests to /db to http://195.23.43.5:8082'
+app.proxy('/db', 'http://195.23.43.5:8082')
+```
+When in proxy mode, normal http will be ignored.
 
 ### EXAMPLES OF USE
 Here's a few examples showing how easy to use Sirloin can be:

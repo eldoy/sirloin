@@ -1,7 +1,7 @@
 {
   "name": "sirloin",
-  "version": "0.7.3",
-  "description": "Node web server for HTTP, web sockets and static files",
+  "version": "0.8.0",
+  "description": "Node web server for HTTP, web sockets, static files and proxies",
   "main": "index.js",
   "bin": {
     "sirloin": "./bin/sirloin.js"
@@ -44,6 +44,10 @@
     "http-server",
     "file-server",
     "static",
+    "proxy",
+    "reverse",
+    "load",
+    "balancer",
     "microservice",
     "pubsub",
     "api"
