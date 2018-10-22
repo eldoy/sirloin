@@ -6,7 +6,7 @@ This high performance, extremely easy to use web server includes:
 
 * HTTP server for your APIs and microservices
 * Support for file uploads and post body parsing
-* Fast and minimal, just around 350 lines of code
+* Fast and minimal, just around 500 lines of code
 * Integrated websocket server based on actions
 * Redis pubsub for scaling your websockets
 * Reverse proxy load balancer support
@@ -19,7 +19,7 @@ Zero configuration required, create an HTTP API endpoint with only 3 lines of co
 
 The websockets are based on the excellent [ws library](https://github.com/websockets/ws), and have very few other dependencies.
 
-*Sirloin is up to 30% faster than Express and Hapi, and also faster than Koa.*
+*Sirloin is faster than Express and Hapi.*
 
 ### INSTALL
 ```npm i sirloin``` or ```yarn add sirloin```
@@ -353,7 +353,7 @@ app.proxy('ws://localhost:8081')
 // Forward all requests to /db to http://195.23.43.5:8082'
 app.proxy('/db', 'http://195.23.43.5:8082')
 ```
-When in proxy mode, normal http will be ignored.
+When in proxy mode, normal http will be ignored. The performance of the reverse proxy is very good, try it out!
 
 ### EXAMPLES OF USE
 Here's a few examples showing how easy to use Sirloin can be:
