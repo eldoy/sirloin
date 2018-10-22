@@ -14,17 +14,19 @@
   },
   "private": false,
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "concurrently --handle-input \"nodemon server.js\" \"nodemon loadbalancer.js\"",
     "test": "jest --watch"
   },
   "devDependencies": {
     "axios": "^0.18.0",
+    "concurrently": "^4.0.1",
     "jest": "^23.6.0",
     "request": "^2.88.0",
     "wsrecon": "^0.2.0"
   },
   "dependencies": {
     "bparse": "^0.0.2",
+    "http-proxy": "^1.17.0",
     "ioredis": "^4.0.2",
     "mime-types": "^2.1.20",
     "rainlog": "^0.4.2",

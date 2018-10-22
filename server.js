@@ -131,6 +131,14 @@ app.any('post', 'get', '/any', async (req, res) => {
   return { hello: 'any' }
 })
 
+app.get('/proxy', async () => {
+  return { hello: 'proxy' }
+})
+
+app.post('/proxy', async () => {
+  return { hello: 'proxy' }
+})
+
 /*******
 * ACTIONS
 */
@@ -213,6 +221,10 @@ app.subscribe('all', async (data, client) => {
 app.action('publishall', async (data, client) => {
   app.publish('all', { hello: 'publish' })
   return { published: true }
+})
+
+app.action('proxy', async (data, client) => {
+  return { hello: 'proxy' }
 })
 
 app.fail(async (err, data, client) => {

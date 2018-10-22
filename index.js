@@ -1,4 +1,5 @@
 const Http = require('./lib/http')
+const Proxy = require('./lib/proxy')
 const Websocket = require('./lib/websocket')
 const tools = require('./lib/tools')
 
@@ -11,19 +12,19 @@ class Sirloin {
   constructor (config = {}) {
     this.middleware = []
     this.api = {}
-    this.configure(config)
-    this.http = new Http(this)
-    this.initRoutes()
-    this.initApi()
+    this.config = this.configure(config)
+    if (this.config.proxy) {
+      this.http = new Proxy(this)
+    } else {
+      this.http = new Http(this)
+      this.initRoutes()
+      this.initApi()
+    }
   }
 
   configure (config) {
-    if (!config.port) {
-      config.port = PORT
-    }
-    if (config.pubsub === true) {
-      config.pubsub = {}
-    }
+    if (!config.port) { config.port = PORT }
+    if (config.pubsub === true) { config.pubsub = {} }
     switch(typeof config.files) {
       case 'undefined': config.files = FILES
       case 'string':
@@ -31,7 +32,7 @@ class Sirloin {
         config.files = false
       }
     }
-    this.config = config
+    return config
   }
 
   initRoutes () {
@@ -97,6 +98,10 @@ class Sirloin {
       this.websocket = new Websocket(this)
     }
     this.websocket.actions[name] = fn
+  }
+
+  proxy (path, host) {
+    this.http.add(path, host)
   }
 }
 
