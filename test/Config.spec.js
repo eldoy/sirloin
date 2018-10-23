@@ -1,16 +1,16 @@
-const Http = require('../lib/http.js')
+const Web = require('../lib/web.js')
 const Sirloin = require('../index.js')
-jest.mock('../lib/http.js')
+jest.mock('../lib/web.js')
 
 beforeEach(() => {
-  Http.mockClear()
-  Http.prototype.routes = {}
+  Web.mockClear()
+  Web.prototype.routes = {}
 })
 
 describe('Config', () => {
   it('should call the constructor', () => {
     const app = new Sirloin()
-    expect(Http).toHaveBeenCalledTimes(1)
+    expect(Web).toHaveBeenCalledTimes(1)
   })
 
   it('should give correct default options', () => {
