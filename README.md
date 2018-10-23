@@ -19,7 +19,7 @@ Zero configuration required, create an HTTP API endpoint with only 3 lines of co
 
 The websockets are based on the excellent [ws library](https://github.com/websockets/ws), and have very few other dependencies.
 
-*Sirloin is faster than Express and Hapi.*
+*Sirloin is considerably faster than Express and Hapi.*
 
 ### INSTALL
 ```npm i sirloin``` or ```yarn add sirloin```
@@ -345,10 +345,9 @@ const app = new Sirloin({ proxy: true })
 
 // Forward all http requests to http://localhost:8080
 app.proxy('*', 'http://localhost:8080')
-app.proxy('http://localhost:8080') // Same as above
 
 // Forward all websocket requests to 'http://localhost:8081'
-app.proxy('ws://localhost:8081')
+app.proxy('*', 'ws://localhost:8081')
 
 // Forward all requests to /db to http://195.23.43.5:8082'
 app.proxy('/db', 'http://195.23.43.5:8082')
