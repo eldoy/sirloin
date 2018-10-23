@@ -351,6 +351,23 @@ app.proxy('*', 'ws://localhost:8081')
 
 // Forward all requests to /db to http://195.23.43.5:8082'
 app.proxy('/db', 'http://195.23.43.5:8082')
+
+// Intercept all http traffic and return data
+app.proxy('*', 'http://localhost:8080', (req) => {
+  if (req.pathname === '/db') {
+    return { error: 'Access denied' }
+  }
+  // Return nothing or undefined to proxy the request normally
+})
+
+// Intercept all websocket traffic
+app.proxy('*', 'http://localhost:8080', (req) => {
+  // Websockets don't return data, the socket is simply destroyed
+  // if you return anything else but undefined
+  if (req.pathname === '/db') {
+    return false
+  }
+})
 ```
 When in proxy mode, normal http will be ignored. The performance of the reverse proxy is very good, try it out!
 
