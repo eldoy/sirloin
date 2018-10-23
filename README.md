@@ -279,7 +279,7 @@ const app = new Sirloin({ files: false })
 ```
 If the given directory doesn't exist static files will be disabled automatically.
 
-Mime types are automatically added to each file to make the browser behave correctly.
+Mime types are automatically added to each file to make the browser behave correctly. The server enables browser caching by using the Last-Modified header returning a 304 response if the file is stale. This speeds up delivery a lot.
 
 ### LOGGING
 Logging is done using the ```app.log``` command. It is an instance of [Rainlog](https://github.com/fugroup/rainlog). You can log to console as well as to file. Rainlog supports multiple loggers, and you can optionally add styles to each logger.
