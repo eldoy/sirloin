@@ -17,7 +17,7 @@ This high performance, extremely easy to use web server includes:
 
 Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/fugroup/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
 
-The websockets are based on the excellent [ws library](https://github.com/websockets/ws), and have very few other dependencies.
+The websockets are based on the excellent [ws library](https://github.com/websockets/ws), pubsub is based on [ioredis](https://github.com/luin/ioredis), reverse proxy is based on [http-proxy](https://github.com/nodejitsu/node-http-proxy), the rest is pure vanilla NodeJS.
 
 *Sirloin is considerably faster than Express and Hapi.*
 
