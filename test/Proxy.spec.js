@@ -1,11 +1,14 @@
+const fs = require('fs')
 const axios = require('axios')
 const Socket = require('wsrecon')
 const base = 'localhost:3001'
-let socket
+const path = '/tmp/sirloin-log-test.txt'
 
 describe('Proxy', () => {
-  beforeAll(() => {
-    socket = new Socket('ws://' + base)
+  beforeEach(() => {
+    try {
+      fs.unlinkSync(path)
+    } catch (e) {}
   })
 
   it('should proxy get http requests', async () => {
@@ -22,9 +25,9 @@ describe('Proxy', () => {
     expect(result.data.hello).toEqual('proxy')
   })
 
-  it('should proxy web socket requests', async () => {
-    const data = await socket.fetch({ action: 'proxy' })
-    expect(data.hello).toEqual('proxy')
+  it('should do callbacks for http requests', async () => {
+    const result = await axios.get('http://' + base + '/nowhere')
+    expect(result.data.hello).toEqual('nowhere')
   })
 
   it('should return 404 not found', async (done) => {
@@ -37,5 +40,23 @@ describe('Proxy', () => {
       expect(result.data).toEqual({})
       done()
     }
+  })
+
+  it('should proxy web socket requests', (done) => {
+    const socket = new Socket('ws://' + base)
+    socket.on('open', async () => {
+      const data = await socket.fetch({ action: 'proxy' })
+      expect(data.hello).toEqual('proxy')
+      done()
+    })
+  })
+
+  it('should do callbacks for web socket requests', (done) => {
+    const socket = new Socket('ws://' + base + '/nowhere')
+    socket.on('error', () => {
+      const CLOSED = 3
+      expect(socket.readyState).toEqual(CLOSED)
+      done()
+    })
   })
 })
