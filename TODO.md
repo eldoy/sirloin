@@ -1,5 +1,6 @@
 # TODO
 
+* [ ] Support for proxy SSL
 * [x] Binary single parameter file location (optional -d)
 * [x] Replace app.log / tools.log with rainlog
 * [x] HEAD request support
