@@ -165,13 +165,13 @@ app.action('*', async (data, client) => {
 // The client send function supports callbacks and promises
 app.action('promise', async (data, client) => {
   // Unordered, the next line happens immediately
-  client.send({ hello: 'send'})
+  client.send({ hello: 'send' })
 
   // With promise, the next line happens after this is done
-  await client.send({ hello: 'promise'})
+  await client.send({ hello: 'promise' })
 
   // With callback, the next line happens immediately
-  await client.send({ hello: 'promise'}, () => {
+  await client.send({ hello: 'promise' }, () => {
     app.log.info('In callback, sent it')
   })
 
@@ -180,7 +180,7 @@ app.action('promise', async (data, client) => {
 
 // All of the options in the ws library are supported for send
 app.action('options', async (data, client) => {
-  await client.send({ message: 'terminated'}, { compress: true })
+  await client.send({ message: 'terminated' }, { compress: true })
 
   // Terminate the client when sending is done
   client.terminate()
@@ -279,7 +279,7 @@ const app = new Sirloin({ files: false })
 ```
 If the given directory doesn't exist static files will be disabled automatically.
 
-Mime types are automatically added to each file to make the browser behave correctly. The server enables browser caching by using the Last-Modified header returning a 304 response if the file is stale. This speeds up delivery a lot.
+Mime types are automatically added to each file to make the browser behave correctly. The server enables browser caching by using the Last-Modified header returning a 304 response if the file is fresh. This speeds up delivery a lot.
 
 ### LOGGING
 Logging is done using the ```app.log``` command. It is an instance of [Rainlog](https://github.com/fugroup/rainlog). You can log to console as well as to file. Rainlog supports multiple loggers, and you can optionally add styles to each logger.
@@ -338,7 +338,7 @@ app.action('db', async (data, client) => {
 })
 ```
 ### REVERSE PROXY LOAD BALANCER
-Sirloin has built-in support for reverse proxying so you can use it as a load balancer instead of Nginx, Haproxy or Traefik. You entire application stack can now be pure Javascript.
+Sirloin has built-in support for reverse proxying so you can use it as a load balancer instead of Nginx, Haproxy or Traefik. Your entire application stack can now be pure Javascript.
 ```javascript
 // Enable proxy mode
 const app = new Sirloin({ proxy: true })
