@@ -50,13 +50,4 @@ describe('Proxy', () => {
       done()
     })
   })
-
-  it('should do callbacks for web socket requests', (done) => {
-    const socket = new Socket('ws://' + base + '/nowhere')
-    socket.on('error', () => {
-      const CLOSED = 3
-      expect(socket.readyState).toEqual(CLOSED)
-      done()
-    })
-  })
 })

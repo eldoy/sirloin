@@ -22,7 +22,7 @@
     "concurrently": "^4.0.1",
     "jest": "^23.6.0",
     "request": "^2.88.0",
-    "wsrecon": "^0.2.0"
+    "wsrecon": "^0.3.1"
   },
   "dependencies": {
     "bparse": "^0.0.2",
