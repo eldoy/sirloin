@@ -14,7 +14,7 @@
   },
   "private": false,
   "scripts": {
-    "start": "concurrently --handle-input \"nodemon server.js\" \"nodemon loadbalancer.js\"",
+    "start": "concurrently --handle-input \"nodemon server.js\"",
     "test": "jest --watch"
   },
   "devDependencies": {
