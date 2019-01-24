@@ -231,3 +231,21 @@ app.fail(async (err, data, client) => {
   app.log.err('%s', err.message)
   return { error: err.message }
 })
+
+/*******
+* LOAD BALANCER
+*/
+
+const app2 = new Sirloin({ port: 3001, proxy: true })
+
+app2.proxy('/proxy', 'http://localhost:3000')
+
+app2.proxy('*', 'ws://localhost:3000')
+
+app2.proxy('/nowhere', 'ws://localhost:3000', async (req) => {
+  return false
+})
+
+app2.proxy('/nowhere', 'http://localhost:3000', async (req) => {
+  return { hello: 'nowhere' }
+})
