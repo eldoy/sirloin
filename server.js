@@ -232,6 +232,7 @@ app.fail(async (err, data, client) => {
   return { error: err.message }
 })
 
+
 /*******
 * LOAD BALANCER
 */
@@ -250,15 +251,16 @@ app2.proxy('/nowhere', 'http://localhost:3000', async (req) => {
   return { hello: 'nowhere' }
 })
 
+
 /*******
 * HTTPS
 */
-const fs = require('fs')
+
 const app3 = new Sirloin({
   port: 3002,
   ssl: {
-    key: fs.readFileSync('config/server.key'),
-    cert: fs.readFileSync('config/server.crt')
+    key: 'config/server.key',
+    cert: 'config/server.crt'
   }
 })
 
@@ -270,13 +272,16 @@ app3.get('/ssl', (req, res) => {
 /*******
 * HTTPS LOADBALANCER
 */
+
 const app4 = new Sirloin({
   port: 3003,
   proxy: true,
   ssl: {
-    key: fs.readFileSync('config/server.key'),
-    cert: fs.readFileSync('config/server.crt')
+    key: 'config/server.key',
+    cert: 'config/server.crt'
   }
 })
 
 app4.proxy('/proxy', 'http://localhost:3000')
+
+app4.proxy('*', 'ws://localhost:8081')

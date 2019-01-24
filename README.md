@@ -13,6 +13,7 @@ This high performance, extremely easy to use web server includes:
 * Optional static file server
 * Cors enabled out of the box
 * Full async / await support
+* HTTPS over SSL support
 * Docker friendly
 
 Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/fugroup/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
@@ -27,14 +28,11 @@ The websockets are based on the excellent [ws library](https://github.com/websoc
 Using the included binary you can start a web server in any directory.
 To install the binary, do ```npm i -g sirloin``` or ```yarn global add sirloin```.
 ```
-// Start a web server running on port 3000 from the 'dist' directory
+// Start a web server running on port 3000 from the directory you are in
 sirloin
 
 // Start a web server from another directory and port
 sirloin -p 3001 -d ~/apps/public
-
-// Start a web server from the directory you are in
-sirloin -d .
 
 // The -d option can be dropped as a short cut
 sirloin ~/src/web/dist
@@ -61,7 +59,13 @@ const app = new Sirloin({
   connect: async (client) => {},
 
   // Redis pubsub is not enabled by default
-  pubsub: undefined
+  pubsub: undefined,
+
+  // HTTPS over SSL support
+  ssl: {
+    key: '/path/to/server.key',
+    cert: '/path/to/server.crt'
+  }
 })
 
 // Get request, whatever you return will be the response
