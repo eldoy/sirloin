@@ -33,6 +33,11 @@
     "uuid": "^3.3.2",
     "ws": "^6.1.0"
   },
+  "files": [
+    "index.js",
+    "lib",
+    "bin"
+  ],
   "keywords": [
     "server",
     "webserver",
