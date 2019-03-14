@@ -108,7 +108,7 @@ describe('Web', () => {
       result = await axios.get(base + '/somethingelse')
     } catch (err) {
       expect(err.response.status).toEqual(404)
-      expect(err.response.data).toEqual({})
+      expect(err.response.data).toEqual('')
     }
   })
 
@@ -132,7 +132,7 @@ describe('Web', () => {
       const result = await axios.post(base + '/not')
     } catch (err) {
       expect(err.response.status).toEqual(404)
-      expect(err.response.data).toEqual({})
+      expect(err.response.data).toEqual('')
     }
   })
 
