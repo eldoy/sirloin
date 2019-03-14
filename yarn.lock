@@ -1308,10 +1308,10 @@ handlebars@^4.0.3:
   optionalDependencies:
     uglify-js "^3.1.4"
 
-hangersteak@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/hangersteak/-/hangersteak-0.0.2.tgz#45b3f0ae3742b88d59b8faf53a7ce76dc8e5066f"
-  integrity sha512-6M2CliNy4KbGbfwd6TmPLWQVmQnIv90kvc0vt4I2eJOHNK4KdwGlscdp/bQpHuqbi5UYz+vA98pPkgYLoq84xw==
+hangersteak@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/hangersteak/-/hangersteak-0.0.3.tgz#8b815ae83fe6ccc66dff9d239b2ae371b4ce956b"
+  integrity sha512-uuo+Q90WRSBwS59GvskjrTMQju5h9uzHh6yg+8YoFx955cq/ddFtpd317/KZeBqp79eG7C0Ar0w3U7QhZXz0Hg==
   dependencies:
     mime-types "^2.1.20"
 
