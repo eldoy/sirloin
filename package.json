@@ -1,6 +1,6 @@
 {
   "name": "sirloin",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "Node web server for HTTP, web sockets, static files and proxies",
   "main": "index.js",
   "bin": {
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "bparse": "^0.0.2",
-    "hangersteak": "^0.0.3",
+    "hangersteak": "^0.0.5",
     "http-proxy": "^1.17.0",
     "ioredis": "^4.0.2",
     "mime-types": "^2.1.20",
