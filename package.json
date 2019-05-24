@@ -15,7 +15,7 @@
   "private": false,
   "scripts": {
     "start": "concurrently --handle-input \"nodemon server.js\"",
-    "test": "jest --watch"
+    "test": "jest --watch --env=node"
   },
   "devDependencies": {
     "axios": "^0.18.0",
