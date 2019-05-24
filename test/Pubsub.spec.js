@@ -9,7 +9,6 @@ beforeAll((done) => {
     done()
   })
   socket.on('message', (data) => {
-    // console.log('RECEIVED MESSAGE: %o', data)
     messages.push(data)
   })
 })

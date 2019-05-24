@@ -226,7 +226,7 @@ app.action('proxy', async (data, client) => {
 })
 
 app.fail(async (err, data, client) => {
-  console.log('%s', err.message)
+  app.log.err('%s', err.message)
   return { error: err.message }
 })
 
