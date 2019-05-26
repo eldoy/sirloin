@@ -39,7 +39,7 @@ sirloin ~/src/web/dist
 ```
 
 ### HTTP SERVER
-Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server Incoming and Outgoing message instances.
+Supported request framework are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server Incoming and Outgoing message instances.
 
 The router is just based on string lookup to make it really fast.
 ```javascript
@@ -96,14 +96,14 @@ app.get('*', async (req, res) => {
   // Return nothing or undefined to send a 404
 })
 
-// Use 'all' to match all HTTP request methods
+// Use 'all' to match all HTTP request framework
 app.all('/all', async (req, res) => {
   if (['POST', 'GET'].includes(req.method)) {
     return { status: 'OK' }
   }
 })
 
-// Use 'any' to match selected HTTP request methods
+// Use 'any' to match selected HTTP request framework
 // This matches 'post' and 'get' to the /any route
 app.any('post', 'get', '/any', async (req, res) => {
   return { status: 'OK' }
@@ -217,7 +217,7 @@ const app = new Sirloin({ pubsub: true }) // or pubsub: {}
 // First subscribe to a function
 app.subscribe('live', async (data, client) => {
   // Publish data to all clients except publisher (client)
-  app.websocket.clients.forEach((c) => {
+  app.websocket.clients.forEach(c => {
     if (client.id !== c.id) {
       c.send(data)
     }
@@ -261,7 +261,7 @@ app.websocket.pubsub.channel    // The channel to publish messages on
 app.websocket.pubsub.options    // The Redis pubsub options
 
 // For each client you can send data to the browser
-app.websocket.clients.forEach((client) => {
+app.websocket.clients.forEach(client => {
   client.send({ hello: 'world' })
 })
 
@@ -357,7 +357,7 @@ app.proxy('*', 'ws://localhost:8081')
 app.proxy('/db', 'http://195.23.43.5:8082')
 
 // Intercept all http traffic and return data
-app.proxy('*', 'http://localhost:8080', (req) => {
+app.proxy('*', 'http://localhost:8080', req => {
   if (req.pathname === '/db') {
     return { error: 'Access denied' }
   }
@@ -365,7 +365,7 @@ app.proxy('*', 'http://localhost:8080', (req) => {
 })
 
 // Intercept all websocket traffic
-app.proxy('*', 'http://localhost:8080', (req) => {
+app.proxy('*', 'http://localhost:8080', req => {
   // Websockets don't return data, the socket is simply destroyed
   // if you return anything else but undefined
   if (req.pathname === '/db') {
