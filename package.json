@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "bparse": "^0.0.2",
-    "hangersteak": "^0.0.5",
+    "hangersteak": "0.1.1",
     "http-proxy": "^1.17.0",
     "ioredis": "^4.0.2",
     "mime-types": "^2.1.20",
