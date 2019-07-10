@@ -94,7 +94,7 @@ describe('Web', () => {
     expect(result.data).toEqual(false)
   })
 
-  it('should not find undefined framework', async () => {
+  it('should not find undefined method', async () => {
     try {
       result = await axios.put(base + '/')
     } catch (err) {

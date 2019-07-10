@@ -39,7 +39,7 @@ sirloin ~/src/web/dist
 ```
 
 ### HTTP SERVER
-Supported request framework are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server Incoming and Outgoing message instances.
+Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server Incoming and Outgoing message instances.
 
 The router is just based on string lookup to make it really fast.
 ```javascript
@@ -96,14 +96,14 @@ app.get('*', async (req, res) => {
   // Return nothing or undefined to send a 404
 })
 
-// Use 'all' to match all HTTP request framework
+// Use 'all' to match all HTTP request methods
 app.all('/all', async (req, res) => {
   if (['POST', 'GET'].includes(req.method)) {
     return { status: 'OK' }
   }
 })
 
-// Use 'any' to match selected HTTP request framework
+// Use 'any' to match selected HTTP request methods
 // This matches 'post' and 'get' to the /any route
 app.any('post', 'get', '/any', async (req, res) => {
   return { status: 'OK' }
