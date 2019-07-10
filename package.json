@@ -1,6 +1,6 @@
 {
   "name": "sirloin",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "Node web server for HTTP, web sockets, static files and proxies",
   "main": "index.js",
   "bin": {
@@ -18,8 +18,8 @@
     "test": "jest --watch --env=node --runInBand"
   },
   "devDependencies": {
-    "axios": "^0.18.0",
-    "concurrently": "^4.0.1",
+    "axios": "^0.18.1",
+    "concurrently": "^4.1.1",
     "jest": "^23.6.0",
     "request": "^2.88.0",
     "wsrecon": "^0.3.1"
@@ -28,11 +28,11 @@
     "bparse": "^0.0.2",
     "hangersteak": "0.1.1",
     "http-proxy": "^1.17.0",
-    "ioredis": "^4.0.2",
-    "mime-types": "^2.1.20",
+    "ioredis": "^4.11.1",
+    "mime-types": "^2.1.24",
     "rainlog": "^0.4.2",
     "uuid": "^3.3.2",
-    "ws": "^6.1.0"
+    "ws": "^6.2.1"
   },
   "files": [
     "index.js",
