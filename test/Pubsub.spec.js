@@ -19,7 +19,7 @@ beforeEach(() => {
 
 describe('Pubsub', () => {
   it('should work with send callbacks', (done) => {
-    socket.send({ action: 'callback' })
+    socket.send({ $action: 'callback' })
     setTimeout(() => {
       expect(messages[0].hello).toEqual('moon')
       expect(messages[1].hello).toEqual('callback')
@@ -29,7 +29,7 @@ describe('Pubsub', () => {
   })
 
   it('should work with send promises', (done) => {
-    socket.send({ action: 'promise' })
+    socket.send({ $action: 'promise' })
     setTimeout(() => {
       expect(messages[0].hello).toEqual('moon')
       expect(messages[1].hello).toEqual('callback')
@@ -39,7 +39,7 @@ describe('Pubsub', () => {
   })
 
   it('should publish messages to all clients', (done) => {
-    socket.send({ action: 'publish' })
+    socket.send({ $action: 'publish' })
     setTimeout(() => {
       expect(messages[0].published).toBe(true)
       expect(messages[1].hello).toEqual('world')
@@ -48,7 +48,7 @@ describe('Pubsub', () => {
   })
 
   it('should publish messages to all clients with await', (done) => {
-    socket.send({ action: 'publishawait' })
+    socket.send({ $action: 'publishawait' })
     setTimeout(() => {
       expect(messages[0].hello).toEqual('await')
       expect(messages[1].published).toBe(true)
@@ -57,7 +57,7 @@ describe('Pubsub', () => {
   })
 
   it('should publish messages to all clients with callback', (done) => {
-    socket.send({ action: 'publishcallback' })
+    socket.send({ $action: 'publishcallback' })
     setTimeout(() => {
       expect(messages[0].published).toBe(true)
       expect(messages[1].hello).toEqual('publish')
@@ -67,7 +67,7 @@ describe('Pubsub', () => {
   })
 
   it('should publish messages to all clients without a client', (done) => {
-    socket.send({ action: 'publishall' })
+    socket.send({ $action: 'publishall' })
     setTimeout(() => {
       expect(messages[0].published).toBe(true)
       expect(messages[1].hello).toEqual('publish')

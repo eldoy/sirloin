@@ -45,7 +45,7 @@ describe('Proxy', () => {
   it('should proxy web socket requests', (done) => {
     const socket = new Socket('ws://' + base)
     socket.on('open', async () => {
-      const data = await socket.fetch({ action: 'proxy' })
+      const data = await socket.fetch({ $action: 'proxy' })
       expect(data.hello).toEqual('proxy')
       done()
     })
