@@ -134,7 +134,7 @@ app.use(async (req, res) => {
 ```
 
 ### WEBSOCKETS
-Websockets are used through *actions*, the URL path is irrelevant. Include *action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead clients.
+Websockets are used through *actions*, the URL path is irrelevant. Include *$action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead clients.
 
 Websocket connections are lazy loaded and enabled only if you specify an action. All websocket actions must return Javascript objects (sent as JSON).
 ```javascript
@@ -155,10 +155,10 @@ const Socket = require('wsrecon')
 const socket = new Socket('ws://example.com')
 
 // Normal socket send from the browser, matches the action named 'hello'
-socket.send({ action: 'hello' })
+socket.send({ $action: 'hello' })
 
 // Use with the 'wsrecon' library to use promises
-const data = await socket.fetch({ action: 'hello' })
+const data = await socket.fetch({ $action: 'hello' })
 console.log(data) // { hello: 'world' }
 
 // Define a '*' action to not use actions
