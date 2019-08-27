@@ -19,8 +19,8 @@
   },
   "devDependencies": {
     "axios": "^0.19.0",
-    "concurrently": "^4.1.1",
-    "jest": "^24.8.0",
+    "concurrently": "^4.1.2",
+    "jest": "^24.9.0",
     "request": "^2.88.0",
     "wsrecon": "^0.4.0"
   },
@@ -28,11 +28,11 @@
     "bparse": "^0.0.3",
     "hangersteak": "^0.1.1",
     "http-proxy": "^1.17.0",
-    "ioredis": "^4.11.2",
+    "ioredis": "^4.14.0",
     "mime-types": "^2.1.24",
     "rainlog": "^0.4.2",
-    "uuid": "^3.3.2",
-    "ws": "^7.1.1"
+    "uuid": "^3.3.3",
+    "ws": "^7.1.2"
   },
   "files": [
     "index.js",
