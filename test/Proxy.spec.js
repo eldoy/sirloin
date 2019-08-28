@@ -12,14 +12,14 @@ describe('Proxy', () => {
   })
 
   it('should proxy get http requests', async () => {
-    let result = await axios.get('http://' + base + '/proxy')
+    const result = await axios.get('http://' + base + '/proxy')
     expect(result.headers['content-type']).toEqual('application/json; charset=utf-8')
     expect(result.status).toEqual(200)
     expect(result.data.hello).toEqual('proxy')
   })
 
   it('should proxy post http requests', async () => {
-    let result = await axios.post('http://' + base + '/proxy')
+    const result = await axios.post('http://' + base + '/proxy')
     expect(result.headers['content-type']).toEqual('application/json; charset=utf-8')
     expect(result.status).toEqual(200)
     expect(result.data.hello).toEqual('proxy')
@@ -32,7 +32,7 @@ describe('Proxy', () => {
 
   it('should return 404 not found', async (done) => {
     try {
-      const data = await axios.get('http://' + base + '/notfound')
+      await axios.get('http://' + base + '/notfound')
     } catch (e) {
       const result = e.response
       expect(result.headers['content-type']).toEqual('application/json; charset=utf-8')
