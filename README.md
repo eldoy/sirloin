@@ -10,6 +10,7 @@ This high performance, extremely easy to use web server includes:
 * Integrated websocket server based on actions
 * Redis pubsub for scaling your websockets
 * Reverse proxy load balancer support
+* Cookie handling
 * Optional static file server
 * Cors enabled out of the box
 * Full async / await support
@@ -77,6 +78,7 @@ app.get('/db', async (req, res) => {
   req.params       // Post body parameters
   req.query        // Query parameters
   req.files        // Uploaded files
+  req.cookie       // Cookie handler
   return { hello: 'world' }
 })
 // See the documentation on Node.js 'incoming message' (req),
@@ -388,13 +390,15 @@ app.use(async (req, res) => {
 })
 
 // JSON API endpoint with routes
-const app = new (require('sirloin'))()
+const Sirloin = require('sirloin')
+const app = new Sirloin()
 app.get('/', async (req, res) => {
   return { hello: 'world' }
 })
 
 // JSON Websocket endpoint
-const app = new (require('sirloin'))()
+const Sirloin = require('sirloin')
+const app = new Sirloin()
 app.action('hello', async (data, client) => {
   return { hello: 'world' }
 })
