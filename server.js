@@ -137,6 +137,11 @@ app.post('/proxy', async () => {
   return { hello: 'proxy' }
 })
 
+app.get('/cookie', async (req, res) => {
+  req.cookie('name', 'hello')
+  return {}
+})
+
 /*******
 * ACTIONS
 */

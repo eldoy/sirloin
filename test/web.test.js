@@ -3,14 +3,14 @@ const base = 'http://localhost:3000'
 
 describe('Web', () => {
   it('should support middleware', async () => {
-    const result = await axios.get(base + '/middleware')
+    let result = await axios.get(base + '/middleware')
     expect(result.headers['content-type']).toEqual('text/html')
     expect(result.status).toEqual(200)
     expect(result.data.hello).toEqual('middleware')
   })
 
   it('should support multiple middleware', async () => {
-    const result = await axios.get(base + '/multiple')
+    let result = await axios.get(base + '/multiple')
     expect(result.headers['content-type']).toEqual('text/html')
     expect(result.headers['content-language']).toEqual('no-NO')
     expect(result.status).toEqual(200)
@@ -18,77 +18,77 @@ describe('Web', () => {
   })
 
   it('should return from middleware', async () => {
-    const result = await axios.get(base + '/middleret')
+    let result = await axios.get(base + '/middleret')
     expect(result.status).toEqual(200)
     expect(result.data.hello).toEqual('middleret')
   })
 
   it('should errors in middleware', async () => {
-    const result = await axios.get(base + '/middleerr')
+    let result = await axios.get(base + '/middleerr')
     expect(result.status).toEqual(200)
     expect(result.data.error).toEqual('middleerr')
   })
 
   it('should return get json', async () => {
-    const result = await axios.get(base + '/world')
+    let result = await axios.get(base + '/world')
     expect(result.status).toEqual(200)
     expect(result.data.hello).toEqual('world')
   })
 
   it('should return post json', async () => {
-    const result = await axios.post(base + '/world')
+    let result = await axios.post(base + '/world')
     expect(result.status).toEqual(200)
     expect(result.data.hello).toEqual('moon')
   })
 
   it('should return put json', async () => {
-    const result = await axios.put(base + '/update')
+    let result = await axios.put(base + '/update')
     expect(result.status).toEqual(200)
     expect(result.data.hello).toEqual('updated')
   })
 
   it('should return delete json', async () => {
-    const result = await axios.delete(base + '/remove')
+    let result = await axios.delete(base + '/remove')
     expect(result.status).toEqual(200)
     expect(result.data.hello).toEqual('removed')
   })
 
   it('should return patch json', async () => {
-    const result = await axios.patch(base + '/patch')
+    let result = await axios.patch(base + '/patch')
     expect(result.status).toEqual(200)
     expect(result.data.hello).toEqual('patched')
   })
 
   it('should return a string', async () => {
-    const result = await axios.get(base + '/string')
+    let result = await axios.get(base + '/string')
     expect(result.headers['content-type']).toEqual('text/plain; charset=utf-8')
     expect(result.status).toEqual(200)
     expect(result.data).toEqual('string')
   })
 
   it('should return a string', async () => {
-    const result = await axios.get(base + '/empty')
+    let result = await axios.get(base + '/empty')
     expect(result.headers['content-type']).toEqual('text/plain; charset=utf-8')
     expect(result.status).toEqual(200)
     expect(result.data).toEqual('')
   })
 
   it('should return a number', async () => {
-    const result = await axios.get(base + '/number')
+    let result = await axios.get(base + '/number')
     expect(result.headers['content-type']).toEqual('text/plain; charset=utf-8')
     expect(result.status).toEqual(200)
     expect(result.data).toEqual(5)
   })
 
   it('should return true', async () => {
-    const result = await axios.get(base + '/true')
+    let result = await axios.get(base + '/true')
     expect(result.headers['content-type']).toEqual('text/plain; charset=utf-8')
     expect(result.status).toEqual(200)
     expect(result.data).toEqual(true)
   })
 
   it('should return false', async () => {
-    const result = await axios.get(base + '/false')
+    let result = await axios.get(base + '/false')
     expect(result.headers['content-type']).toEqual('text/plain; charset=utf-8')
     expect(result.status).toEqual(200)
     expect(result.data).toEqual(false)
@@ -96,7 +96,7 @@ describe('Web', () => {
 
   it('should not find undefined method', async () => {
     try {
-      await axios.put(base + '/')
+      result = await axios.put(base + '/')
     } catch (err) {
       expect(err.response.status).toEqual(404)
       expect(err.response.data).toEqual({})
@@ -105,7 +105,7 @@ describe('Web', () => {
 
   it('should not find undefined paths', async () => {
     try {
-      await axios.get(base + '/somethingelse')
+      result = await axios.get(base + '/somethingelse')
     } catch (err) {
       expect(err.response.status).toEqual(404)
       expect(err.response.data).toEqual('')
@@ -129,7 +129,7 @@ describe('Web', () => {
 
   it('should not run matchall if wrong route', async () => {
     try {
-      await axios.post(base + '/not')
+      const result = await axios.post(base + '/not')
     } catch (err) {
       expect(err.response.status).toEqual(404)
       expect(err.response.data).toEqual('')
@@ -156,5 +156,10 @@ describe('Web', () => {
   it('should support error message handling', async () => {
     const result = await axios.post(base + '/error')
     expect(result.data.error).toEqual('hello error')
+  })
+
+  it('should support cookies', async () => {
+    const result = await axios.get(base + '/cookie')
+    expect(result.headers['set-cookie'][0]).toMatch('name=hello')
   })
 })
