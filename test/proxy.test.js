@@ -36,8 +36,8 @@ describe('Proxy', () => {
     } catch (e) {
       const result = e.response
       expect(result.headers['content-type']).toEqual('application/json; charset=utf-8')
-      expect(result.status).toEqual(404)
-      expect(result.data).toEqual({})
+      expect(result.status).toBe(404)
+      expect(result.data).toBe('')
       done()
     }
   })
