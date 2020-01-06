@@ -7,6 +7,10 @@ const app = new Sirloin({
   connect: async (client) => {
     client.mutate = 'mutate'
   },
+
+  // Uncomment to force this host:
+  // host: 'https://localhost'
+
   // Uncomment to enable SSL:
   // ssl: {
   //   key: './config/server.key',

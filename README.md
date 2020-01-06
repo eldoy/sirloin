@@ -8,13 +8,13 @@ This high performance, extremely easy to use web server includes:
 * Support for file uploads and post body parsing
 * Fast and minimal, just around 500 lines of code
 * Integrated websocket server based on actions
+* Static file server with compression support
 * Redis pubsub for scaling your websockets
 * Reverse proxy load balancer support
-* Cookie handling
-* Optional static file server
 * Cors enabled out of the box
 * Full async / await support
 * HTTPS over SSL support
+* Cookie handling
 * Docker friendly
 
 Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/fugroup/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
@@ -54,6 +54,9 @@ const app = new Sirloin({
   // Static files root directory
   // Set to false to not serve static files
   files: 'dist',
+
+  // Redirect to this host if no match
+  host: 'https://example.com,
 
   // Callback for websocket connect event
   // Can be used for adding data to the websocket client
