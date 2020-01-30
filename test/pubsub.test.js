@@ -1,13 +1,10 @@
-const Socket = require('wsrecon')
+const ws = require('wsrecon')
 const base = 'ws://localhost:3000'
 let socket
 let messages = []
 
-beforeAll((done) => {
-  socket = new Socket(base)
-  socket.on('open', () => {
-    done()
-  })
+beforeAll(async () => {
+  socket = await ws(base)
   socket.on('message', (data) => {
     messages.push(data)
   })

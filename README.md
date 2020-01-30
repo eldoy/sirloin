@@ -17,7 +17,7 @@ This high performance, extremely easy to use web server includes:
 * Cookie handling
 * Docker friendly
 
-Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/fugroup/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
+Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/eldoy/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
 
 The websockets are based on the excellent [ws library](https://github.com/websockets/ws), pubsub is based on [ioredis](https://github.com/luin/ioredis), reverse proxy is based on [http-proxy](https://github.com/nodejitsu/node-http-proxy), and the rest is pure vanilla NodeJS.
 
@@ -291,7 +291,7 @@ If the given directory doesn't exist static files will be disabled automatically
 Mime types are automatically added to each file to make the browser behave correctly. The server enables browser caching by using the Last-Modified header returning a 304 response if the file is fresh. This speeds up delivery a lot.
 
 ### LOGGING
-Logging is done using the ```app.log``` command. It is an instance of [Rainlog](https://github.com/fugroup/rainlog). You can log to console as well as to file. Rainlog supports multiple loggers, and you can optionally add styles to each logger.
+Logging is done using the ```app.log``` command. It is an instance of [Rainlog](https://github.com/eldoy/rainlog). You can log to console as well as to file. Rainlog supports multiple loggers, and you can optionally add styles to each logger.
 ```javascript
 // Log to console with the 'info' logger
 app.log.info('hello')
@@ -305,7 +305,7 @@ app.log.get.info.set({ style: 'green.bold.underline' })
 
 // Default styles are 'green' for info and 'red' for err.
 ```
-Check out the documentation on [Rainlog](https://github.com/fugroup/rainlog) for more info on how to use it and set it up.
+Check out the documentation on [Rainlog](https://github.com/eldoy/rainlog) for more info on how to use it and set it up.
 
 ### ERROR HANDLING
 Errors can be caught with ```try catch``` inside of middleware, routes and actions.
@@ -406,7 +406,7 @@ app.action('hello', async (data, client) => {
   return { hello: 'world' }
 })
 ```
-See the [server.js](https://github.com/fugroup/sirloin/blob/master/server.js) file for more examples.
+See the [server.js](https://github.com/eldoy/sirloin/blob/master/server.js) file for more examples.
 
 ### LICENSE
 
