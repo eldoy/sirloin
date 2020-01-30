@@ -11,7 +11,6 @@ This high performance, extremely easy to use web server includes:
 * Static file server with compression support
 * Redis pubsub for scaling your websockets
 * Reverse proxy load balancer support
-* Cors enabled out of the box
 * Full async / await support
 * HTTPS over SSL support
 * Cookie handling
@@ -127,6 +126,12 @@ Use middleware to run a function before every request. You can return values fro
 // Middleware functions are run in the order that they are added
 app.use(async (req, res) => {
   res.setHeader('Content-Type', 'text/html')
+
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
 })
 
 // Return directly from middleware to skip further processing
