@@ -1,6 +1,6 @@
 const fs = require('fs')
 const axios = require('axios')
-const Socket = require('wsrecon')
+const ws = require('wsrecon')
 const base = 'localhost:3001'
 const path = '/tmp/sirloin-log-test.txt'
 
@@ -42,12 +42,9 @@ describe('Proxy', () => {
     }
   })
 
-  it('should proxy web socket requests', (done) => {
-    const socket = new Socket('ws://' + base)
-    socket.on('open', async () => {
-      const data = await socket.fetch({ $action: 'proxy' })
-      expect(data.hello).toEqual('proxy')
-      done()
-    })
+  it('should proxy web socket requests', async () => {
+    const socket = await ws('ws://' + base)
+    const data = await socket.fetch({ $action: 'proxy' })
+    expect(data.hello).toEqual('proxy')
   })
 })

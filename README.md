@@ -8,16 +8,15 @@ This high performance, extremely easy to use web server includes:
 * Support for file uploads and post body parsing
 * Fast and minimal, just around 500 lines of code
 * Integrated websocket server based on actions
+* Static file server with compression support
 * Redis pubsub for scaling your websockets
 * Reverse proxy load balancer support
-* Cookie handling
-* Optional static file server
-* Cors enabled out of the box
 * Full async / await support
 * HTTPS over SSL support
+* Cookie handling
 * Docker friendly
 
-Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/fugroup/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
+Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/eldoy/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
 
 The websockets are based on the excellent [ws library](https://github.com/websockets/ws), pubsub is based on [ioredis](https://github.com/luin/ioredis), reverse proxy is based on [http-proxy](https://github.com/nodejitsu/node-http-proxy), and the rest is pure vanilla NodeJS.
 
@@ -54,6 +53,9 @@ const app = new Sirloin({
   // Static files root directory
   // Set to false to not serve static files
   files: 'dist',
+
+  // Redirect to this host if no match
+  host: 'https://example.com,
 
   // Callback for websocket connect event
   // Can be used for adding data to the websocket client
@@ -124,6 +126,12 @@ Use middleware to run a function before every request. You can return values fro
 // Middleware functions are run in the order that they are added
 app.use(async (req, res) => {
   res.setHeader('Content-Type', 'text/html')
+
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
 })
 
 // Return directly from middleware to skip further processing
@@ -288,7 +296,7 @@ If the given directory doesn't exist static files will be disabled automatically
 Mime types are automatically added to each file to make the browser behave correctly. The server enables browser caching by using the Last-Modified header returning a 304 response if the file is fresh. This speeds up delivery a lot.
 
 ### LOGGING
-Logging is done using the ```app.log``` command. It is an instance of [Rainlog](https://github.com/fugroup/rainlog). You can log to console as well as to file. Rainlog supports multiple loggers, and you can optionally add styles to each logger.
+Logging is done using the ```app.log``` command. It is an instance of [Rainlog](https://github.com/eldoy/rainlog). You can log to console as well as to file. Rainlog supports multiple loggers, and you can optionally add styles to each logger.
 ```javascript
 // Log to console with the 'info' logger
 app.log.info('hello')
@@ -302,7 +310,7 @@ app.log.get.info.set({ style: 'green.bold.underline' })
 
 // Default styles are 'green' for info and 'red' for err.
 ```
-Check out the documentation on [Rainlog](https://github.com/fugroup/rainlog) for more info on how to use it and set it up.
+Check out the documentation on [Rainlog](https://github.com/eldoy/rainlog) for more info on how to use it and set it up.
 
 ### ERROR HANDLING
 Errors can be caught with ```try catch``` inside of middleware, routes and actions.
@@ -403,7 +411,7 @@ app.action('hello', async (data, client) => {
   return { hello: 'world' }
 })
 ```
-See the [server.js](https://github.com/fugroup/sirloin/blob/master/server.js) file for more examples.
+See the [server.js](https://github.com/eldoy/sirloin/blob/master/server.js) file for more examples.
 
 ### LICENSE
 

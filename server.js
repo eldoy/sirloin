@@ -6,7 +6,16 @@ const app = new Sirloin({
   files: 'dist', // Static files folder
   connect: async (client) => {
     client.mutate = 'mutate'
-  }
+  },
+
+  // Uncomment to force this host:
+  // host: 'https://localhost'
+
+  // Uncomment to enable SSL:
+  // ssl: {
+  //   key: './config/server.key',
+  //   cert: './config/server.crt'
+  // }
 })
 
 /*******

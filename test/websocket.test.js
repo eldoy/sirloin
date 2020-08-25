@@ -1,13 +1,10 @@
-const Socket = require('wsrecon')
+const ws = require('wsrecon')
 const base = 'ws://localhost:3000'
 let socket
 let message
 
-beforeAll((done) => {
-  socket = new Socket(base)
-  socket.on('open', () => {
-    done()
-  })
+beforeAll(async () => {
+  socket = await ws(base)
   socket.on('message', (data) => {
     message = data
   })
@@ -17,10 +14,7 @@ beforeEach(() => {
   message = undefined
 })
 
-describe('Websocket', () => {
-  it('should connect to web socket', () => {
-    expect(socket.readyState).toEqual(1)
-  })
+describe('websocket', () => {
 
   it('should receive a message without action and fetch', async () => {
     const data = await socket.fetch({})

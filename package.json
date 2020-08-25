@@ -1,16 +1,16 @@
 {
   "name": "sirloin",
-  "version": "0.14.2",
+  "version": "0.15.0",
   "description": "Node web server for HTTP, web sockets, static files and proxies",
   "main": "index.js",
   "bin": {
     "sirloin": "./bin/sirloin.js"
   },
-  "author": "fugroup <vidar@fugroup.net>",
+  "author": "Vidar Eldøy <vidar@eldoy.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fugroup/sirloin.git"
+    "url": "https://github.com/eldoy/sirloin.git"
   },
   "private": false,
   "scripts": {
@@ -18,22 +18,22 @@
     "test": "jest --watch --env=node --runInBand"
   },
   "devDependencies": {
-    "axios": "^0.19.0",
-    "concurrently": "^5.0.0",
-    "jest": "^24.9.0",
+    "axios": "^0.19.2",
+    "concurrently": "^5.1.0",
+    "jest": "^25.1.0",
     "request": "^2.88.0",
-    "wsrecon": "^0.4.0"
+    "wsrecon": "^0.6.0"
   },
   "dependencies": {
     "bparse": "^0.0.3",
-    "hangersteak": "^0.1.1",
+    "hangersteak": "^0.2.4",
     "http-proxy": "^1.18.0",
     "ioredis": "^4.14.1",
-    "mime-types": "^2.1.24",
+    "mime-types": "^2.1.26",
     "rainlog": "^0.4.2",
-    "uuid": "^3.3.3",
+    "uuid": "^3.4.0",
     "wcookie": "^0.3.0",
-    "ws": "^7.2.0"
+    "ws": "^7.2.1"
   },
   "files": [
     "index.js",
