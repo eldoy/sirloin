@@ -55,7 +55,7 @@ const app = new Sirloin({
   files: 'dist',
 
   // Redirect to this host if no match
-  host: 'https://example.com,
+  host: 'https://example.com',
 
   // Callback for websocket connect event
   // Can be used for adding data to the websocket client
