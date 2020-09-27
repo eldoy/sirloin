@@ -25,7 +25,7 @@
     "wsrecon": "^0.6.0"
   },
   "dependencies": {
-    "bparse": "^0.1.4",
+    "bparse": "^0.1.5",
     "hangersteak": "^0.2.5",
     "http-proxy": "^1.18.1",
     "ioredis": "^4.17.3",
