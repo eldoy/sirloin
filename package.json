@@ -18,9 +18,9 @@
     "test": "jest --watch --env=node --runInBand"
   },
   "devDependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.0",
     "concurrently": "^5.3.0",
-    "jest": "^26.4.2",
+    "jest": "^26.6.1",
     "request": "^2.88.2",
     "wsrecon": "^0.6.0"
   },
@@ -28,10 +28,11 @@
     "bparse": "^0.1.5",
     "hangersteak": "^0.2.5",
     "http-proxy": "^1.18.1",
-    "ioredis": "^4.17.3",
+    "ioredis": "^4.19.1",
     "mime-types": "^2.1.27",
     "rainlog": "^0.4.2",
-    "uuid": "^8.3.0",
+    "rekvest": "^0.1.2",
+    "uuid": "^8.3.1",
     "wcookie": "^0.4.0",
     "ws": "^7.3.1"
   },
