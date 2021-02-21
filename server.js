@@ -228,7 +228,7 @@ app.action('publishall', async (data, client) => {
 })
 
 app.fail(async (err, data, client) => {
-  app.log.err('%s', err.message)
+  console.log('%s', err.message)
   return { error: err.message }
 })
 
