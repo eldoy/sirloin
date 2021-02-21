@@ -140,14 +140,6 @@ app.any('post', 'get', '/any', async (req, res) => {
   return { hello: 'any' }
 })
 
-app.get('/proxy', async () => {
-  return { hello: 'proxy' }
-})
-
-app.post('/proxy', async () => {
-  return { hello: 'proxy' }
-})
-
 app.get('/cookie', async (req, res) => {
   req.cookie('name', 'hello')
   return {}
@@ -237,32 +229,9 @@ app.action('publishall', async (data, client) => {
   return { published: true }
 })
 
-app.action('proxy', async (data, client) => {
-  return { hello: 'proxy' }
-})
-
 app.fail(async (err, data, client) => {
   app.log.err('%s', err.message)
   return { error: err.message }
-})
-
-
-/*******
-* LOAD BALANCER
-*/
-
-const app2 = new Sirloin({ port: 3001, proxy: true })
-
-app2.proxy('/proxy', 'http://localhost:3000')
-
-app2.proxy('*', 'ws://localhost:3000')
-
-app2.proxy('/nowhere', 'ws://localhost:3000', async (req) => {
-  return false
-})
-
-app2.proxy('/nowhere', 'http://localhost:3000', async (req) => {
-  return { hello: 'nowhere' }
 })
 
 
@@ -281,21 +250,3 @@ const app3 = new Sirloin({
 app3.get('/ssl', (req, res) => {
   return { hello: 'ssl' }
 })
-
-
-/*******
-* HTTPS LOADBALANCER
-*/
-
-const app4 = new Sirloin({
-  port: 3003,
-  proxy: true,
-  ssl: {
-    key: 'config/server.key',
-    cert: 'config/server.crt'
-  }
-})
-
-app4.proxy('/proxy', 'http://localhost:3000')
-
-app4.proxy('*', 'ws://localhost:8081')

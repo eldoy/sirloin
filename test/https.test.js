@@ -16,18 +16,4 @@ describe('Https', () => {
       done()
     })
   })
-
-  it('should get https proxy requests', (done) => {
-    request.get({
-      rejectUnauthorized: false,
-      url: `${load}/proxy`
-    },
-    (err, res, body) => {
-      expect(res.statusCode).toEqual(200)
-      expect(res.headers['content-type']).toEqual('application/json; charset=utf-8')
-      expect(typeof body).toEqual('string')
-      expect(body).toMatch('proxy')
-      done()
-    })
-  })
 })
