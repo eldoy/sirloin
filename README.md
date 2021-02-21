@@ -10,7 +10,6 @@ This high performance, extremely easy to use web server includes:
 * Integrated websocket server based on actions
 * Static file server with compression support
 * Redis pubsub for scaling your websockets
-* Reverse proxy load balancer support
 * Full async / await support
 * HTTPS over SSL support
 * Cookie handling
@@ -18,15 +17,13 @@ This high performance, extremely easy to use web server includes:
 
 Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/eldoy/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
 
-The websockets are based on the excellent [ws library](https://github.com/websockets/ws), pubsub is based on [ioredis](https://github.com/luin/ioredis), reverse proxy is based on [http-proxy](https://github.com/nodejitsu/node-http-proxy), and the rest is pure vanilla NodeJS.
-
-*Sirloin is considerably faster than Express and Hapi.*
+The websockets are based on the excellent [ws library](https://github.com/websockets/ws), pubsub is based on [ioredis](https://github.com/luin/ioredis), and the rest is pure vanilla NodeJS.
 
 ### INSTALL
-```npm i sirloin``` or ```yarn add sirloin```
+```npm i sirloin```
 
 Using the included binary you can start a web server in any directory.
-To install the binary, do ```npm i -g sirloin``` or ```yarn global add sirloin```.
+To install the binary, do ```npm i -g sirloin```.
 ```
 // Start a web server running on port 3000 from the directory you are in
 sirloin
@@ -42,7 +39,7 @@ sirloin ~/src/web/dist
 Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server Incoming and Outgoing message instances.
 
 The router is just based on string lookup to make it really fast.
-```javascript
+```js
 const Sirloin = require('sirloin')
 
 // Default config shown
@@ -122,7 +119,7 @@ app.get('/projects', async (req, res) => {
 
 ### MIDDLEWARE
 Use middleware to run a function before every request. You can return values from middleware as well and the rest of the middleware stack will be skipped.
-```javascript
+```js
 // Middleware functions are run in the order that they are added
 app.use(async (req, res) => {
   res.setHeader('Content-Type', 'text/html')
@@ -147,7 +144,7 @@ app.use(async (req, res) => {
 Websockets are used through *actions*, the URL path is irrelevant. Include *$action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead clients.
 
 Websocket connections are lazy loaded and enabled only if you specify an action. All websocket actions must return Javascript objects (sent as JSON).
-```javascript
+```js
 // Websocket actions work like remote function calls
 app.action('hello', async (data, client) => {
   data             // The data sent from the browser minus action
@@ -202,11 +199,12 @@ app.action('options', async (data, client) => {
   // ...
 })
 ```
+
 ### REDIS PUBSUB
 If you have more than one app server for your websockets, you need pubsub to reliably publish messages to multiple clients. With pubsub, the messages go via a [Redis server](https://redis.io), a high performance key-value store.
 
 Sirloin has built in support for pubsub, all you need to do is to [install Redis](https://redis.io/download) and enable it in your Sirloin config:
-```javascript
+```js
 // Default config options shown
 const app = new Sirloin({
   pubsub: {
@@ -256,7 +254,7 @@ Pubsub is disabled by default, remove the config or set to 'false' to send messa
 
 ### API & CONFIGURATION
 The app object contains functions and properties that are useful as well:
-```javascript
+```js
 app.config                      // The active config for the app
 app.http                        // The HTTP server reference
 app.http.server                 // The Node.js HTTP server instance
@@ -281,7 +279,7 @@ client.send({ data: { hello: 'found' } })
 ```
 ### STATIC FILE SERVER
 Static files will be served from the 'dist' directory by default. Routes have presedence over static files. If the file path ends with just a '/', then the server will serve the 'index.html' file if it exists.
-```javascript
+```js
 // Set the static file directory via the 'files' option, default is 'dist'
 const app = new Sirloin({ files: 'dist' })
 
@@ -297,7 +295,7 @@ Mime types are automatically added to each file to make the browser behave corre
 
 ### LOGGING
 Logging is done using the ```app.log``` command. It is an instance of [Rainlog](https://github.com/eldoy/rainlog). You can log to console as well as to file. Rainlog supports multiple loggers, and you can optionally add styles to each logger.
-```javascript
+```js
 // Log to console with the 'info' logger
 app.log.info('hello')
 
@@ -314,7 +312,7 @@ Check out the documentation on [Rainlog](https://github.com/eldoy/rainlog) for m
 
 ### ERROR HANDLING
 Errors can be caught with ```try catch``` inside of middleware, routes and actions.
-```javascript
+```js
 app.get('/crash', async (req, res) => {
   try {
     const user = await db.user.first()
@@ -325,7 +323,7 @@ app.get('/crash', async (req, res) => {
 })
 ```
 You can also collect errors in special routes and actions. The 'err' argument is a normal javascript Error instance.
-```javascript
+```js
 // For middleware and http routes use 'error'
 app.error(async (err, req, res) => {
   return { error: err.message }
@@ -351,43 +349,10 @@ app.action('db', async (data, client) => {
   throw new Error('websocket error!')
 })
 ```
-### REVERSE PROXY LOAD BALANCER
-Sirloin has built-in support for reverse proxying so you can use it as a load balancer instead of Nginx, Haproxy or Traefik. Your entire application stack can now be pure Javascript.
-```javascript
-// Enable proxy mode
-const app = new Sirloin({ proxy: true })
-
-// Forward all http requests to http://localhost:8080
-app.proxy('*', 'http://localhost:8080')
-
-// Forward all websocket requests to 'http://localhost:8081'
-app.proxy('*', 'ws://localhost:8081')
-
-// Forward all requests to /db to http://195.23.43.5:8082'
-app.proxy('/db', 'http://195.23.43.5:8082')
-
-// Intercept all http traffic and return data
-app.proxy('*', 'http://localhost:8080', req => {
-  if (req.pathname === '/db') {
-    return { error: 'Access denied' }
-  }
-  // Return nothing or undefined to proxy the request normally
-})
-
-// Intercept all websocket traffic
-app.proxy('*', 'http://localhost:8080', req => {
-  // Websockets don't return data, the socket is simply destroyed
-  // if you return anything else but undefined
-  if (req.pathname === '/db') {
-    return false
-  }
-})
-```
-When in proxy mode, normal http will be ignored. The performance of the reverse proxy is very good, try it out!
 
 ### EXAMPLES OF USE
 Here's a few examples showing how easy to use Sirloin can be:
-```javascript
+```js
 // File server running on port 3000 (yeah, only one line of code)
 new (require('sirloin'))()
 
