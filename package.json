@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "axios": "^0.21.1",
-    "concurrently": "^5.3.0",
+    "concurrently": "^6.0.0",
     "jest": "^26.6.3",
     "request": "^2.88.2",
     "wsrecon": "^0.6.0"
@@ -29,7 +29,7 @@
     "hangersteak": "^0.2.6",
     "http-proxy": "^1.18.1",
     "ioredis": "^4.22.0",
-    "mime-types": "^2.1.28",
+    "mime-types": "^2.1.29",
     "rainlog": "^0.4.2",
     "rekvest": "^0.1.2",
     "uuid": "^8.3.2",
