@@ -95,9 +95,7 @@ app.error(async (err, req, res) => {
 })
 
 app.post('/upload', async (req, res) => {
-  console.log(req.files)
   const file = req.files[0]
-  console.log(file)
   return { name: file.name }
 })
 
