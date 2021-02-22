@@ -3,9 +3,6 @@
   "version": "0.18.2",
   "description": "Node web server for HTTP, web sockets and static files",
   "main": "index.js",
-  "bin": {
-    "sirloin": "./bin/sirloin.js"
-  },
   "author": "Vidar Eldøy <vidar@eldoy.com>",
   "license": "MIT",
   "repository": {
@@ -35,9 +32,7 @@
     "ws": "^7.4.3"
   },
   "files": [
-    "index.js",
-    "lib",
-    "bin"
+    "index.js"
   ],
   "keywords": [
     "server",
@@ -53,10 +48,6 @@
     "http-server",
     "file-server",
     "static",
-    "proxy",
-    "reverse",
-    "load",
-    "balancer",
     "microservice",
     "pubsub",
     "api"
