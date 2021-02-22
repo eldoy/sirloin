@@ -160,12 +160,12 @@ app.action('mutate', async (data, client) => {
 })
 
 app.action('count', async (data, client) => {
-  const count = app.websocket.server.clients.size
+  const count = app.server.clients.size
   return { hello: count }
 })
 
 app.action('clients', async (data, client) => {
-  const count = [...app.websocket.server.clients].length
+  const count = [...app.server.clients].length
   return { hello: count }
 })
 
@@ -194,7 +194,7 @@ app.action('promise', async (data, client) => {
 })
 
 app.subscribe('live', async (data, client) => {
-  app.websocket.server.clients.forEach((c) => {
+  app.server.clients.forEach((c) => {
     c.send(data)
   })
 })
@@ -217,7 +217,7 @@ app.action('publishcallback', async (data, client) => {
 })
 
 app.subscribe('all', async (data, client) => {
-  app.websocket.server.clients.forEach((c) => {
+  app.server.clients.forEach((c) => {
     c.send(data)
   })
 })
