@@ -232,6 +232,11 @@ app.fail(async (err, data, client) => {
   return { error: err.message }
 })
 
+/*******
+* WEB
+*/
+
+const app2 = new Sirloin({ port: 3001 })
 
 /*******
 * HTTPS
