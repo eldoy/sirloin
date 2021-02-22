@@ -95,10 +95,9 @@ describe('Web', () => {
     expect(result.body).toEqual(false)
   })
 
-  // TODO: This is not kicking in
-  xit('should not find undefined method', async () => {
+  it('should not find undefined method', async () => {
     try {
-      const result = await got.put(base2 + '/')
+      const result = await got.put(base2 + '/', { responseType: 'json' })
     } catch (err) {
       expect(err.response.statusCode).toEqual(404)
       expect(err.response.body).toEqual('')
@@ -131,7 +130,7 @@ describe('Web', () => {
 
   it('should not run matchall if wrong route', async () => {
     try {
-      const result = await got.post(base + '/not')
+      const result = await got.post(base + '/not', { responseType: 'json' })
     } catch (err) {
       expect(err.response.statusCode).toEqual(404)
       expect(err.response.body).toEqual('')
