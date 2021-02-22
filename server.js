@@ -1,6 +1,6 @@
-const Sirloin = require('./index.js')
+const sirloin = require('./index.js')
 
-const app = new Sirloin({
+const app = sirloin({
   pubsub: true,
   port: 3000,
   files: 'dist', // Static files folder
@@ -236,13 +236,13 @@ app.fail(async (err, data, client) => {
 * WEB
 */
 
-const app2 = new Sirloin({ port: 3001 })
+const app2 = sirloin({ port: 3001 })
 
 /*******
 * HTTPS
 */
 
-const app3 = new Sirloin({
+const app3 = sirloin({
   port: 3002,
   ssl: {
     key: 'config/server.key',
