@@ -3,13 +3,13 @@ const base = 'https://localhost:3002'
 
 describe('Https', () => {
   it('should get https requests', async () => {
-    const res = await got(
+    const result = await got(
       `${base}/ssl`,
       { https: { rejectUnauthorized: false } }
     )
-    expect(res.statusCode).toEqual(200)
-    expect(res.headers['content-type']).toEqual('application/json; charset=utf-8')
-    expect(typeof res.body).toEqual('string')
-    expect(res.body).toMatch('ssl')
+    expect(result.statusCode).toEqual(200)
+    expect(result.headers['content-type']).toEqual('application/json; charset=utf-8')
+    expect(typeof result.body).toEqual('string')
+    expect(result.body).toMatch('ssl')
   })
 })
