@@ -137,7 +137,6 @@ server.action('hello', async (data, client) => {
   client.id        // The id of this websocket client
   client.send()    // Use this function to send messages back to the browser
   client.req       // The request object used to connect to the websocket
-  client.websocket // The app websocket object
 
   // Return a javascript object to send to the client
   return { hello: 'world' }
@@ -312,7 +311,7 @@ server.action('db', async (data, client) => {
 })
 ```
 
-### Examples of use
+### Examples of Use
 Here's a few examples showing how easy to use Sirloin can be:
 ```js
 // File server running on port 3000 (yeah, only one line of code)
