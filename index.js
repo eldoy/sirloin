@@ -32,7 +32,7 @@ function normalizeArgs(options, fn) {
 
 function log(msg, data = {}) {
   if (process.env.NODE_ENV !== 'production') {
-    console.log(`${msg}\n${util.inspect(data)}\n`)
+    console.log(`\n${msg}\n${util.inspect(data)}`)
   }
 }
 
