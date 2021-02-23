@@ -29,7 +29,7 @@ The router is just based on string lookup to make it really fast.
 const sirloin = require('sirloin')
 
 // Default config shown
-const app = sirloin({
+const server = sirloin({
   // Web server port
   port: 3000,
 
@@ -55,7 +55,7 @@ const app = sirloin({
 })
 
 // Get request, whatever you return will be the response
-app.get('/db', async (req, res) => {
+server.get('/db', async (req, res) => {
   req.method       // Request method
   req.path         // Request path
   req.pathname     // Request path name
@@ -70,13 +70,13 @@ app.get('/db', async (req, res) => {
 // 'outgoing message' (res) and 'url' for more on what's available.
 
 // Post request, uploads must be post requests
-app.post('/upload', async (req, res) => {
+server.post('/upload', async (req, res) => {
   req.files // Array of uploaded files if any
   return { success: true }
 })
 
 // Use the '*' for a catch all route
-app.get('*', async (req, res) => {
+server.get('*', async (req, res) => {
   if (req.path === '/custom') {
     return { hello: 'custom' }
   }
@@ -84,7 +84,7 @@ app.get('*', async (req, res) => {
 })
 
 // Use 'all' to match all HTTP request methods
-app.all('/all', async (req, res) => {
+server.all('/all', async (req, res) => {
   if (['POST', 'GET'].includes(req.method)) {
     return { status: 'OK' }
   }
@@ -92,12 +92,12 @@ app.all('/all', async (req, res) => {
 
 // Use 'any' to match selected HTTP request methods
 // This matches 'post' and 'get' to the /any route
-app.any('post', 'get', '/any', async (req, res) => {
+server.any('post', 'get', '/any', async (req, res) => {
   return { status: 'OK' }
 })
 
 // You can also return HTML templates, strings, numbers and boolean values
-app.get('/projects', async (req, res) => {
+server.get('/projects', async (req, res) => {
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
   return '<h1>Hello world</h1>'
 })
@@ -107,7 +107,7 @@ app.get('/projects', async (req, res) => {
 Use middleware to run a function before every request. You can return values from middleware as well and the rest of the middleware stack will be skipped.
 ```js
 // Middleware functions are run in the order that they are added
-app.use(async (req, res) => {
+server.use(async (req, res) => {
   res.setHeader('Content-Type', 'text/html')
 
   // Enable CORS
@@ -118,7 +118,7 @@ app.use(async (req, res) => {
 })
 
 // Return directly from middleware to skip further processing
-app.use(async (req, res) => {
+server.use(async (req, res) => {
    const session = await db.session.find({ token: res.query.token })
    if (!session) {
      return { error: 'session not found' }
@@ -132,7 +132,7 @@ Websockets are used through *actions*, the URL path is irrelevant. Include *$act
 Websocket connections are lazy loaded and enabled only if you specify an action. All websocket actions must return Javascript objects (sent as JSON).
 ```js
 // Websocket actions work like remote function calls
-app.action('hello', async (data, client) => {
+server.action('hello', async (data, client) => {
   data             // The data sent from the browser minus action
   client.id        // The id of this websocket client
   client.send()    // Use this function to send messages back to the browser
@@ -155,12 +155,12 @@ const data = await socket.fetch({ $action: 'hello' })
 console.log(data) // { hello: 'world' }
 
 // Define a '*' action to not use actions
-app.action('*', async (data, client) => {
+server.action('*', async (data, client) => {
   return { hello: 'custom' }       // Will send what you return
 })
 
 // The client send function supports callbacks and promises
-app.action('promise', async (data, client) => {
+server.action('promise', async (data, client) => {
   // Unordered, the next line happens immediately
   client.send({ hello: 'send' })
 
@@ -169,14 +169,14 @@ app.action('promise', async (data, client) => {
 
   // With callback, the next line happens immediately
   await client.send({ hello: 'promise' }, () => {
-    app.log.info('In callback, sent it')
+    console.log('In callback, sent it')
   })
 
   // ...
 })
 
 // All of the options in the ws library are supported for send
-app.action('options', async (data, client) => {
+server.action('options', async (data, client) => {
   await client.send({ message: 'terminated' }, { compress: true })
 
   // Terminate the client when sending is done
@@ -192,7 +192,7 @@ If you have more than one app server for your websockets, you need pubsub to rel
 Sirloin has built in support for pubsub, all you need to do is to [install Redis](https://redis.io/download) and enable it in your Sirloin config:
 ```js
 // Default config options shown
-const app = sirloin({
+const server = sirloin({
   pubsub: {
     port: 6379,          // Redis port
     host: 'localhost',   // Redis host URL
@@ -206,12 +206,12 @@ const app = sirloin({
 
 // To use the default options, this is all you need
 // Make sure Redis is running before starting your application
-const app = sirloin({ pubsub: true }) // or pubsub: {}
+const server = sirloin({ pubsub: true }) // or pubsub: {}
 
 // First subscribe to a function
-app.subscribe('live', async (data, client) => {
+server.subscribe('live', async (data, client) => {
   // Publish data to all clients except publisher (client)
-  app.websocket.clients.forEach(c => {
+  server.websocket.clients.forEach(c => {
     if (client.id !== c.id) {
       c.send(data)
     }
@@ -219,12 +219,12 @@ app.subscribe('live', async (data, client) => {
 })
 
 // Use the 'publish' function to publish messages to multiple clients
-app.action('publish', async (data, client) => {
+server.action('publish', async (data, client) => {
   // This will call the subscribed function named 'live' on every app server
   client.publish('live', { hello: 'world' })
 
   // Publish to all without client, in case you don't have it
-  app.publish('live', { hello: 'all' })
+  server.publish('live', { hello: 'all' })
 })
 
 // The publish function works with await
@@ -239,41 +239,34 @@ client.publish('live', { hello: 'world' }, () => {
 Pubsub is disabled by default, remove the config or set to 'false' to send messages directly to the socket.
 
 ### API & Configuration
-The app object contains functions and properties that are useful as well:
+The server object contains functions and properties that are useful as well:
 ```js
-app.config                      // The active config for the app
-app.http                        // The HTTP server reference
-app.http.server                 // The Node.js HTTP server instance
-app.websocket                   // The Websocket server reference
-app.websocket.server            // The ws Websocket server instance
-app.websocket.server.clients    // The connected clients as a set
-app.websocket.clients           // The connected clients as an array
-app.websocket.pubsub            // The pubsub object
-app.websocket.pubsub.hub        // The pubsub hub handling subscriptions
-app.websocket.pubsub.connected  // Whether pubsub is connected or not
-app.websocket.pubsub.channel    // The channel to publish messages on
-app.websocket.pubsub.options    // The Redis pubsub options
+server.config                      // The active config for the server
+server.http                        // The HTTP server reference
+server.websocket                   // The Websocket server reference
+server.websocket.clients           // The connected clients as an array
 
 // For each client you can send data to the browser
-app.websocket.clients.forEach(client => {
+server.websocket.clients.forEach(client => {
   client.send({ hello: 'world' })
 })
 
 // Find the client with the 'id' in _id and send some data to it
-const client = app.websocket.clients.find(c => c.id === _id)
+const client = server.websocket.clients.find(c => c.id === _id)
 client.send({ data: { hello: 'found' } })
 ```
+
 ### Static File Server
 Static files will be served from the 'dist' directory by default. Routes have presedence over static files. If the file path ends with just a '/', then the server will serve the 'index.html' file if it exists.
 ```js
 // Set the static file directory via the 'dir' option, default is 'dist'
-const app = sirloin({ dir: 'dist' })
+const server = sirloin({ dir: 'dist' })
 
 // Change it to the name of your static files directory
-const app = sirloin({ dir: 'public' })
+const server = sirloin({ dir: 'public' })
 
 // Set it to false to disable serving of static files
-const app = sirloin({ dir: false })
+const server = sirloin({ dir: false })
 ```
 If the given directory doesn't exist static files will be disabled automatically.
 
@@ -282,11 +275,11 @@ Mime types are automatically added to each file to make the browser behave corre
 ### Error Handling
 Errors can be caught with ```try catch``` inside of middleware, routes and actions.
 ```js
-app.get('/crash', async (req, res) => {
+server.get('/crash', async (req, res) => {
   try {
     const user = await db.user.first()
   } catch (e) {
-    app.log.err(e.message)
+    console.log(e.message)
     return { error: 'find user crashed' }
   }
 })
@@ -294,27 +287,27 @@ app.get('/crash', async (req, res) => {
 You can also collect errors in special routes and actions. The 'err' argument is a normal javascript Error instance.
 ```js
 // For middleware and http routes use 'error'
-app.error(async (err, req, res) => {
+server.error(async (err, req, res) => {
   return { error: err.message }
 })
 
 // For websocket actions use 'fail'
-app.fail(async (err, data, client) => {
+server.fail(async (err, data, client) => {
   return { error: err.message }
 })
 
 // Trigger error from middleware, will go to 'error' if defined
-app.use(async (req, res) => {
+server.use(async (req, res) => {
   throw new Error('middleware error!')
 })
 
 // Trigger error from http route, will go to 'error' if defined
-app.post('/db', async (req, res) => {
+server.post('/db', async (req, res) => {
   throw new Error('http error!')
 })
 
 // Trigger error from websocket action, will go to 'fail' if defined
-app.action('db', async (data, client) => {
+server.action('db', async (data, client) => {
   throw new Error('websocket error!')
 })
 ```
@@ -326,22 +319,22 @@ Here's a few examples showing how easy to use Sirloin can be:
 require('sirloin')()
 
 // JSON API endpoint without routes (middleware only)
-const app = require('sirloin')()
-app.use(async (req, res) => {
+const server = require('sirloin')()
+server.use(async (req, res) => {
   return { hello: 'world' }
 })
 
 // JSON API endpoint with routes
 const sirloin = require('sirloin')
-const app = sirloin()
-app.get('/', async (req, res) => {
+const server = sirloin()
+server.get('/', async (req, res) => {
   return { hello: 'world' }
 })
 
 // JSON Websocket endpoint
 const sirloin = require('sirloin')
-const app = sirloin()
-app.action('hello', async (data, client) => {
+const server = sirloin()
+server.action('hello', async (data, client) => {
   return { hello: 'world' }
 })
 ```

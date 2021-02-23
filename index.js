@@ -248,7 +248,7 @@ module.exports = function(config = {}) {
 
   function all(path, fn, methods = METHODS) {
     for (const m of methods) {
-      app[m.toLowerCase()](path, fn)
+      server[m.toLowerCase()](path, fn)
     }
   }
 
@@ -291,14 +291,14 @@ module.exports = function(config = {}) {
     })
   }
 
-  const app = { any, all, use, action, subscribe, error, fail, publish, http, websocket }
+  const server = { any, all, use, action, subscribe, error, fail, publish, http, websocket, config }
 
   // Generate verb functions
   for (const m of METHODS) {
-    app[m.toLowerCase()] = function(path, fn) {
+    server[m.toLowerCase()] = function(path, fn) {
       routes[m][path] = fn
     }
   }
 
-  return app
+  return server
 }
