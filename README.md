@@ -2,7 +2,7 @@
 
 # Sirloin Node.js Web Server
 
-This high performance, extremely easy to use web server includes:
+This high performance easy to use web server includes:
 
 * HTTP server for your APIs and microservices
 * Support for file uploads and post body parsing
@@ -13,43 +13,29 @@ This high performance, extremely easy to use web server includes:
 * Full async / await support
 * HTTPS over SSL support
 * Cookie handling
-* Docker friendly
 
 Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/eldoy/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
 
 The websockets are based on the excellent [ws library](https://github.com/websockets/ws), pubsub is based on [ioredis](https://github.com/luin/ioredis), and the rest is pure vanilla NodeJS.
 
-### INSTALL
+### Install
 ```npm i sirloin```
 
-Using the included binary you can start a web server in any directory.
-To install the binary, do ```npm i -g sirloin```.
-```
-// Start a web server running on port 3000 from the directory you are in
-sirloin
-
-// Start a web server from another directory and port
-sirloin -p 3001 -d ~/apps/public
-
-// The -d option can be dropped as a short cut
-sirloin ~/src/web/dist
-```
-
-### HTTP SERVER
+### HTTP Server
 Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server Incoming and Outgoing message instances.
 
 The router is just based on string lookup to make it really fast.
 ```js
-const Sirloin = require('sirloin')
+const sirloin = require('sirloin')
 
 // Default config shown
-const app = new Sirloin({
+const app = sirloin({
   // Web server port
   port: 3000,
 
   // Static files root directory
   // Set to false to not serve static files
-  files: 'dist',
+  dir: 'dist',
 
   // Redirect to this host if no match
   host: 'https://example.com',
@@ -117,7 +103,7 @@ app.get('/projects', async (req, res) => {
 })
 ```
 
-### MIDDLEWARE
+### Middleware
 Use middleware to run a function before every request. You can return values from middleware as well and the rest of the middleware stack will be skipped.
 ```js
 // Middleware functions are run in the order that they are added
@@ -140,7 +126,7 @@ app.use(async (req, res) => {
 })
 ```
 
-### WEBSOCKETS
+### Websockets
 Websockets are used through *actions*, the URL path is irrelevant. Include *$action: 'name'* in the data you are sending to the server to match your action. Connection handling through *ping and pong* will automatically terminate dead clients.
 
 Websocket connections are lazy loaded and enabled only if you specify an action. All websocket actions must return Javascript objects (sent as JSON).
@@ -200,13 +186,13 @@ app.action('options', async (data, client) => {
 })
 ```
 
-### REDIS PUBSUB
+### Redis Pubsub
 If you have more than one app server for your websockets, you need pubsub to reliably publish messages to multiple clients. With pubsub, the messages go via a [Redis server](https://redis.io), a high performance key-value store.
 
 Sirloin has built in support for pubsub, all you need to do is to [install Redis](https://redis.io/download) and enable it in your Sirloin config:
 ```js
 // Default config options shown
-const app = new Sirloin({
+const app = sirloin({
   pubsub: {
     port: 6379,          // Redis port
     host: 'localhost',   // Redis host URL
@@ -220,7 +206,7 @@ const app = new Sirloin({
 
 // To use the default options, this is all you need
 // Make sure Redis is running before starting your application
-const app = new Sirloin({ pubsub: true }) // or pubsub: {}
+const app = sirloin({ pubsub: true }) // or pubsub: {}
 
 // First subscribe to a function
 app.subscribe('live', async (data, client) => {
@@ -252,7 +238,7 @@ client.publish('live', { hello: 'world' }, () => {
 ```
 Pubsub is disabled by default, remove the config or set to 'false' to send messages directly to the socket.
 
-### API & CONFIGURATION
+### API & Configuration
 The app object contains functions and properties that are useful as well:
 ```js
 app.config                      // The active config for the app
@@ -277,40 +263,23 @@ app.websocket.clients.forEach(client => {
 const client = app.websocket.clients.find(c => c.id === _id)
 client.send({ data: { hello: 'found' } })
 ```
-### STATIC FILE SERVER
+### Static File Server
 Static files will be served from the 'dist' directory by default. Routes have presedence over static files. If the file path ends with just a '/', then the server will serve the 'index.html' file if it exists.
 ```js
-// Set the static file directory via the 'files' option, default is 'dist'
-const app = new Sirloin({ files: 'dist' })
+// Set the static file directory via the 'dir' option, default is 'dist'
+const app = sirloin({ dir: 'dist' })
 
 // Change it to the name of your static files directory
-const app = new Sirloin({ files: 'public' })
+const app = sirloin({ dir: 'public' })
 
 // Set it to false to disable serving of static files
-const app = new Sirloin({ files: false })
+const app = sirloin({ dir: false })
 ```
 If the given directory doesn't exist static files will be disabled automatically.
 
 Mime types are automatically added to each file to make the browser behave correctly. The server enables browser caching by using the Last-Modified header returning a 304 response if the file is fresh. This speeds up delivery a lot.
 
-### LOGGING
-Logging is done using the ```app.log``` command. It is an instance of [Rainlog](https://github.com/eldoy/rainlog). You can log to console as well as to file. Rainlog supports multiple loggers, and you can optionally add styles to each logger.
-```js
-// Log to console with the 'info' logger
-app.log.info('hello')
-
-// Log to console with the 'err' logger
-app.log.err('hello')
-
-// Set styles for your logger
-// You can combine styles from the 'chalk' library as you please.
-app.log.get.info.set({ style: 'green.bold.underline' })
-
-// Default styles are 'green' for info and 'red' for err.
-```
-Check out the documentation on [Rainlog](https://github.com/eldoy/rainlog) for more info on how to use it and set it up.
-
-### ERROR HANDLING
+### Error Handling
 Errors can be caught with ```try catch``` inside of middleware, routes and actions.
 ```js
 app.get('/crash', async (req, res) => {
@@ -350,34 +319,34 @@ app.action('db', async (data, client) => {
 })
 ```
 
-### EXAMPLES OF USE
+### Examples of use
 Here's a few examples showing how easy to use Sirloin can be:
 ```js
 // File server running on port 3000 (yeah, only one line of code)
-new (require('sirloin'))()
+require('sirloin')()
 
 // JSON API endpoint without routes (middleware only)
-const app = new (require('sirloin'))()
+const app = require('sirloin')()
 app.use(async (req, res) => {
   return { hello: 'world' }
 })
 
 // JSON API endpoint with routes
-const Sirloin = require('sirloin')
-const app = new Sirloin()
+const sirloin = require('sirloin')
+const app = sirloin()
 app.get('/', async (req, res) => {
   return { hello: 'world' }
 })
 
 // JSON Websocket endpoint
-const Sirloin = require('sirloin')
-const app = new Sirloin()
+const sirloin = require('sirloin')
+const app = sirloin()
 app.action('hello', async (data, client) => {
   return { hello: 'world' }
 })
 ```
 See the [server.js](https://github.com/eldoy/sirloin/blob/master/server.js) file for more examples.
 
-### LICENSE
+### License
 
 MIT Licensed. Enjoy!
