@@ -22,11 +22,11 @@
     "wsrecon": "^0.6.0"
   },
   "dependencies": {
-    "bparse": "^0.1.7",
-    "hangersteak": "^0.2.6",
+    "bparse": "^0.1.8",
+    "hangersteak": "^0.2.7",
     "ioredis": "^4.22.0",
     "mime-types": "^2.1.29",
-    "rekvest": "^0.1.2",
+    "rekvest": "^0.1.3",
     "uuid": "^8.3.2",
     "wcookie": "^0.4.0",
     "ws": "^7.4.3"
