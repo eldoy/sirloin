@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "bparse": "^0.1.8",
-    "hangersteak": "^0.2.7",
+    "hangersteak": "^0.2.8",
     "ioredis": "^4.22.0",
     "mime-types": "^2.1.29",
     "rekvest": "^0.1.3",
