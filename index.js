@@ -71,7 +71,7 @@ module.exports = function(config = {}) {
     try {
       return await fn(...args)
     } catch (err) {
-      const e = api[type === 'websocket' ? 'fail' : 'error']
+      const e = api[type == 'websocket' ? 'fail' : 'error']
       if (e) {
         return await e(err, ...args)
       } else {
@@ -102,8 +102,8 @@ module.exports = function(config = {}) {
       }
 
       // Process route
-      if (typeof data === 'undefined') {
-        if (req.method === 'OPTIONS') {
+      if (typeof data == 'undefined') {
+        if (req.method == 'OPTIONS') {
           data = ''
         }
         const map = routes[req.method]
@@ -119,8 +119,8 @@ module.exports = function(config = {}) {
       }
 
       // Serve static if still no match
-      if (typeof dir === 'string' &&
-        typeof data === 'undefined' &&
+      if (typeof dir == 'string' &&
+        typeof data == 'undefined' &&
         ['GET', 'HEAD'].includes(req.method)
         ) {
         serveStatic(req, res, { dir })
@@ -161,7 +161,7 @@ module.exports = function(config = {}) {
     client.send = (data, opt, f) => {
       const { options, fn } = normalizeArgs(opt, f)
       return new Promise(resolve => {
-        if (typeof data === 'object') {
+        if (typeof data == 'object') {
           data = JSON.stringify(data)
         }
         client.deliver(data, options, () => fn ? fn() : resolve())
