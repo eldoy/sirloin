@@ -126,10 +126,11 @@ module.exports = function(config = {}) {
   // Set up web socket
   const actions = {}
   const callbacks = {}
-
   const websocket = new ws.Server({ server: http })
   websocket.on('connection', async (client, req) => {
     rekvest(req)
+
+    // Additional properties
     client.req = req
     client.isAlive = true
     client.id = uuid()
@@ -154,6 +155,7 @@ module.exports = function(config = {}) {
     client.on('pong', () => client.isAlive = true)
     client.on('close', () => client.isAlive = false)
     client.on('message', async (data) => {
+      // Extract data and action
       data = JSON.parse(data)
       const id = data[CBID]
       delete data[CBID]
@@ -164,6 +166,7 @@ module.exports = function(config = {}) {
       // Log request
       log(`WS /${name}`, data)
 
+      // Run action and send result
       if (action) {
         const result = await run('websocket', action, data, client)
         if (typeof result !== 'undefined') {
@@ -186,10 +189,16 @@ module.exports = function(config = {}) {
   }, TIMEOUT)
 
   if (pubsub) {
+    // Pubsub settings
     settings = { ...OPTIONS, ...pubsub }
+
+    // Channel to send on
     channel = new Redis(settings)
 
+    // Hub is the channel to receive on
     const hub = new Redis(settings)
+
+    // Subscribe to channel name in settings
     hub.subscribe(settings.channel, (err) => {
       if (err) {
         console.log('Pubsub channel unavailable \'%s\':\n%s', settings.channel, err.message)
@@ -199,6 +208,8 @@ module.exports = function(config = {}) {
         connected = true
       }
     })
+
+    // Receive messages here from publish
     hub.on('message', async (channel, msg) => {
       const { name, data, options } = JSON.parse(msg)
       const { clientid, cbid } = options
@@ -210,37 +221,45 @@ module.exports = function(config = {}) {
     })
   }
 
+  // Match any method
   function any(...args) {
     const [fn, path] = args.reverse()
     all(path, fn)
   }
 
+  // Match specific methods
   function all(path, fn, methods = METHODS) {
     for (const m of methods) {
       server[m.toLowerCase()](path, fn)
     }
   }
 
+  // Use middleware
   function use(fn) {
     middleware.push(fn)
   }
 
+  // Match action name
   function action(name, fn) {
     actions[name] = fn
   }
 
+  // Subscribe to publish
   function subscribe(name, fn) {
     api[name] = fn
   }
 
+  // HTTP error
   function error(fn) {
     api.error = fn
   }
 
+  // Websocket fail
   function fail(fn) {
     api.fail = fn
   }
 
+  // Publish to pubsub channel
   function publish(name, data, options = {}, fn, client) {
     if (typeof options == 'function') {
       fn = options; options = {}
@@ -259,6 +278,7 @@ module.exports = function(config = {}) {
     })
   }
 
+  // Public functions and properties
   const server = { any, all, use, action, subscribe, error, fail, publish, http, websocket }
 
   // Generate verb functions
