@@ -22,10 +22,10 @@ const TIMEOUT = 30000
 const CBID = '$cbid'
 const ACTIONID = '$action'
 
-function normalizeArgs(options, fn) {
-  switch (typeof options) {
-    case 'function': fn = options; options = {}
-    case 'undefined': options = {}
+function normalizeArgs(options = {}, fn) {
+  if (typeof options == 'function') {
+    fn = options
+    options = {}
   }
   return { options, fn }
 }
@@ -57,9 +57,7 @@ module.exports = function(config = {}) {
 
   // Init routes
   const routes = {}
-  for (const m of METHODS) {
-    routes[m] = {}
-  }
+  for (const m of METHODS) routes[m] = {}
 
   // Run api functions
   const run = async (type, fn, ...args) => {
@@ -98,9 +96,7 @@ module.exports = function(config = {}) {
 
       // Process route
       if (typeof data == 'undefined') {
-        if (req.method == 'OPTIONS') {
-          data = ''
-        }
+        if (req.method == 'OPTIONS') data = ''
         const map = routes[req.method]
         if (map) {
           const route = map[req.pathname] || map['*']
@@ -153,21 +149,19 @@ module.exports = function(config = {}) {
 
     // Support promises and JSON for client send
     client.deliver = client.send
-    client.send = (data, opt, f) => {
-      const { options, fn } = normalizeArgs(opt, f)
+    client.send = (data, options, fn) => {
+      const _ = { options, fn } = normalizeArgs(options, fn)
+      if (typeof data == 'object') {
+        data = JSON.stringify(data)
+      }
       return new Promise(resolve => {
-        if (typeof data == 'object') {
-          data = JSON.stringify(data)
-        }
         client.deliver(data, options, () => fn ? fn() : resolve())
       })
     }
     client.publish = (name, data, options, fn) => {
       return publish(name, data, options, fn, client)
     }
-    if (connect) {
-      await connect(client)
-    }
+    if (connect) await connect(client)
     client.on('pong', () => client.isAlive = true)
     client.on('close', () => client.isAlive = false)
     client.on('message', async (data) => {
@@ -263,17 +257,14 @@ module.exports = function(config = {}) {
     api.fail = fn
   }
 
-  function publish(name, data, opt, f, client) {
-    let { options, fn } = normalizeArgs(opt, f)
+  function publish(name, data, options, fn, client) {
+    const _ = { options, fn } = normalizeArgs(options, fn)
     return new Promise(resolve => {
-      if (client) {
-        options.clientid = client.id
-      }
-      switch (typeof fn) {
-        case 'undefined': fn = () => resolve()
-        case 'function':
-          options.cbid = uuid()
-          callbacks[options.cbid] = fn
+      if (client) options.clientid = client.id
+      if (typeof fn == 'undefined') fn = () => resolve()
+      if (typeof fn == 'function') {
+        options.cbid = uuid()
+        callbacks[options.cbid] = fn
       }
       if (connected) {
         const msg = JSON.stringify({ name, data, options })
