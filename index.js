@@ -22,14 +22,6 @@ const TIMEOUT = 30000
 const CBID = '$cbid'
 const ACTIONID = '$action'
 
-function normalizeArgs(options = {}, fn) {
-  if (typeof options == 'function') {
-    fn = options
-    options = {}
-  }
-  return { options, fn }
-}
-
 function log(msg, data = {}) {
   if (process.env.NODE_ENV !== 'production') {
     console.log(`\n${msg}\n${util.inspect(data)}`)
@@ -149,8 +141,11 @@ module.exports = function(config = {}) {
 
     // Support promises and JSON for client send
     client.deliver = client.send
-    client.send = (data, options, fn) => {
-      const _ = { options, fn } = normalizeArgs(options, fn)
+    client.send = (data, options = {}, fn) => {
+      if (typeof options == 'function') {
+        fn = options
+        options = {}
+      }
       if (typeof data == 'object') {
         data = JSON.stringify(data)
       }
@@ -257,10 +252,13 @@ module.exports = function(config = {}) {
     api.fail = fn
   }
 
-  function publish(name, data, options, fn, client) {
-    const _ = { options, fn } = normalizeArgs(options, fn)
+  function publish(name, data, options = {}, fn, client) {
+    if (typeof options == 'function') {
+      fn = options
+      options = {}
+    }
+    if (client) options.clientid = client.id
     return new Promise(resolve => {
-      if (client) options.clientid = client.id
       if (typeof fn == 'undefined') fn = () => resolve()
       if (typeof fn == 'function') {
         options.cbid = uuid()
