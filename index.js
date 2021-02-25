@@ -110,7 +110,7 @@ module.exports = function(config = {}) {
         if (map) {
           const route = map[req.pathname] || map['*']
           if (route) {
-            if (req.method !== 'GET') {
+            if (req.method == 'POST') {
               await bodyParser(req)
             }
             data = await run('http', route, req, res)
