@@ -92,6 +92,9 @@ module.exports = function(config = {}) {
       cookie(req)
       let data
 
+      // Log request
+      log(`HTTP ${req.pathname}`, req.params)
+
       // Run middleware
       for (const mw of middleware) {
         data = await run('http', mw, req, res)
@@ -116,9 +119,6 @@ module.exports = function(config = {}) {
           }
         }
       }
-
-      // Log request
-      log(`HTTP ${req.pathname}`, req.params)
 
       // Serve static if still no match
       const { dir } = config
