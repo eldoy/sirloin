@@ -46,20 +46,18 @@ module.exports = function(config = {}) {
   const api = {}
 
   // Set up config
-  config.port = config.port || PORT
-  if (config.pubsub === true) config.pubsub = {}
-
-  switch(typeof config.dir) {
-    case 'undefined': config.dir = 'dist'
+  let { pubsub, dir, ssl, connect, port = PORT } = config
+  if (pubsub === true) pubsub = {}
+  switch(typeof dir) {
+    case 'undefined': dir = 'dist'
     case 'string':
-      if(!fs.existsSync(config.dir)) {
-        config.dir = false
+      if(!fs.existsSync(dir)) {
+        dir = false
       }
   }
-
-  if (config.ssl) {
-    config.ssl.key = fs.readFileSync(config.ssl.key, 'utf8')
-    config.ssl.cert = fs.readFileSync(config.ssl.cert, 'utf8')
+  if (ssl) {
+    ssl.key = fs.readFileSync(ssl.key, 'utf8')
+    ssl.cert = fs.readFileSync(ssl.cert, 'utf8')
   }
 
   // Init routes
@@ -83,9 +81,9 @@ module.exports = function(config = {}) {
   }
 
   // Create HTTP server
-  const client = libs[config.ssl ? 'https' : 'http']
+  const client = libs[ssl ? 'https' : 'http']
   const http = client.createServer(
-    config.ssl,
+    ssl,
     async (req, res) => {
       rekvest(req)
       res.setHeader('Content-Type', 'application/json; charset=utf-8')
@@ -121,7 +119,6 @@ module.exports = function(config = {}) {
       }
 
       // Serve static if still no match
-      const { dir } = config
       if (typeof dir === 'string' &&
         typeof data === 'undefined' &&
         ['GET', 'HEAD'].includes(req.method)
@@ -145,7 +142,6 @@ module.exports = function(config = {}) {
   )
 
   // Listen to port
-  const port = config.port
   http.listen(port)
   console.log('Web server is listening on port %d', port)
 
@@ -174,8 +170,8 @@ module.exports = function(config = {}) {
     client.publish = (name, data, options, fn) => {
       return publish(name, data, options, fn, client)
     }
-    if (config.connect) {
-      await config.connect(client)
+    if (connect) {
+      await connect(client)
     }
     client.on('pong', () => client.isAlive = true)
     client.on('close', () => client.isAlive = false)
@@ -213,8 +209,8 @@ module.exports = function(config = {}) {
     })
   }, TIMEOUT)
 
-  if (config.pubsub) {
-    settings = { ...OPTIONS, ...config.pubsub }
+  if (pubsub) {
+    settings = { ...OPTIONS, ...pubsub }
     channel = new Redis(settings)
 
     const hub = new Redis(settings)
@@ -291,7 +287,7 @@ module.exports = function(config = {}) {
     })
   }
 
-  const server = { any, all, use, action, subscribe, error, fail, publish, http, websocket, config }
+  const server = { any, all, use, action, subscribe, error, fail, publish, http, websocket }
 
   // Generate verb functions
   for (const m of METHODS) {
