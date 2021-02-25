@@ -143,8 +143,7 @@ module.exports = function(config = {}) {
     client.deliver = client.send
     client.send = (data, options = {}, fn) => {
       if (typeof options == 'function') {
-        fn = options
-        options = {}
+        fn = options; options = {}
       }
       if (typeof data == 'object') {
         data = JSON.stringify(data)
@@ -254,8 +253,7 @@ module.exports = function(config = {}) {
 
   function publish(name, data, options = {}, fn, client) {
     if (typeof options == 'function') {
-      fn = options
-      options = {}
+      fn = options; options = {}
     }
     if (client) options.clientid = client.id
     return new Promise(resolve => {
