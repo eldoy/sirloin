@@ -48,13 +48,8 @@ module.exports = function(config = {}) {
   // Set up config
   let { pubsub, dir, ssl, connect, port = PORT } = config
   if (pubsub === true) pubsub = {}
-  switch(typeof dir) {
-    case 'undefined': dir = 'dist'
-    case 'string':
-      if(!fs.existsSync(dir)) {
-        dir = false
-      }
-  }
+  if (typeof dir == 'undefined') dir = 'dist'
+  if (typeof dir == 'string' && !fs.existsSync(dir)) dir = false
   if (ssl) {
     ssl.key = fs.readFileSync(ssl.key, 'utf8')
     ssl.cert = fs.readFileSync(ssl.cert, 'utf8')
