@@ -52,7 +52,7 @@ module.exports = function(config = {}) {
   for (const m of METHODS) routes[m] = {}
 
   // Run api functions
-  const run = async (type, fn, ...args) => {
+  async function run(type, fn, ...args) {
     try {
       return await fn(...args)
     } catch (err) {
@@ -81,9 +81,7 @@ module.exports = function(config = {}) {
       // Run middleware
       for (const mw of middleware) {
         data = await run('http', mw, req, res)
-        if (typeof data !== 'undefined') {
-          break
-        }
+        if (typeof data !== 'undefined') break
       }
 
       // Process route
@@ -93,9 +91,7 @@ module.exports = function(config = {}) {
         if (map) {
           const route = map[req.pathname] || map['*']
           if (route) {
-            if (req.method == 'POST') {
-              await bodyParser(req)
-            }
+            if (req.method == 'POST') await bodyParser(req)
             data = await run('http', route, req, res)
           }
         }
@@ -108,7 +104,6 @@ module.exports = function(config = {}) {
         ) {
         serveStatic(req, res, { dir })
       } else {
-
         // Serve data requests
         switch (typeof data) {
           case 'undefined': res.statusCode = 404
@@ -172,9 +167,7 @@ module.exports = function(config = {}) {
       if (action) {
         const result = await run('websocket', action, data, client)
         if (typeof result !== 'undefined') {
-          if (id) {
-            result[CBID] = id
-          }
+          if (id) result[CBID] = id
           client.send(result)
         }
       }
@@ -209,16 +202,13 @@ module.exports = function(config = {}) {
     hub.on('message', async (channel, msg) => {
       const { name, data, options } = JSON.parse(msg)
       const { clientid, cbid } = options
-      const clients = [...websocket.clients]
-      const client = clients.find(c => c.id == clientid)
+      const client = [...websocket.clients].find(c => c.id == clientid)
       const callback = callbacks[cbid]
       delete callbacks[cbid]
       await api[name](data, client)
       if (callback) callback()
     })
   }
-
-  // Available functions
 
   function any(...args) {
     const [fn, path] = args.reverse()
