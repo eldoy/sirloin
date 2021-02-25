@@ -235,7 +235,7 @@ module.exports = function(config = {}) {
       const callback = callbacks[cbid]
       delete callbacks[cbid]
       await api[name](data, client)
-      if (client && callback) callback()
+      if (callback) callback()
     })
   }
 
