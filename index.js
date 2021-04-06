@@ -67,57 +67,54 @@ module.exports = function(config = {}) {
 
   // Create HTTP server
   const client = libs[ssl ? 'https' : 'http']
-  const http = client.createServer(
-    ssl,
-    async (req, res) => {
-      rekvest(req)
-      res.setHeader('Content-Type', 'application/json; charset=utf-8')
-      cookie(req)
-      let data
+  const http = client.createServer(ssl, async (req, res) => {
+    rekvest(req)
+    res.setHeader('Content-Type', 'application/json; charset=utf-8')
+    cookie(req)
+    let data
 
+    // Run middleware
+    for (const mw of middleware) {
+      data = await run('http', mw, req, res)
+      if (typeof data !== 'undefined') break
+    }
+
+    // Process route
+    if (typeof data == 'undefined') {
+      if (req.method == 'OPTIONS') data = ''
+      const map = routes[req.method]
+      if (map) {
+        const route = map[req.pathname] || map['*']
+        if (route) {
+          if (req.method == 'POST') await bodyParser(req)
+          data = await run('http', route, req, res)
+        }
+      }
+    }
+
+    // Serve static if still no match
+    if (typeof dir == 'string' &&
+      typeof data == 'undefined' &&
+      ['GET', 'HEAD'].includes(req.method)
+      ) {
+      serveStatic(req, res, { dir })
+    } else {
       // Log request
       log(`HTTP ${req.pathname}`, req.params)
 
-      // Run middleware
-      for (const mw of middleware) {
-        data = await run('http', mw, req, res)
-        if (typeof data !== 'undefined') break
+      // Serve data requests
+      switch (typeof data) {
+        case 'undefined': res.statusCode = 404
+        case 'object': data = JSON.stringify(data || '')
+        default: data = String(data)
       }
-
-      // Process route
-      if (typeof data == 'undefined') {
-        if (req.method == 'OPTIONS') data = ''
-        const map = routes[req.method]
-        if (map) {
-          const route = map[req.pathname] || map['*']
-          if (route) {
-            if (req.method == 'POST') await bodyParser(req)
-            data = await run('http', route, req, res)
-          }
-        }
+      if (req.cookieJar && req.cookieJar.length) {
+        res.setHeader('set-cookie', req.cookieJar.headers)
       }
-
-      // Serve static if still no match
-      if (typeof dir == 'string' &&
-        typeof data == 'undefined' &&
-        ['GET', 'HEAD'].includes(req.method)
-        ) {
-        serveStatic(req, res, { dir })
-      } else {
-        // Serve data requests
-        switch (typeof data) {
-          case 'undefined': res.statusCode = 404
-          case 'object': data = JSON.stringify(data || '')
-          default: data = String(data)
-        }
-        if (req.cookieJar && req.cookieJar.length) {
-          res.setHeader('set-cookie', req.cookieJar.headers)
-        }
-        res.setHeader('content-length', Buffer.byteLength(data))
-        res.end(data)
-      }
+      res.setHeader('content-length', Buffer.byteLength(data))
+      res.end(data)
     }
-  )
+  })
 
   // Listen to port
   http.listen(port)
