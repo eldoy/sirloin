@@ -312,7 +312,7 @@ server.action('db', async (data, client) => {
 ```
 
 ### Examples of Use
-Here's a few examples showing how easy to use Sirloin can be:
+Here are a few examples showing how easy to use Sirloin can be:
 ```js
 // File server running on port 3000 (yeah, only one line of code)
 require('sirloin')()
