@@ -23,7 +23,7 @@ const CBID = '$cbid'
 const ACTIONID = '$action'
 
 function log(msg, data = {}) {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV != 'production') {
     console.log(`\n${msg}\n${util.inspect(data)}`)
   }
 }
@@ -79,7 +79,7 @@ module.exports = function(config = {}) {
     // Run middleware
     for (const mw of middleware) {
       data = await run('http', mw, req, res)
-      if (typeof data !== 'undefined') break
+      if (typeof data != 'undefined') break
     }
 
     // Process route
@@ -164,7 +164,7 @@ module.exports = function(config = {}) {
       // Run action and send result
       if (action) {
         const result = await run('websocket', action, data, client)
-        if (typeof result !== 'undefined') {
+        if (typeof result != 'undefined') {
           if (id) result[CBID] = id
           client.send(result)
         }
