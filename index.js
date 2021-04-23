@@ -71,7 +71,10 @@ module.exports = function(config = {}) {
     rekvest(req)
     res.setHeader('Content-Type', 'application/json; charset=utf-8')
     cookie(req)
-    let data
+    let data, assetRequest = ['GET', 'HEAD'].includes(req.method)
+
+    // Log request
+    if (!assetRequest) log(`HTTP ${req.pathname}`, req.params)
 
     // Run middleware
     for (const mw of middleware) {
@@ -93,14 +96,9 @@ module.exports = function(config = {}) {
     }
 
     // Serve static if still no match
-    if (typeof dir == 'string' &&
-      typeof data == 'undefined' &&
-      ['GET', 'HEAD'].includes(req.method)
-      ) {
+    if (typeof dir == 'string' && typeof data == 'undefined' && assetRequest) {
       serveStatic(req, res, { dir })
     } else {
-      // Log request
-      log(`HTTP ${req.pathname}`, req.params)
 
       // Serve data requests
       switch (typeof data) {
