@@ -10,11 +10,12 @@ This high performance easy to use web server includes:
 * Integrated websocket server based on actions
 * Static file server with compression support
 * Redis pubsub for scaling your websockets
+* Ping pong support terminating dead web sockets
 * Full async / await support
 * HTTPS over SSL support
 * Cookie handling
 
-Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/eldoy/wsrecon) is recommended as you'll get support for auto-reconnect, promises and callbacks out of the box.
+Zero configuration required, create an HTTP API endpoint with only 3 lines of code. If you're using websockets, the [wsrecon library](https://github.com/eldoy/wsrecon) is recommended as you'll get support for auto-reconnect and automatic JSON data handling out of the box.
 
 The websockets are based on the excellent [ws library](https://github.com/websockets/ws), pubsub is based on [ioredis](https://github.com/luin/ioredis), and the rest is pure vanilla NodeJS.
 
