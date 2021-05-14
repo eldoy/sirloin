@@ -143,19 +143,21 @@ server.action('hello', async (data, client) => {
 })
 
 // Example socket client setup with wsrecon
-const Socket = require('wsrecon')
-const socket = new Socket('ws://example.com')
+const wsrecon = require('wsrecon')
+const socket = await wsrecon('ws://example.com')
 
 // Normal socket send from the browser, matches the action named 'hello'
 socket.send({ $action: 'hello' })
 
-// Use with the 'wsrecon' library to use promises
-const data = await socket.fetch({ $action: 'hello' })
-console.log(data) // { hello: 'world' }
+// Get data from the web socket
+socket.on('message', function(data) {
+  console.log(data) // { hello: 'world' }
+})
 
 // Define a '*' action to not use actions
 server.action('*', async (data, client) => {
-  return { hello: 'custom' }       // Will send what you return
+  // Will send what you return
+  return { hello: 'custom' }
 })
 
 // The client send function supports callbacks and promises
