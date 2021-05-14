@@ -95,7 +95,7 @@ describe('Web', () => {
     expect(result.body).toEqual(false)
   })
 
-  it.only('should not find undefined method', async () => {
+  it('should not find undefined method', async () => {
     try {
       const result = await got.put(base2 + '/', { responseType: 'json' })
     } catch (err) {

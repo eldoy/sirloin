@@ -19,7 +19,6 @@ const PORT = 3000
 const OPTIONS = { channel: 'messages' }
 
 const TIMEOUT = 30000
-const CBID = '$cbid'
 const ACTIONID = '$action'
 
 function log(msg, data = {}) {
@@ -152,8 +151,6 @@ module.exports = function(config = {}) {
     client.on('message', async (data) => {
       // Extract data and action
       data = JSON.parse(data)
-      const id = data[CBID]
-      delete data[CBID]
       const name = data[ACTIONID] || '*'
       const action = actions[name]
       delete data[ACTIONID]
@@ -165,7 +162,6 @@ module.exports = function(config = {}) {
       if (action) {
         const result = await run('websocket', action, data, client)
         if (typeof result != 'undefined') {
-          if (id) result[CBID] = id
           client.send(result)
         }
       }
