@@ -175,7 +175,7 @@ module.exports = function(config = {}) {
         return client.terminate()
       }
       client.isAlive = false
-      client.ping('', false, true)
+      client.ping(function(){})
     })
   }, TIMEOUT)
 
