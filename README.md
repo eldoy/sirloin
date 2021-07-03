@@ -6,7 +6,7 @@ This high performance easy to use web server includes:
 
 * HTTP server for your APIs and microservices
 * Support for file uploads and post body parsing
-* Fast and minimal, just around 500 lines of code
+* Fast and minimal, just around 280 lines of code
 * Integrated websocket server based on actions
 * Static file server with compression support
 * Redis pubsub for scaling your websockets
