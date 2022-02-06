@@ -49,9 +49,6 @@ module.exports = function(config = {}) {
   if (config.pubsub === true) {
     config.pubsub = {}
   }
-  // if (config.pubsub) {
-  //   pubsub(config, pubsubMessage)
-  // }
 
   // Init routes
   const routes = {}
