@@ -243,10 +243,15 @@ Pubsub is disabled by default, remove the config or set to 'false' to send messa
 ### API & Configuration
 The server object contains functions and properties that are useful as well:
 ```js
-server.config                      // The active config for the server
 server.http                        // The HTTP server reference
 server.websocket                   // The Websocket server reference
 server.websocket.clients           // The connected clients as an array
+server.pubsub                      // The pubsub connection info
+server.pubsub.channel              // The current pubsub channel name
+server.pubsub.sender               // The sending pubsub connection
+server.pubsub.receiver             // The receiving pubsub connection
+server.pubsub.connected            // The pubsub connection status
+server.config                      // The active config for the server
 
 // For each client you can send data to the browser
 server.websocket.clients.forEach(client => {

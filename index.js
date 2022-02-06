@@ -35,7 +35,7 @@ module.exports = function(config = {}) {
   // Set up pub sub
   const pubsub = sub(websocket, state, config)
 
-  // Publish to pubsub channel
+  // Publish to pubsub
   function publish(name, data, options = {}, fn, client) {
     if (typeof options == 'function') {
       fn = options; options = {}
