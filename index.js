@@ -27,6 +27,20 @@ function log(msg, data = {}) {
   }
 }
 
+// Serve data requests
+function serveData(req, res, data) {
+  switch (typeof data) {
+    case 'undefined': res.statusCode = 404
+    case 'object': data = JSON.stringify(data || '')
+    default: data = String(data)
+  }
+  if (req.cookieJar && req.cookieJar.length) {
+    res.setHeader('set-cookie', req.cookieJar.headers)
+  }
+  res.setHeader('content-length', Buffer.byteLength(data))
+  res.end(data)
+}
+
 module.exports = function(config = {}) {
   let settings = null
   let connected = false
@@ -98,18 +112,7 @@ module.exports = function(config = {}) {
     if (typeof dir == 'string' && typeof data == 'undefined' && assetRequest) {
       serveStatic(req, res, { dir })
     } else {
-
-      // Serve data requests
-      switch (typeof data) {
-        case 'undefined': res.statusCode = 404
-        case 'object': data = JSON.stringify(data || '')
-        default: data = String(data)
-      }
-      if (req.cookieJar && req.cookieJar.length) {
-        res.setHeader('set-cookie', req.cookieJar.headers)
-      }
-      res.setHeader('content-length', Buffer.byteLength(data))
-      res.end(data)
+      serveData(req, res, data)
     }
   })
 
