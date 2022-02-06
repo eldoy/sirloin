@@ -26,6 +26,8 @@ function log(msg, data = {}) {
 
 module.exports = function(config = {}) {
 
+  const api = {}
+
   configure(config)
 
   /***************************************************************
@@ -261,6 +263,9 @@ module.exports = function(config = {}) {
   /* API
   ***************************************************************/
 
+
+
+
   // Init HTTP routes
   const routes = {}
 
@@ -273,59 +278,6 @@ module.exports = function(config = {}) {
   // Custom handler functions
   const handlers = {}
 
-  // Match any method
-  function any(...args) {
-    const [fn, path] = args.reverse()
-    all(path, fn)
-  }
-
-  // Match specific methods
-  function all(path, fn, methods = METHODS) {
-    for (const m of methods) {
-      api[m.toLowerCase()](path, fn)
-    }
-  }
-
-  // Use middleware
-  function use(fn) {
-    middleware.push(fn)
-  }
-
-  // Match action name
-  function action(name, fn) {
-    actions[name] = fn
-  }
-
-  // Subscribe to publish
-  function subscribe(name, fn) {
-    handlers[name] = fn
-  }
-
-  // HTTP error
-  function error(fn) {
-    handlers.error = fn
-  }
-
-  // Websocket fail
-  function fail(fn) {
-    handlers.fail = fn
-  }
-
-  // Public functions and properties
-  var api = {
-    any,
-    all,
-    use,
-    action,
-    subscribe,
-    error,
-    fail,
-    http,
-    websocket,
-    publish,
-    config
-  }
-
   // Generate verb functions
   for (const m of METHODS) {
     routes[m] = {}
@@ -333,6 +285,50 @@ module.exports = function(config = {}) {
       routes[m][path] = fn
     }
   }
+
+  // Match specific methods
+  api.all = function(path, fn, methods = METHODS) {
+    for (const m of methods) {
+      api[m.toLowerCase()](path, fn)
+    }
+  }
+
+  // Match any method
+  api.any = function(...args) {
+    const [fn, path] = args.reverse()
+    api.all(path, fn)
+  }
+
+  // Use middleware
+  api.use = function(fn) {
+    middleware.push(fn)
+  }
+
+  // Match action name
+  api.action = function(name, fn) {
+    actions[name] = fn
+  }
+
+  // Subscribe to publish
+  api.subscribe = function(name, fn) {
+    handlers[name] = fn
+  }
+
+  // HTTP error
+  api.error = function(fn) {
+    handlers.error = fn
+  }
+
+  // Websocket fail
+  api.fail = function(fn) {
+    handlers.fail = fn
+  }
+
+  // Public functions and properties
+  api.http = http
+  api.websocket = websocket
+  api.publish = publish
+  api.config = config
 
   return api
 }
