@@ -11,7 +11,7 @@
   },
   "private": false,
   "scripts": {
-    "serve": "concurrently --handle-input \"nodemon server.js\"",
+    "serve:test": "concurrently --handle-input \"nodemon dev.js\"",
     "test": "jest --watch --env=node --runInBand"
   },
   "devDependencies": {
