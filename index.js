@@ -1,17 +1,14 @@
 const { v4: uuid } = require('uuid')
-const ws = require('ws')
-const rekvest = require('rekvest')
 const setup = require('./lib/setup.js')
 const run = require('./lib/run.js')
 const server = require('./lib/server.js')
 const socket = require('./lib/socket.js')
 const sub = require('./lib/sub.js')
-const core = require('./lib/core.js')
+const api = require('./lib/api.js')
 const log = require('./lib/log.js')
 
 module.exports = function(config = {}) {
 
-  // Internal state
   const state = {
     // Init HTTP routes
     routes: {},
@@ -41,16 +38,12 @@ module.exports = function(config = {}) {
   // Publish to pubsub channel
   function publish(name, data, options = {}, fn, client) {
     if (typeof options == 'function') {
-      fn = options
-      options = {}
+      fn = options; options = {}
     }
-    if (client) {
-      options.clientid = client.id
-    }
+    if (client) options.clientid = client.id
+
     return new Promise(resolve => {
-      if (typeof fn == 'undefined') {
-        fn = () => resolve()
-      }
+      if (typeof fn == 'undefined') fn = resolve
       if (typeof fn == 'function') {
         options.cbid = uuid()
         pubsub.callbacks[options.cbid] = fn
@@ -63,13 +56,12 @@ module.exports = function(config = {}) {
   }
 
   // Public functions and properties
-  const api = core(state)
-
-  api.http = http
-  api.websocket = websocket
-  api.publish = publish
-  api.pubsub = pubsub
-  api.config = config
-
-  return api
+  return {
+    http,
+    websocket,
+    publish,
+    pubsub,
+    config,
+    ...api(state)
+  }
 }
