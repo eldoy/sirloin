@@ -310,7 +310,8 @@ module.exports = function(config = {}) {
     fail,
     publish,
     http,
-    websocket
+    websocket,
+    config
   }
 
   // Generate verb functions
