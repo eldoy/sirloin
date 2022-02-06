@@ -59,7 +59,7 @@ module.exports = function(config = {}) {
 
     // Run middleware
     for (const mw of middleware) {
-      data = await run('http', mw, req, res)
+      data = await run(mw, api.error, req, res)
       if (typeof data != 'undefined') break
     }
 
@@ -71,7 +71,7 @@ module.exports = function(config = {}) {
         const route = map[req.pathname] || map['*']
         if (route) {
           if (req.method == 'POST') await bodyParser(req)
-          data = await run('http', route, req, res)
+          data = await run(route, api.error, req, res)
         }
       }
     }
@@ -149,7 +149,7 @@ module.exports = function(config = {}) {
 
       // Run action and send result
       if (action) {
-        const result = await run('websocket', action, data, client)
+        const result = await run(action, api.fail, data, client)
         if (typeof result != 'undefined') {
           client.send(result)
         }
@@ -276,15 +276,14 @@ module.exports = function(config = {}) {
   const api = {}
 
   // Run api functions
-  async function run(type, fn, ...args) {
+  async function run(fn, handler, ...args) {
     try {
       return await fn(...args)
-    } catch (err) {
-      const e = api[type == 'websocket' ? 'fail' : 'error']
-      if (e) {
-        return await e(err, ...args)
+    } catch(e) {
+      if (handler) {
+        return await handler(e, ...args)
       } else {
-        throw err
+        throw e
       }
     }
   }
