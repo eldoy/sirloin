@@ -4,7 +4,7 @@ const { v4: uuid } = require('uuid')
 const ws = require('ws')
 const rekvest = require('rekvest')
 
-const configure = require('./lib/configure.js')
+const setup = require('./lib/setup.js')
 const run = require('./lib/run.js')
 const server = require('./lib/server.js')
 
@@ -34,7 +34,7 @@ module.exports = function(config = {}) {
   }
 
   // Add defaults and set up config
-  configure(config)
+  setup(config)
 
   // Set up web server
   const http = server(state, config)
