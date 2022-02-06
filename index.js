@@ -59,7 +59,39 @@ module.exports = function(config = {}) {
     config.pubsub = {}
   }
   if (config.pubsub) {
-    config.pubsub = { channel: 'messages', ...config.pubsub }
+    if (!config.pubsub.channel) {
+      config.pubsub.channel = 'messages'
+    }
+
+    // Channel to send on
+    config.pubsub.publisher = new Redis(config.pubsub)
+
+    // Hub is the channel to receive on
+    config.pubsub.receiver = new Redis(config.pubsub)
+
+    // Subscribe to config channel name
+    function subscribeChannel(err) {
+      if (err) {
+        console.log('Pubsub channel unavailable \'%s\':\n%s', config.pubsub.channel, err.message)
+        throw err
+      } else {
+        console.log('Pubsub subscribed to channel \'%s\'', config.pubsub.channel)
+        config.pubsub.connected = true
+      }
+    }
+    config.pubsub.receiver.subscribe(config.pubsub.channel, subscribeChannel)
+
+    // Receive messages here from publish
+    async function pubsubMessage(channel, msg) {
+      const { name, data, options } = JSON.parse(msg)
+      const { clientid, cbid } = options
+      const client = [...websocket.clients].find(c => c.id == clientid)
+      const callback = callbacks[cbid]
+      delete callbacks[cbid]
+      await api[name](data, client)
+      if (callback) callback()
+    }
+    config.pubsub.receiver.on('message', pubsubMessage)
   }
 
   // Init routes
@@ -204,42 +236,6 @@ module.exports = function(config = {}) {
   }
 
   setInterval(terminateStaleClients, 30000)
-
-  function initPubsub() {
-    // Channel to send on
-    config.pubsub.publisher = new Redis(config.pubsub)
-
-    // Hub is the channel to receive on
-    config.pubsub.receiver = new Redis(config.pubsub)
-
-    // Subscribe to config channel name
-    function subscribeChannel(err) {
-      if (err) {
-        console.log('Pubsub channel unavailable \'%s\':\n%s', config.pubsub.channel, err.message)
-        throw err
-      } else {
-        console.log('Pubsub subscribed to channel \'%s\'', config.pubsub.channel)
-        config.pubsub.connected = true
-      }
-    }
-    config.pubsub.receiver.subscribe(config.pubsub.channel, subscribeChannel)
-
-    // Receive messages here from publish
-    async function pubsubMessage(channel, msg) {
-      const { name, data, options } = JSON.parse(msg)
-      const { clientid, cbid } = options
-      const client = [...websocket.clients].find(c => c.id == clientid)
-      const callback = callbacks[cbid]
-      delete callbacks[cbid]
-      await api[name](data, client)
-      if (callback) callback()
-    }
-    config.pubsub.receiver.on('message', pubsubMessage)
-  }
-
-  if (config.pubsub) {
-    initPubsub()
-  }
 
   // Match any method
   function any(...args) {
