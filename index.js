@@ -175,7 +175,7 @@ module.exports = function(config = {}) {
     }
 
     // Run websocket connect callback
-    if (typeof config.connect) {
+    if (typeof config.connect == 'function') {
       await config.connect(client)
     }
 
