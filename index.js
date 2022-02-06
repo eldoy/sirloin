@@ -36,8 +36,6 @@ function serveData(req, res, data) {
 }
 
 module.exports = function(config = {}) {
-  let connected = false
-  let publisher = null
   const middleware = []
 
   // Init APIs
@@ -209,10 +207,10 @@ module.exports = function(config = {}) {
 
   function initPubsub() {
     // Channel to send on
-    publisher = new Redis(config.pubsub)
+    config.pubsub.publisher = new Redis(config.pubsub)
 
     // Hub is the channel to receive on
-    const receiver = new Redis(config.pubsub)
+    config.pubsub.receiver = new Redis(config.pubsub)
 
     // Subscribe to config channel name
     function subscribeChannel(err) {
@@ -221,10 +219,10 @@ module.exports = function(config = {}) {
         throw err
       } else {
         console.log('Pubsub subscribed to channel \'%s\'', config.pubsub.channel)
-        connected = true
+        config.pubsub.connected = true
       }
     }
-    receiver.subscribe(config.pubsub.channel, subscribeChannel)
+    config.pubsub.receiver.subscribe(config.pubsub.channel, subscribeChannel)
 
     // Receive messages here from publish
     async function pubsubMessage(channel, msg) {
@@ -236,7 +234,7 @@ module.exports = function(config = {}) {
       await api[name](data, client)
       if (callback) callback()
     }
-    receiver.on('message', pubsubMessage)
+    config.pubsub.receiver.on('message', pubsubMessage)
   }
 
   if (config.pubsub) {
@@ -287,16 +285,20 @@ module.exports = function(config = {}) {
       fn = options
       options = {}
     }
-    if (client) options.clientid = client.id
+    if (client) {
+      options.clientid = client.id
+    }
     return new Promise(resolve => {
-      if (typeof fn == 'undefined') fn = () => resolve()
+      if (typeof fn == 'undefined') {
+        fn = () => resolve()
+      }
       if (typeof fn == 'function') {
         options.cbid = uuid()
         callbacks[options.cbid] = fn
       }
-      if (connected) {
+      if (config.pubsub.connected) {
         const msg = JSON.stringify({ name, data, options })
-        publisher.publish(config.pubsub.channel, msg)
+        config.pubsub.publisher.publish(config.pubsub.channel, msg)
       }
     })
   }
