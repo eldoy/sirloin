@@ -1,6 +1,6 @@
 {
   "name": "sirloin",
-  "version": "0.21.3",
+  "version": "0.21.4",
   "description": "Node web server for HTTP, web sockets and static files",
   "main": "index.js",
   "author": "Vidar Eldøy <vidar@eldoy.com>",
