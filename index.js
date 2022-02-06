@@ -60,7 +60,7 @@ module.exports = function(config = {}) {
 
     // Run middleware
     for (const mw of middleware) {
-      data = await run(mw, api.error, req, res)
+      data = await run(mw, handlers.error, req, res)
       if (typeof data != 'undefined') break
     }
 
@@ -72,7 +72,7 @@ module.exports = function(config = {}) {
         const route = map[req.pathname] || map['*']
         if (route) {
           if (req.method == 'POST') await bodyParser(req)
-          data = await run(route, api.error, req, res)
+          data = await run(route, handlers.error, req, res)
         }
       }
     }
@@ -150,7 +150,7 @@ module.exports = function(config = {}) {
 
       // Run action and send result
       if (action) {
-        const result = await run(action, api.fail, data, client)
+        const result = await run(action, handlers.fail, data, client)
         if (typeof result != 'undefined') {
           client.send(result)
         }
@@ -228,7 +228,7 @@ module.exports = function(config = {}) {
     const client = [...websocket.clients].find(c => c.id == clientid)
     const callback = callbacks[cbid]
     delete callbacks[cbid]
-    await api[name](data, client)
+    await handlers[name](data, client)
     if (callback) callback()
   }
 
@@ -267,14 +267,14 @@ module.exports = function(config = {}) {
     routes[m] = {}
   }
 
-  // Holds middleware functions
+  // Middleware functions
   const middleware = []
 
-  // Holds websocket actions
+  // Websocket actions
   const actions = {}
 
-  // Holds the internal APIs
-  const api = {}
+  // Custom handler functions
+  const handlers = {}
 
   // Match any method
   function any(...args) {
@@ -301,17 +301,17 @@ module.exports = function(config = {}) {
 
   // Subscribe to publish
   function subscribe(name, fn) {
-    api[name] = fn
+    handlers[name] = fn
   }
 
   // HTTP error
   function error(fn) {
-    api.error = fn
+    handlers.error = fn
   }
 
   // Websocket fail
   function fail(fn) {
-    api.fail = fn
+    handlers.fail = fn
   }
 
   // Public functions and properties
