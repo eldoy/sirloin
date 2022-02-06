@@ -248,8 +248,8 @@ server.websocket                   // The Websocket server reference
 server.websocket.clients           // The connected clients as an array
 server.pubsub                      // The pubsub connection info
 server.pubsub.channel              // The current pubsub channel name
-server.pubsub.sender               // The sending pubsub connection
-server.pubsub.receiver             // The receiving pubsub connection
+server.pubsub.publisher            // The publishing pubsub connection
+server.pubsub.subscriber           // The subscribing pubsub connection
 server.pubsub.connected            // The pubsub connection status
 server.config                      // The active config for the server
 

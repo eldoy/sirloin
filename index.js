@@ -50,7 +50,7 @@ module.exports = function(config = {}) {
       }
       if (pubsub.connected) {
         const msg = JSON.stringify({ name, data, options })
-        pubsub.sender.publish(config.pubsub.channel, msg)
+        pubsub.publisher.publish(config.pubsub.channel, msg)
       }
     })
   }
