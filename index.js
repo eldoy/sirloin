@@ -300,7 +300,7 @@ module.exports = function(config = {}) {
   }
 
   // Public functions and properties
-  const server = {
+  var server = {
     any,
     all,
     use,
