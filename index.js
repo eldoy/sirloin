@@ -1,6 +1,6 @@
 const util = require('util')
 const fs = require('fs')
-const libs = {
+const protocols = {
   http: require('http'),
   https: require('https')
 }
@@ -14,7 +14,6 @@ const ws = require('ws')
 const rekvest = require('rekvest')
 
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
-const ACTIONID = '$action'
 
 function log(msg, data = {}) {
   if (process.env.NODE_ENV != 'production') {
@@ -119,7 +118,7 @@ module.exports = function(config = {}) {
   }
 
   // Create HTTP server
-  const client = libs[config.ssl ? 'https' : 'http']
+  const client = protocols[config.ssl ? 'https' : 'http']
   const http = client.createServer(config.ssl, httpRequest)
 
   // Listen to port
@@ -171,9 +170,9 @@ module.exports = function(config = {}) {
     async function webSocketMessage(data) {
       // Extract data and action
       data = JSON.parse(data)
-      const name = data[ACTIONID] || '*'
+      const name = data.$action || '*'
       const action = actions[name]
-      delete data[ACTIONID]
+      delete data.$action
 
       // Log request
       log(`WS /${name}`, data)
