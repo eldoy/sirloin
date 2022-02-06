@@ -14,7 +14,6 @@ const ws = require('ws')
 const rekvest = require('rekvest')
 
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
-const OPTIONS = { channel: 'messages' }
 const ACTIONID = '$action'
 
 function log(msg, data = {}) {
@@ -207,7 +206,7 @@ module.exports = function(config = {}) {
 
   function initPubsub() {
     // Pubsub settings
-    settings = { ...OPTIONS, ...config.pubsub }
+    settings = { channel: 'messages', ...config.pubsub }
 
     // Channel to send on
     channel = new Redis(settings)
