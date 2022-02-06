@@ -285,7 +285,7 @@ module.exports = function(config = {}) {
   // Match specific methods
   function all(path, fn, methods = METHODS) {
     for (const m of methods) {
-      server[m.toLowerCase()](path, fn)
+      api[m.toLowerCase()](path, fn)
     }
   }
 
@@ -315,7 +315,7 @@ module.exports = function(config = {}) {
   }
 
   // Public functions and properties
-  var server = {
+  var api = {
     any,
     all,
     use,
@@ -331,10 +331,10 @@ module.exports = function(config = {}) {
 
   // Generate verb functions
   for (const m of METHODS) {
-    server[m.toLowerCase()] = function(path, fn) {
+    api[m.toLowerCase()] = function(path, fn) {
       routes[m][path] = fn
     }
   }
 
-  return server
+  return api
 }
