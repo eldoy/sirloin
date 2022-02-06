@@ -3,7 +3,7 @@ const setup = require('./lib/setup.js')
 const run = require('./lib/run.js')
 const server = require('./lib/server.js')
 const socket = require('./lib/socket.js')
-const sub = require('./lib/sub.js')
+const broker = require('./lib/broker.js')
 const api = require('./lib/api.js')
 const log = require('./lib/log.js')
 
@@ -33,7 +33,7 @@ module.exports = function(config = {}) {
   const websocket = socket(http, publish, state, config)
 
   // Set up pubsub
-  const pubsub = sub(websocket, state, config)
+  const pubsub = broker(websocket, state, config)
 
   // Publish to pubsub
   function publish(name, data, options = {}, fn, client) {
