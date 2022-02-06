@@ -94,30 +94,6 @@ module.exports = function(config = {}) {
     if (callback) callback()
   }
 
-  // Publish to pubsub channel
-  function publish(name, data, options = {}, fn, client) {
-    if (typeof options == 'function') {
-      fn = options
-      options = {}
-    }
-    if (client) {
-      options.clientid = client.id
-    }
-    return new Promise(resolve => {
-      if (typeof fn == 'undefined') {
-        fn = () => resolve()
-      }
-      if (typeof fn == 'function') {
-        options.cbid = uuid()
-        pubsub.callbacks[options.cbid] = fn
-      }
-      if (pubsub.connected) {
-        const msg = JSON.stringify({ name, data, options })
-        pubsub.publisher.publish(config.pubsub.channel, msg)
-      }
-    })
-  }
-
 
   /***************************************************************
   * WEBSOCKET
@@ -185,6 +161,30 @@ module.exports = function(config = {}) {
   }
 
   websocket.on('connection', websocketRequest)
+
+  // Publish to pubsub channel
+  function publish(name, data, options = {}, fn, client) {
+    if (typeof options == 'function') {
+      fn = options
+      options = {}
+    }
+    if (client) {
+      options.clientid = client.id
+    }
+    return new Promise(resolve => {
+      if (typeof fn == 'undefined') {
+        fn = () => resolve()
+      }
+      if (typeof fn == 'function') {
+        options.cbid = uuid()
+        pubsub.callbacks[options.cbid] = fn
+      }
+      if (pubsub.connected) {
+        const msg = JSON.stringify({ name, data, options })
+        pubsub.publisher.publish(config.pubsub.channel, msg)
+      }
+    })
+  }
 
   // Terminate stale clients
   function terminateStaleClients() {
