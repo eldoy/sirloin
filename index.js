@@ -15,9 +15,7 @@ const rekvest = require('rekvest')
 
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 const PORT = 3000
-
 const OPTIONS = { channel: 'messages' }
-
 const TIMEOUT = 30000
 const ACTIONID = '$action'
 
@@ -78,9 +76,8 @@ module.exports = function(config = {}) {
     }
   }
 
-  // Create HTTP server
-  const client = libs[ssl ? 'https' : 'http']
-  const http = client.createServer(ssl, async (req, res) => {
+  // The http request callback
+  async function httpRequest(req, res) {
     rekvest(req)
     res.setHeader('Content-Type', 'application/json; charset=utf-8')
     cookie(req)
@@ -114,7 +111,11 @@ module.exports = function(config = {}) {
     } else {
       serveData(req, res, data)
     }
-  })
+  }
+
+  // Create HTTP server
+  const client = libs[ssl ? 'https' : 'http']
+  const http = client.createServer(ssl, httpRequest)
 
   // Listen to port
   http.listen(port)
@@ -124,7 +125,9 @@ module.exports = function(config = {}) {
   const actions = {}
   const callbacks = {}
   const websocket = new ws.Server({ server: http })
-  websocket.on('connection', async (client, req) => {
+
+  // The websocket callback
+  async function websocketRequest(client, req) {
     rekvest(req)
 
     // Additional properties
@@ -134,9 +137,11 @@ module.exports = function(config = {}) {
 
     // Support promises and JSON for client send
     client.deliver = client.send
-    client.send = (data, options = {}, fn) => {
+
+    client.send = function(data, options = {}, fn) {
       if (typeof options == 'function') {
-        fn = options; options = {}
+        fn = options
+        options = {}
       }
       if (typeof data == 'object') {
         data = JSON.stringify(data)
@@ -145,13 +150,17 @@ module.exports = function(config = {}) {
         client.deliver(data, options, () => fn ? fn() : resolve())
       })
     }
-    client.publish = (name, data, options, fn) => {
+
+    client.publish = function(name, data, options, fn) {
       return publish(name, data, options, fn, client)
     }
+
     if (connect) await connect(client)
+
     client.on('pong', () => client.isAlive = true)
     client.on('close', () => client.isAlive = false)
-    client.on('message', async (data) => {
+
+    async function webSocketMessage(data) {
       // Extract data and action
       data = JSON.parse(data)
       const name = data[ACTIONID] || '*'
@@ -168,11 +177,14 @@ module.exports = function(config = {}) {
           client.send(result)
         }
       }
-    })
-  })
+    }
+    client.on('message', webSocketMessage)
+  }
+
+  websocket.on('connection', websocketRequest)
 
   // Terminate stale clients
-  setInterval(() => {
+  function terminateStaleClients() {
     websocket.clients.forEach(client => {
       if (client.isAlive === false) {
         return client.terminate()
@@ -180,7 +192,9 @@ module.exports = function(config = {}) {
       client.isAlive = false
       client.ping(function(){})
     })
-  }, TIMEOUT)
+  }
+
+  setInterval(terminateStaleClients, TIMEOUT)
 
   if (pubsub) {
     // Pubsub settings
@@ -193,7 +207,7 @@ module.exports = function(config = {}) {
     const hub = new Redis(settings)
 
     // Subscribe to channel name in settings
-    hub.subscribe(settings.channel, (err) => {
+    function subscribeChannel(err) {
       if (err) {
         console.log('Pubsub channel unavailable \'%s\':\n%s', settings.channel, err.message)
         throw err
@@ -201,10 +215,11 @@ module.exports = function(config = {}) {
         console.log('Pubsub subscribed to channel \'%s\'', settings.channel)
         connected = true
       }
-    })
+    }
+    hub.subscribe(settings.channel, subscribeChannel)
 
     // Receive messages here from publish
-    hub.on('message', async (channel, msg) => {
+    async function pubsubMessage(channel, msg) {
       const { name, data, options } = JSON.parse(msg)
       const { clientid, cbid } = options
       const client = [...websocket.clients].find(c => c.id == clientid)
@@ -212,7 +227,8 @@ module.exports = function(config = {}) {
       delete callbacks[cbid]
       await api[name](data, client)
       if (callback) callback()
-    })
+    }
+    hub.on('message', pubsubMessage)
   }
 
   // Match any method
