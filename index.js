@@ -272,7 +272,8 @@ module.exports = function(config = {}) {
   // Publish to pubsub channel
   function publish(name, data, options = {}, fn, client) {
     if (typeof options == 'function') {
-      fn = options; options = {}
+      fn = options
+      options = {}
     }
     if (client) options.clientid = client.id
     return new Promise(resolve => {
