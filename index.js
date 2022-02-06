@@ -43,11 +43,8 @@ module.exports = function(config = {}) {
     if (client) options.clientid = client.id
 
     return new Promise(resolve => {
-      if (typeof fn == 'undefined') fn = resolve
-      if (typeof fn == 'function') {
-        options.cbid = uuid()
-        pubsub.callbacks[options.cbid] = fn
-      }
+      options.cbid = uuid()
+      pubsub.callbacks[options.cbid] = fn || resolve
       if (pubsub.connected) {
         const msg = JSON.stringify({ name, data, options })
         pubsub.publisher.publish(config.pubsub.channel, msg)
