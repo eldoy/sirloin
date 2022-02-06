@@ -7,7 +7,8 @@ const protocols = {
 const bodyParser = require('bparse')
 const serveStatic = require('hangersteak')
 const cookie = require('wcookie')
-const Redis = require('ioredis')
+
+const pubsub = require('./lib/pubsub.js')
 
 const { v4: uuid } = require('uuid')
 const ws = require('ws')
@@ -59,27 +60,7 @@ module.exports = function(config = {}) {
     config.pubsub = {}
   }
   if (config.pubsub) {
-    if (!config.pubsub.channel) {
-      config.pubsub.channel = 'messages'
-    }
-
-    // Channel to send on
-    config.pubsub.publisher = new Redis(config.pubsub)
-
-    // Hub is the channel to receive on
-    config.pubsub.receiver = new Redis(config.pubsub)
-
-    // Subscribe to config channel name
-    function subscribeChannel(err) {
-      if (err) {
-        console.log('Pubsub channel unavailable \'%s\':\n%s', config.pubsub.channel, err.message)
-        throw err
-      } else {
-        console.log('Pubsub subscribed to channel \'%s\'', config.pubsub.channel)
-        config.pubsub.connected = true
-      }
-    }
-    config.pubsub.receiver.subscribe(config.pubsub.channel, subscribeChannel)
+    pubsub(config)
 
     // Receive messages here from publish
     async function pubsubMessage(channel, msg) {
