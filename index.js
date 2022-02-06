@@ -14,6 +14,7 @@ const ws = require('ws')
 const rekvest = require('rekvest')
 
 const configure = require('./lib/configure.js')
+const run = require('./lib/run.js')
 
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 
@@ -274,19 +275,6 @@ module.exports = function(config = {}) {
 
   // Holds the internal APIs
   const api = {}
-
-  // Run api functions
-  async function run(fn, handler, ...args) {
-    try {
-      return await fn(...args)
-    } catch(e) {
-      if (handler) {
-        return await handler(e, ...args)
-      } else {
-        throw e
-      }
-    }
-  }
 
   // Match any method
   function any(...args) {
