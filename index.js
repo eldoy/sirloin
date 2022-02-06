@@ -196,7 +196,7 @@ module.exports = function(config = {}) {
 
   setInterval(terminateStaleClients, TIMEOUT)
 
-  if (pubsub) {
+  function initPubsub() {
     // Pubsub settings
     settings = { ...OPTIONS, ...pubsub }
 
@@ -230,6 +230,8 @@ module.exports = function(config = {}) {
     }
     hub.on('message', pubsubMessage)
   }
+
+  if (pubsub) initPubsub()
 
   // Match any method
   function any(...args) {
