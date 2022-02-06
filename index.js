@@ -1,5 +1,4 @@
 const util = require('util')
-const fs = require('fs')
 const protocols = {
   http: require('http'),
   https: require('https')
@@ -14,6 +13,8 @@ const { v4: uuid } = require('uuid')
 const ws = require('ws')
 const rekvest = require('rekvest')
 
+const configure = require('./lib/configure.js')
+
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 
 function log(msg, data = {}) {
@@ -24,28 +25,7 @@ function log(msg, data = {}) {
 
 module.exports = function(config = {}) {
 
-  /***************************************************************
-  /* CONFIG
-  ***************************************************************/
-
-  // Set up config
-  if (typeof config.port == 'undefined') {
-    config.port = 3000
-  }
-  if (typeof config.dir == 'undefined') {
-    config.dir = 'dist'
-  }
-  if (typeof config.dir == 'string' && !fs.existsSync(config.dir)) {
-    config.dir = false
-  }
-  if (config.ssl) {
-    config.ssl.key = fs.readFileSync(config.ssl.key, 'utf8')
-    config.ssl.cert = fs.readFileSync(config.ssl.cert, 'utf8')
-  }
-  if (config.pubsub === true) {
-    config.pubsub = {}
-  }
-
+  configure(config)
 
   /***************************************************************
   /* HTTP
