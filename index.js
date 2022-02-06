@@ -85,10 +85,12 @@ module.exports = function(config = {}) {
     rekvest(req)
     res.setHeader('Content-Type', 'application/json; charset=utf-8')
     cookie(req)
-    let data, assetRequest = ['GET', 'HEAD'].includes(req.method)
+    let data, isStaticRequest = ['GET', 'HEAD'].includes(req.method)
 
     // Log request
-    if (!assetRequest) log(`HTTP ${req.pathname}`, req.params)
+    if (!isStaticRequest) {
+      log(`HTTP ${req.pathname}`, req.params)
+    }
 
     // Run middleware
     for (const mw of middleware) {
@@ -110,7 +112,7 @@ module.exports = function(config = {}) {
     }
 
     // Serve static if still no match
-    if (typeof config.dir == 'string' && typeof data == 'undefined' && assetRequest) {
+    if (typeof config.dir == 'string' && typeof data == 'undefined' && isStaticRequest) {
       serveStatic(req, res, { dir: config.dir })
     } else {
       serveData(req, res, data)
