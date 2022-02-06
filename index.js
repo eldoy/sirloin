@@ -14,9 +14,7 @@ const ws = require('ws')
 const rekvest = require('rekvest')
 
 const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
-const PORT = 3000
 const OPTIONS = { channel: 'messages' }
-const TIMEOUT = 30000
 const ACTIONID = '$action'
 
 function log(msg, data = {}) {
@@ -49,13 +47,21 @@ module.exports = function(config = {}) {
   const api = {}
 
   // Set up config
-  let { pubsub, dir, ssl, connect, port = PORT } = config
-  if (pubsub === true) pubsub = {}
-  if (typeof dir == 'undefined') dir = 'dist'
-  if (typeof dir == 'string' && !fs.existsSync(dir)) dir = false
-  if (ssl) {
-    ssl.key = fs.readFileSync(ssl.key, 'utf8')
-    ssl.cert = fs.readFileSync(ssl.cert, 'utf8')
+  if (typeof config.port == 'undefined') {
+    config.port = 3000
+  }
+  if (typeof config.dir == 'undefined') {
+    config.dir = 'dist'
+  }
+  if (typeof config.dir == 'string' && !fs.existsSync(config.dir)) {
+    config.dir = false
+  }
+  if (config.ssl) {
+    config.ssl.key = fs.readFileSync(config.ssl.key, 'utf8')
+    config.ssl.cert = fs.readFileSync(config.ssl.cert, 'utf8')
+  }
+  if (config.pubsub === true) {
+    config.pubsub = {}
   }
 
   // Init routes
@@ -106,20 +112,20 @@ module.exports = function(config = {}) {
     }
 
     // Serve static if still no match
-    if (typeof dir == 'string' && typeof data == 'undefined' && assetRequest) {
-      serveStatic(req, res, { dir })
+    if (typeof config.dir == 'string' && typeof data == 'undefined' && assetRequest) {
+      serveStatic(req, res, { dir: config.dir })
     } else {
       serveData(req, res, data)
     }
   }
 
   // Create HTTP server
-  const client = libs[ssl ? 'https' : 'http']
-  const http = client.createServer(ssl, httpRequest)
+  const client = libs[config.ssl ? 'https' : 'http']
+  const http = client.createServer(config.ssl, httpRequest)
 
   // Listen to port
-  http.listen(port)
-  console.log('Web server is listening on port %d', port)
+  http.listen(config.port)
+  console.log('Web server is listening on port %d', config.port)
 
   // Set up web socket
   const actions = {}
@@ -155,7 +161,10 @@ module.exports = function(config = {}) {
       return publish(name, data, options, fn, client)
     }
 
-    if (connect) await connect(client)
+    // Run websocket connect callback
+    if (typeof config.connect) {
+      await config.connect(client)
+    }
 
     client.on('pong', () => client.isAlive = true)
     client.on('close', () => client.isAlive = false)
@@ -194,11 +203,11 @@ module.exports = function(config = {}) {
     })
   }
 
-  setInterval(terminateStaleClients, TIMEOUT)
+  setInterval(terminateStaleClients, 30000)
 
   function initPubsub() {
     // Pubsub settings
-    settings = { ...OPTIONS, ...pubsub }
+    settings = { ...OPTIONS, ...config.pubsub }
 
     // Channel to send on
     channel = new Redis(settings)
@@ -231,7 +240,9 @@ module.exports = function(config = {}) {
     hub.on('message', pubsubMessage)
   }
 
-  if (pubsub) initPubsub()
+  if (config.pubsub) {
+    initPubsub()
+  }
 
   // Match any method
   function any(...args) {
