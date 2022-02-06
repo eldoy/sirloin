@@ -24,8 +24,9 @@ function log(msg, data = {}) {
 
 module.exports = function(config = {}) {
 
-  /* SETUP
-  *********************/
+  /***************************************************************
+  /* CONFIG
+  ***************************************************************/
 
   // Set up config
   if (typeof config.port == 'undefined') {
@@ -46,9 +47,9 @@ module.exports = function(config = {}) {
   }
 
 
-
+  /***************************************************************
   /* HTTP
-  *********************/
+  ***************************************************************/
 
   // Serve data requests
   function serveData(req, res, data) {
@@ -112,11 +113,11 @@ module.exports = function(config = {}) {
   console.log('Web server is listening on port %d', config.port)
 
 
-  /* WEBSOCKET
-  *********************/
+  /***************************************************************
+  * WEBSOCKET
+  ***************************************************************/
 
   // Set up web socket
-  const actions = {}
   const websocket = new ws.Server({ server: http })
 
   // The websocket callback
@@ -193,9 +194,9 @@ module.exports = function(config = {}) {
   setInterval(terminateStaleClients, 30000)
 
 
+  /***************************************************************
   /* PUBSUB
-  *********************/
-
+  ***************************************************************/
 
   // The name of the pubsub channel
   let channel
@@ -275,15 +276,21 @@ module.exports = function(config = {}) {
   }
 
 
+  /***************************************************************
   /* API
-  *********************/
+  ***************************************************************/
 
-  // Init routes
+  // Init HTTP routes
   const routes = {}
-  for (const m of METHODS) routes[m] = {}
+  for (const m of METHODS) {
+    routes[m] = {}
+  }
 
   // Holds middleware functions
   const middleware = []
+
+  // Holds websocket actions
+  const actions = {}
 
   // Holds the internal APIs
   const api = {}
@@ -301,8 +308,6 @@ module.exports = function(config = {}) {
       }
     }
   }
-
-
 
   // Match any method
   function any(...args) {
@@ -351,9 +356,9 @@ module.exports = function(config = {}) {
     subscribe,
     error,
     fail,
-    publish,
     http,
     websocket,
+    publish,
     config
   }
 
