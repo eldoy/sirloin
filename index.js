@@ -26,9 +26,27 @@ function log(msg, data = {}) {
 
 module.exports = function(config = {}) {
 
+  // Public api functions and properties
   const api = {}
 
+  // Internal state
+  const state = {
+    // Init HTTP routes
+    routes: {},
+
+    // Middleware functions
+    middleware: [],
+
+    // Websocket actions
+    actions: {},
+
+    // Custom handler functions
+    handlers: {}
+  }
+
+  // Add defaults and set up config
   configure(config)
+
 
   /***************************************************************
   /* HTTP
@@ -61,20 +79,20 @@ module.exports = function(config = {}) {
     }
 
     // Run middleware
-    for (const mw of middleware) {
-      data = await run(mw, handlers.error, req, res)
+    for (const mw of state.middleware) {
+      data = await run(mw, state.handlers.error, req, res)
       if (typeof data != 'undefined') break
     }
 
     // Process route
     if (typeof data == 'undefined') {
       if (req.method == 'OPTIONS') data = ''
-      const map = routes[req.method]
+      const map = state.routes[req.method]
       if (map) {
         const route = map[req.pathname] || map['*']
         if (route) {
           if (req.method == 'POST') await bodyParser(req)
-          data = await run(route, handlers.error, req, res)
+          data = await run(route, state.handlers.error, req, res)
         }
       }
     }
@@ -144,7 +162,7 @@ module.exports = function(config = {}) {
       // Extract data and action
       data = JSON.parse(data)
       const name = data.$action || '*'
-      const action = actions[name]
+      const action = state.actions[name]
       delete data.$action
 
       // Log request
@@ -152,7 +170,7 @@ module.exports = function(config = {}) {
 
       // Run action and send result
       if (action) {
-        const result = await run(action, handlers.fail, data, client)
+        const result = await run(action, state.handlers.fail, data, client)
         if (typeof result != 'undefined') {
           client.send(result)
         }
@@ -230,7 +248,7 @@ module.exports = function(config = {}) {
     const client = [...websocket.clients].find(c => c.id == clientid)
     const callback = callbacks[cbid]
     delete callbacks[cbid]
-    await handlers[name](data, client)
+    await state.handlers[name](data, client)
     if (callback) callback()
   }
 
@@ -263,26 +281,11 @@ module.exports = function(config = {}) {
   /* API
   ***************************************************************/
 
-
-
-
-  // Init HTTP routes
-  const routes = {}
-
-  // Middleware functions
-  const middleware = []
-
-  // Websocket actions
-  const actions = {}
-
-  // Custom handler functions
-  const handlers = {}
-
   // Generate verb functions
   for (const m of METHODS) {
-    routes[m] = {}
+    state.routes[m] = {}
     api[m.toLowerCase()] = function(path, fn) {
-      routes[m][path] = fn
+      state.routes[m][path] = fn
     }
   }
 
@@ -301,27 +304,27 @@ module.exports = function(config = {}) {
 
   // Use middleware
   api.use = function(fn) {
-    middleware.push(fn)
+    state.middleware.push(fn)
   }
 
   // Match action name
   api.action = function(name, fn) {
-    actions[name] = fn
+    state.actions[name] = fn
   }
 
   // Subscribe to publish
   api.subscribe = function(name, fn) {
-    handlers[name] = fn
+    state.handlers[name] = fn
   }
 
   // HTTP error
   api.error = function(fn) {
-    handlers.error = fn
+    state.handlers.error = fn
   }
 
   // Websocket fail
   api.fail = function(fn) {
-    handlers.fail = fn
+    state.handlers.fail = fn
   }
 
   // Public functions and properties
