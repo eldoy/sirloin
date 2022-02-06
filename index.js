@@ -29,10 +29,10 @@ module.exports = function(config = {}) {
   // Set up web server
   const http = server(state, config)
 
-  // Set up web socket
+  // Set up websocket
   const websocket = socket(http, publish, state, config)
 
-  // Set up pub sub
+  // Set up pubsub
   const pubsub = sub(websocket, state, config)
 
   // Publish to pubsub
