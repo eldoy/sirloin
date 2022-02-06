@@ -273,7 +273,18 @@ module.exports = function(config = {}) {
   }
 
   // Public functions and properties
-  const server = { any, all, use, action, subscribe, error, fail, publish, http, websocket }
+  const server = {
+    any,
+    all,
+    use,
+    action,
+    subscribe,
+    error,
+    fail,
+    publish,
+    http,
+    websocket
+  }
 
   // Generate verb functions
   for (const m of METHODS) {
