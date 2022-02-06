@@ -125,45 +125,43 @@ module.exports = function(config = {}) {
   /* PUBSUB
   ***************************************************************/
 
-  // The name of the pubsub channel
-  let channel
+  const pubsub = {
 
-  // The pubsub publisher
-  let publisher
+    // The pubsub publisher
+    publisher: null,
 
-  // The pubsub receiver
-  let receiver
+    // The pubsub receiver
+    receiver: null,
 
-  // Whether or not we are connected to pubsub
-  let connected
+    // Pubsub connection status
+    connected: false,
 
-  // Holds pubsub callbacks
-  const callbacks = {}
+    // Pubsub callbacks
+    callbacks: {}
+  }
 
   if (config.pubsub) {
-    if (!channel) {
-      channel = 'messages'
-    }
 
     // Channel to send on
-    publisher = new Redis(config.pubsub)
+    pubsub.publisher = new Redis(config.pubsub)
 
     // Receiver is the channel to receive on
-    receiver = new Redis(config.pubsub)
+    pubsub.receiver = new Redis(config.pubsub)
 
-    receiver.subscribe(channel, subscribeChannel)
-    receiver.on('message', pubsubMessage)
+    pubsub.receiver.subscribe(config.pubsub.channel, subscribeChannel)
+    pubsub.receiver.on('message', pubsubMessage)
   }
 
   // Subscribe to config channel name
   function subscribeChannel(err) {
+    const { channel } = config.pubsub
     if (err) {
       console.log(`Pubsub channel '${channel}' is unavailable`)
       console.log(err.message)
       throw err
     } else {
       console.log(`Pubsub subscribed to channel '${channel}'`)
-      connected = true
+      pubsub.connected = true
     }
   }
 
@@ -172,8 +170,8 @@ module.exports = function(config = {}) {
     const { name, data, options } = JSON.parse(msg)
     const { clientid, cbid } = options
     const client = [...websocket.clients].find(c => c.id == clientid)
-    const callback = callbacks[cbid]
-    delete callbacks[cbid]
+    const callback = pubsub.callbacks[cbid]
+    delete pubsub.callbacks[cbid]
     await state.handlers[name](data, client)
     if (callback) callback()
   }
@@ -193,11 +191,11 @@ module.exports = function(config = {}) {
       }
       if (typeof fn == 'function') {
         options.cbid = uuid()
-        callbacks[options.cbid] = fn
+        pubsub.callbacks[options.cbid] = fn
       }
-      if (connected) {
+      if (pubsub.connected) {
         const msg = JSON.stringify({ name, data, options })
-        publisher.publish(channel, msg)
+        pubsub.publisher.publish(config.pubsub.channel, msg)
       }
     })
   }
