@@ -36,7 +36,6 @@ function serveData(req, res, data) {
 }
 
 module.exports = function(config = {}) {
-  let settings = null
   let connected = false
   let publisher = null
   const middleware = []
@@ -60,6 +59,9 @@ module.exports = function(config = {}) {
   }
   if (config.pubsub === true) {
     config.pubsub = {}
+  }
+  if (config.pubsub) {
+    config.pubsub = { channel: 'messages', ...config.pubsub }
   }
 
   // Init routes
@@ -206,26 +208,23 @@ module.exports = function(config = {}) {
   setInterval(terminateStaleClients, 30000)
 
   function initPubsub() {
-    // Pubsub settings
-    settings = { channel: 'messages', ...config.pubsub }
-
     // Channel to send on
-    publisher = new Redis(settings)
+    publisher = new Redis(config.pubsub)
 
     // Hub is the channel to receive on
-    const receiver = new Redis(settings)
+    const receiver = new Redis(config.pubsub)
 
-    // Subscribe to channel name in settings
+    // Subscribe to config channel name
     function subscribeChannel(err) {
       if (err) {
-        console.log('Pubsub channel unavailable \'%s\':\n%s', settings.channel, err.message)
+        console.log('Pubsub channel unavailable \'%s\':\n%s', config.pubsub.channel, err.message)
         throw err
       } else {
-        console.log('Pubsub subscribed to channel \'%s\'', settings.channel)
+        console.log('Pubsub subscribed to channel \'%s\'', config.pubsub.channel)
         connected = true
       }
     }
-    receiver.subscribe(settings.channel, subscribeChannel)
+    receiver.subscribe(config.pubsub.channel, subscribeChannel)
 
     // Receive messages here from publish
     async function pubsubMessage(channel, msg) {
@@ -297,7 +296,7 @@ module.exports = function(config = {}) {
       }
       if (connected) {
         const msg = JSON.stringify({ name, data, options })
-        publisher.publish(settings.channel, msg)
+        publisher.publish(config.pubsub.channel, msg)
       }
     })
   }
