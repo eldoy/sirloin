@@ -345,7 +345,7 @@ server.action('hello', async (data, client) => {
   return { hello: 'world' }
 })
 ```
-See the [server.js](https://github.com/eldoy/sirloin/blob/master/server.js) file for more examples.
+See the [dev.js](https://github.com/eldoy/sirloin/blob/master/dev.js) file for more examples.
 
 ### License
 
