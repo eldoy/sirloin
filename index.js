@@ -263,9 +263,6 @@ module.exports = function(config = {}) {
 
   // Init HTTP routes
   const routes = {}
-  for (const m of METHODS) {
-    routes[m] = {}
-  }
 
   // Middleware functions
   const middleware = []
@@ -331,6 +328,7 @@ module.exports = function(config = {}) {
 
   // Generate verb functions
   for (const m of METHODS) {
+    routes[m] = {}
     api[m.toLowerCase()] = function(path, fn) {
       routes[m][path] = fn
     }
