@@ -38,7 +38,7 @@ function serveData(req, res, data) {
 module.exports = function(config = {}) {
   let settings = null
   let connected = false
-  let channel = null
+  let publisher = null
   const middleware = []
 
   // Init APIs
@@ -210,10 +210,10 @@ module.exports = function(config = {}) {
     settings = { channel: 'messages', ...config.pubsub }
 
     // Channel to send on
-    channel = new Redis(settings)
+    publisher = new Redis(settings)
 
     // Hub is the channel to receive on
-    const hub = new Redis(settings)
+    const receiver = new Redis(settings)
 
     // Subscribe to channel name in settings
     function subscribeChannel(err) {
@@ -225,7 +225,7 @@ module.exports = function(config = {}) {
         connected = true
       }
     }
-    hub.subscribe(settings.channel, subscribeChannel)
+    receiver.subscribe(settings.channel, subscribeChannel)
 
     // Receive messages here from publish
     async function pubsubMessage(channel, msg) {
@@ -237,7 +237,7 @@ module.exports = function(config = {}) {
       await api[name](data, client)
       if (callback) callback()
     }
-    hub.on('message', pubsubMessage)
+    receiver.on('message', pubsubMessage)
   }
 
   if (config.pubsub) {
@@ -297,7 +297,7 @@ module.exports = function(config = {}) {
       }
       if (connected) {
         const msg = JSON.stringify({ name, data, options })
-        channel.publish(settings.channel, msg)
+        publisher.publish(settings.channel, msg)
       }
     })
   }
