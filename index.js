@@ -8,7 +8,7 @@ const bodyParser = require('bparse')
 const serveStatic = require('hangersteak')
 const cookie = require('wcookie')
 
-const pubsub = require('./lib/pubsub.js')
+const Redis = require('ioredis')
 
 const { v4: uuid } = require('uuid')
 const ws = require('ws')
@@ -22,21 +22,11 @@ function log(msg, data = {}) {
   }
 }
 
-// Serve data requests
-function serveData(req, res, data) {
-  switch (typeof data) {
-    case 'undefined': res.statusCode = 404
-    case 'object': data = JSON.stringify(data || '')
-    default: data = String(data)
-  }
-  if (req.cookieJar && req.cookieJar.length) {
-    res.setHeader('set-cookie', req.cookieJar.headers)
-  }
-  res.setHeader('content-length', Buffer.byteLength(data))
-  res.end(data)
-}
-
 module.exports = function(config = {}) {
+
+  /* SETUP
+  *********************/
+
   const middleware = []
 
   // Init APIs
@@ -59,21 +49,9 @@ module.exports = function(config = {}) {
   if (config.pubsub === true) {
     config.pubsub = {}
   }
-  if (config.pubsub) {
-    pubsub(config)
-
-    // Receive messages here from publish
-    async function pubsubMessage(channel, msg) {
-      const { name, data, options } = JSON.parse(msg)
-      const { clientid, cbid } = options
-      const client = [...websocket.clients].find(c => c.id == clientid)
-      const callback = callbacks[cbid]
-      delete callbacks[cbid]
-      await api[name](data, client)
-      if (callback) callback()
-    }
-    config.pubsub.receiver.on('message', pubsubMessage)
-  }
+  // if (config.pubsub) {
+  //   pubsub(config, pubsubMessage)
+  // }
 
   // Init routes
   const routes = {}
@@ -91,6 +69,92 @@ module.exports = function(config = {}) {
         throw err
       }
     }
+  }
+
+
+  /* PUBSUB
+  *********************/
+
+  if (config.pubsub) {
+    if (!config.pubsub.channel) {
+      config.pubsub.channel = 'messages'
+    }
+
+    // Channel to send on
+    config.pubsub.publisher = new Redis(config.pubsub)
+
+    // Hub is the channel to receive on
+    config.pubsub.receiver = new Redis(config.pubsub)
+
+    config.pubsub.receiver.subscribe(config.pubsub.channel, subscribeChannel)
+    config.pubsub.receiver.on('message', pubsubMessage)
+  }
+
+  // Subscribe to config channel name
+  function subscribeChannel(err) {
+    const { channel } = config.pubsub
+    if (err) {
+      console.log(`Pubsub channel '${channel}' is unavailable`)
+      console.log(err.message)
+      throw err
+    } else {
+      console.log(`Pubsub subscribed to channel '${channel}'`)
+      config.pubsub.connected = true
+    }
+  }
+
+  // Receive messages here from publish
+  async function pubsubMessage(channel, msg) {
+    const { name, data, options } = JSON.parse(msg)
+    const { clientid, cbid } = options
+    const client = [...websocket.clients].find(c => c.id == clientid)
+    const callback = callbacks[cbid]
+    delete callbacks[cbid]
+    await api[name](data, client)
+    if (callback) callback()
+  }
+
+  // Publish to pubsub channel
+  function publish(name, data, options = {}, fn, client) {
+    if (typeof options == 'function') {
+      fn = options
+      options = {}
+    }
+    if (client) {
+      options.clientid = client.id
+    }
+    return new Promise(resolve => {
+      if (typeof fn == 'undefined') {
+        fn = () => resolve()
+      }
+      if (typeof fn == 'function') {
+        options.cbid = uuid()
+        callbacks[options.cbid] = fn
+      }
+      const { connected, publisher, channel } = config.pubsub
+      if (connected) {
+        const msg = JSON.stringify({ name, data, options })
+        publisher.publish(channel, msg)
+      }
+    })
+  }
+
+
+  /* HTTP
+  *********************/
+
+  // Serve data requests
+  function serveData(req, res, data) {
+    switch (typeof data) {
+      case 'undefined': res.statusCode = 404
+      case 'object': data = JSON.stringify(data || '')
+      default: data = String(data)
+    }
+    if (req.cookieJar && req.cookieJar.length) {
+      res.setHeader('set-cookie', req.cookieJar.headers)
+    }
+    res.setHeader('content-length', Buffer.byteLength(data))
+    res.end(data)
   }
 
   // The http request callback
@@ -139,6 +203,10 @@ module.exports = function(config = {}) {
   // Listen to port
   http.listen(config.port)
   console.log('Web server is listening on port %d', config.port)
+
+
+  /* WEBSOCKET
+  *********************/
 
   // Set up web socket
   const actions = {}
@@ -218,6 +286,10 @@ module.exports = function(config = {}) {
 
   setInterval(terminateStaleClients, 30000)
 
+
+  /* API
+  *********************/
+
   // Match any method
   function any(...args) {
     const [fn, path] = args.reverse()
@@ -254,30 +326,6 @@ module.exports = function(config = {}) {
   // Websocket fail
   function fail(fn) {
     api.fail = fn
-  }
-
-  // Publish to pubsub channel
-  function publish(name, data, options = {}, fn, client) {
-    if (typeof options == 'function') {
-      fn = options
-      options = {}
-    }
-    if (client) {
-      options.clientid = client.id
-    }
-    return new Promise(resolve => {
-      if (typeof fn == 'undefined') {
-        fn = () => resolve()
-      }
-      if (typeof fn == 'function') {
-        options.cbid = uuid()
-        callbacks[options.cbid] = fn
-      }
-      if (config.pubsub.connected) {
-        const msg = JSON.stringify({ name, data, options })
-        config.pubsub.publisher.publish(config.pubsub.channel, msg)
-      }
-    })
   }
 
   // Public functions and properties
