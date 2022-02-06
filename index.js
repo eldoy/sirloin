@@ -27,11 +27,6 @@ module.exports = function(config = {}) {
   /* SETUP
   *********************/
 
-  const middleware = []
-
-  // Init APIs
-  const api = {}
-
   // Set up config
   if (typeof config.port == 'undefined') {
     config.port = 3000
@@ -50,91 +45,6 @@ module.exports = function(config = {}) {
     config.pubsub = {}
   }
 
-  // Init routes
-  const routes = {}
-  for (const m of METHODS) routes[m] = {}
-
-  // Run api functions
-  async function run(type, fn, ...args) {
-    try {
-      return await fn(...args)
-    } catch (err) {
-      const e = api[type == 'websocket' ? 'fail' : 'error']
-      if (e) {
-        return await e(err, ...args)
-      } else {
-        throw err
-      }
-    }
-  }
-
-
-  /* PUBSUB
-  *********************/
-
-  if (config.pubsub) {
-    if (!config.pubsub.channel) {
-      config.pubsub.channel = 'messages'
-    }
-
-    // Channel to send on
-    config.pubsub.publisher = new Redis(config.pubsub)
-
-    // Hub is the channel to receive on
-    config.pubsub.receiver = new Redis(config.pubsub)
-
-    config.pubsub.receiver.subscribe(config.pubsub.channel, subscribeChannel)
-    config.pubsub.receiver.on('message', pubsubMessage)
-  }
-
-  // Subscribe to config channel name
-  function subscribeChannel(err) {
-    const { channel } = config.pubsub
-    if (err) {
-      console.log(`Pubsub channel '${channel}' is unavailable`)
-      console.log(err.message)
-      throw err
-    } else {
-      console.log(`Pubsub subscribed to channel '${channel}'`)
-      config.pubsub.connected = true
-    }
-  }
-
-  // Receive messages here from publish
-  async function pubsubMessage(channel, msg) {
-    const { name, data, options } = JSON.parse(msg)
-    const { clientid, cbid } = options
-    const client = [...websocket.clients].find(c => c.id == clientid)
-    const callback = callbacks[cbid]
-    delete callbacks[cbid]
-    await api[name](data, client)
-    if (callback) callback()
-  }
-
-  // Publish to pubsub channel
-  function publish(name, data, options = {}, fn, client) {
-    if (typeof options == 'function') {
-      fn = options
-      options = {}
-    }
-    if (client) {
-      options.clientid = client.id
-    }
-    return new Promise(resolve => {
-      if (typeof fn == 'undefined') {
-        fn = () => resolve()
-      }
-      if (typeof fn == 'function') {
-        options.cbid = uuid()
-        callbacks[options.cbid] = fn
-      }
-      const { connected, publisher, channel } = config.pubsub
-      if (connected) {
-        const msg = JSON.stringify({ name, data, options })
-        publisher.publish(channel, msg)
-      }
-    })
-  }
 
 
   /* HTTP
@@ -207,7 +117,6 @@ module.exports = function(config = {}) {
 
   // Set up web socket
   const actions = {}
-  const callbacks = {}
   const websocket = new ws.Server({ server: http })
 
   // The websocket callback
@@ -284,8 +193,116 @@ module.exports = function(config = {}) {
   setInterval(terminateStaleClients, 30000)
 
 
+  /* PUBSUB
+  *********************/
+
+
+  // The name of the pubsub channel
+  let channel
+
+  // The pubsub publisher
+  let publisher
+
+  // The pubsub receiver
+  let receiver
+
+  // Whether or not we are connected to pubsub
+  let connected
+
+  // Holds pubsub callbacks
+  const callbacks = {}
+
+  if (config.pubsub) {
+    if (!channel) {
+      channel = 'messages'
+    }
+
+    // Channel to send on
+    publisher = new Redis(config.pubsub)
+
+    // Receiver is the channel to receive on
+    receiver = new Redis(config.pubsub)
+
+    receiver.subscribe(channel, subscribeChannel)
+    receiver.on('message', pubsubMessage)
+  }
+
+  // Subscribe to config channel name
+  function subscribeChannel(err) {
+    if (err) {
+      console.log(`Pubsub channel '${channel}' is unavailable`)
+      console.log(err.message)
+      throw err
+    } else {
+      console.log(`Pubsub subscribed to channel '${channel}'`)
+      connected = true
+    }
+  }
+
+  // Receive messages here from publish
+  async function pubsubMessage(channel, msg) {
+    const { name, data, options } = JSON.parse(msg)
+    const { clientid, cbid } = options
+    const client = [...websocket.clients].find(c => c.id == clientid)
+    const callback = callbacks[cbid]
+    delete callbacks[cbid]
+    await api[name](data, client)
+    if (callback) callback()
+  }
+
+  // Publish to pubsub channel
+  function publish(name, data, options = {}, fn, client) {
+    if (typeof options == 'function') {
+      fn = options
+      options = {}
+    }
+    if (client) {
+      options.clientid = client.id
+    }
+    return new Promise(resolve => {
+      if (typeof fn == 'undefined') {
+        fn = () => resolve()
+      }
+      if (typeof fn == 'function') {
+        options.cbid = uuid()
+        callbacks[options.cbid] = fn
+      }
+      if (connected) {
+        const msg = JSON.stringify({ name, data, options })
+        publisher.publish(channel, msg)
+      }
+    })
+  }
+
+
   /* API
   *********************/
+
+  // Init routes
+  const routes = {}
+  for (const m of METHODS) routes[m] = {}
+
+  // Holds middleware functions
+  const middleware = []
+
+  // Holds the internal APIs
+  const api = {}
+
+  // Run api functions
+  async function run(type, fn, ...args) {
+    try {
+      return await fn(...args)
+    } catch (err) {
+      const e = api[type == 'websocket' ? 'fail' : 'error']
+      if (e) {
+        return await e(err, ...args)
+      } else {
+        throw err
+      }
+    }
+  }
+
+
 
   // Match any method
   function any(...args) {
