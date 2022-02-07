@@ -1,10 +1,8 @@
 const setup = require('./lib/setup.js')
-const run = require('./lib/run.js')
-const server = require('./lib/server.js')
-const socket = require('./lib/socket.js')
-const broker = require('./lib/broker.js')
+const http = require('./lib/http.js')
+const websocket = require('./lib/websocket.js')
+const pubsub = require('./lib/pubsub.js')
 const api = require('./lib/api.js')
-const log = require('./lib/log.js')
 
 module.exports = function(config = {}) {
 
@@ -28,13 +26,13 @@ module.exports = function(config = {}) {
   const app = {}
 
   // Set up web server
-  app.http = server(state, config)
+  app.http = http(state, config)
 
   // Set up websocket
-  app.websocket = socket(app, state, config)
+  app.websocket = websocket(app, state, config)
 
   // Set up pubsub
-  app.pubsub = broker(app, state, config)
+  app.pubsub = pubsub(app, state, config)
 
   // Public functions and properties
   return {
