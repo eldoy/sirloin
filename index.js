@@ -36,7 +36,7 @@ module.exports = function(config = {}) {
 
   // Publish to pubsub
   function publish(...args) {
-    return pubsub.send(...args)
+    return pubsub && pubsub.publish(...args)
   }
 
   // Public functions and properties
