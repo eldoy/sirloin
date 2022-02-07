@@ -250,7 +250,6 @@ server.pubsub                      // The pubsub connection info
 server.pubsub.channel              // The current pubsub channel name
 server.pubsub.publisher            // The publishing pubsub connection
 server.pubsub.subscriber           // The subscribing pubsub connection
-server.pubsub.connected            // The pubsub connection status
 server.config                      // The active config for the server
 
 // For each client you can send data to the browser
