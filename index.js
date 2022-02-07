@@ -1,4 +1,3 @@
-const { v4: uuid } = require('uuid')
 const setup = require('./lib/setup.js')
 const run = require('./lib/run.js')
 const server = require('./lib/server.js')
@@ -36,18 +35,8 @@ module.exports = function(config = {}) {
   const pubsub = broker(websocket, state, config)
 
   // Publish to pubsub
-  function publish(name, data, options = {}, fn, client) {
-    if (typeof options == 'function') {
-      fn = options; options = {}
-    }
-    if (client) options.clientid = client.id
-    return new Promise(resolve => {
-      pubsub.callbacks[options.cbid = uuid()] = fn || resolve
-      if (pubsub.connected) {
-        const message = JSON.stringify({ name, data, options })
-        pubsub.publisher.publish(config.pubsub.channel, message)
-      }
-    })
+  function publish(...args) {
+    return pubsub.send(...args)
   }
 
   // Public functions and properties
