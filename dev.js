@@ -223,7 +223,7 @@ server.subscribe('all', async (data, client) => {
 })
 
 server.action('publishall', async (data, client) => {
-  server.publish('all', { hello: 'publish' })
+  server.pubsub.publish('all', { hello: 'publish' })
   return { published: true }
 })
 

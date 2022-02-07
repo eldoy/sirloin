@@ -8,7 +8,7 @@ const log = require('./lib/log.js')
 
 module.exports = function(config = {}) {
 
-  const state = {
+  var state = {
     // Init HTTP routes
     routes: {},
 
@@ -25,27 +25,21 @@ module.exports = function(config = {}) {
   // Add defaults and set up config
   setup(config)
 
+  const app = {}
+
   // Set up web server
-  const http = server(state, config)
+  app.http = server(state, config)
 
   // Set up websocket
-  const websocket = socket(http, publish, state, config)
+  app.websocket = socket(app, state, config)
 
   // Set up pubsub
-  const pubsub = broker(websocket, state, config)
-
-  // Publish to pubsub
-  function publish(...args) {
-    return pubsub && pubsub.publish(...args)
-  }
+  app.pubsub = broker(app, state, config)
 
   // Public functions and properties
   return {
-    http,
-    websocket,
-    publish,
-    pubsub,
     config,
+    ...app,
     ...api(state)
   }
 }

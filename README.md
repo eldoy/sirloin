@@ -226,7 +226,7 @@ server.action('publish', async (data, client) => {
   client.publish('live', { hello: 'world' })
 
   // Publish to all without client, in case you don't have it
-  server.publish('live', { hello: 'all' })
+  server.pubsub.publish('live', { hello: 'all' })
 })
 
 // The publish function works with await
