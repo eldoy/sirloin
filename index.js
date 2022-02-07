@@ -25,7 +25,7 @@ module.exports = function(config = {}) {
 
   const app = {}
 
-  // Set up web server
+  // Set up http server
   app.http = http(state, config)
 
   // Set up websocket
