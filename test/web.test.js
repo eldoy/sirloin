@@ -4,18 +4,18 @@ const base2 = 'http://localhost:3001'
 
 describe('Web', () => {
   it('should support middleware', async () => {
-    let result = await got(base + '/middleware', { responseType: 'json' })
+    let result = await got(base + '/middleware')
     expect(result.headers['content-type']).toEqual('text/html; charset=utf-8')
     expect(result.statusCode).toEqual(200)
-    expect(result.body.hello).toEqual('middleware')
+    expect(result.body).toBe('<div>middleware</div>')
   })
 
   it('should support multiple middleware', async () => {
-    let result = await got(base + '/multiple', { responseType: 'json' })
+    let result = await got(base + '/multiple')
     expect(result.headers['content-type']).toEqual('text/html; charset=utf-8')
     expect(result.headers['content-language']).toEqual('no-NO')
     expect(result.statusCode).toEqual(200)
-    expect(result.body.hello).toEqual('multiple')
+    expect(result.body).toBe('<div>multiple</div>')
   })
 
   it('should return from middleware', async () => {
@@ -31,9 +31,9 @@ describe('Web', () => {
   })
 
   it('should return get json', async () => {
-    let result = await got(base + '/world', { responseType: 'json' })
+    let result = await got(base + '/world')
     expect(result.statusCode).toEqual(200)
-    expect(result.body.hello).toEqual('world')
+    expect(result.body).toBe('<div>world</div>')
   })
 
   it('should return post json', async () => {

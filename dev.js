@@ -23,14 +23,8 @@ const server = sirloin({
  */
 
 server.use(async (req, res) => {
-  if (['/middleware', '/multiple'].includes(req.pathname)) {
-    res.setHeader('Content-Type', 'text/html; charset=utf-8')
-  }
-})
-
-server.use(async (req, res) => {
   if (['/multiple'].includes(req.pathname)) {
-    res.setHeader('Content-Language', 'no-NO')
+    res.setHeader('content-language', 'no-NO')
   }
 })
 
@@ -51,15 +45,15 @@ server.use(async (req, res) => {
 */
 
 server.get('/middleware', async (req, res) => {
-  return { hello: 'middleware' }
+  return '<div>middleware</div>'
 })
 
 server.get('/multiple', async (req, res) => {
-  return { hello: 'multiple' }
+  return '<div>multiple</div>'
 })
 
 server.get('/world', async (req, res) => {
-  return { hello: 'world' }
+  return '<div>world</div>'
 })
 
 server.post('/world', async (req, res) => {
@@ -100,27 +94,27 @@ server.post('/upload', async (req, res) => {
 })
 
 server.get('/string', async (req, res) => {
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+  res.setHeader('content-type', 'text/plain; charset=utf-8')
   return 'string'
 })
 
 server.get('/empty', async (req, res) => {
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+  res.setHeader('content-type', 'text/plain; charset=utf-8')
   return ''
 })
 
 server.get('/number', async (req, res) => {
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+  res.setHeader('content-type', 'text/plain; charset=utf-8')
   return 5
 })
 
 server.get('/true', async (req, res) => {
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+  res.setHeader('content-type', 'text/plain; charset=utf-8')
   return true
 })
 
 server.get('/false', async (req, res) => {
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
+  res.setHeader('content-type', 'text/plain; charset=utf-8')
   return false
 })
 
