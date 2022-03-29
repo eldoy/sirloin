@@ -24,7 +24,7 @@ const server = sirloin({
 
 server.use(async (req, res) => {
   if (['/middleware', '/multiple'].includes(req.pathname)) {
-    res.setHeader('Content-Type', 'text/html')
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
   }
 })
 

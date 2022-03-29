@@ -8,7 +8,7 @@ describe('Https', () => {
       { https: { rejectUnauthorized: false } }
     )
     expect(result.statusCode).toEqual(200)
-    expect(result.headers['content-type']).toEqual('application/json; charset=utf-8')
+    expect(result.headers['content-type']).toEqual('text/html; charset=utf-8')
     expect(typeof result.body).toEqual('string')
     expect(result.body).toMatch('ssl')
   })
