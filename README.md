@@ -6,7 +6,7 @@ This high performance easy to use web server includes:
 
 * HTTP server for your APIs and microservices
 * Support for file uploads and post body parsing
-* Fast and minimal, just around 300 lines of code
+* Fast and minimal, just a few hundred lines of code
 * Integrated websocket server based on actions
 * Static file server with compression support
 * Redis pubsub for scaling your websockets
@@ -24,6 +24,8 @@ The websockets are based on the excellent [ws library](https://github.com/websoc
 
 ### HTTP Server
 Supported request methods are GET, POST, PUT, DELETE and PATCH. The response and request parameters are standard Node.js HTTP server Incoming and Outgoing message instances.
+
+The default content type for GET requests is `text/html` and `application/json` for all other requests.
 
 The router is just based on string lookup to make it really fast.
 ```js
