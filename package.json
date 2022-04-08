@@ -23,10 +23,10 @@
   },
   "dependencies": {
     "bparse": "^0.1.9",
-    "hangersteak": "^0.2.12",
     "ioredis": "^5.0.3",
     "mime-types": "^2.1.35",
     "rekvest": "^0.1.4",
+    "smor": "^0.1.0",
     "uuid": "^8.3.2",
     "wcookie": "^0.4.1",
     "ws": "^8.5.0"
